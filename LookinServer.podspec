@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.license      = "GPL-3.0"
   spec.author       = { "QMUI Team" => "lookin@lookin.work" }
   spec.platform     = :ios, "8.0"
-  spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "v#{s.version}" }
+  spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "0.9.2"}
   spec.vendored_frameworks = "LookinServer.framework"
   spec.framework  = "UIKit"
 end
