@@ -25,9 +25,9 @@ You must embed LookinServer.framework into your iOS App before using Lookin.
 ## Source Code
 The source code of Lookin in iOS is open-sourced: https://github.com/QMUI/LookinServer/tree/master/SourceCode
 
-Download and open "Lookin.xcodeproj", you will see two targets named "LookinServer" and "LookinServer-Universal". After compiling and running "LookinServer-Universal", the finder will be opened and a file named "LookinServer.framework" will be displayed.
+Download and open "Lookin.xcodeproj", you will see two targets named "LookinServer" and "LookinServer-Universal". After compiling and running "LookinServer-Universal", a file named "LookinServer.framework" will be displayed in a Finder window.
 
-## Contribute
+## Push Request
 Feel free to push requests. For example, there're some issues that we don't know how to deal with. 
 - Some users got issues below while archiving:
 > error: exportArchive: Failed to verify bitcode in LookinServer.framework/LookinServer:
@@ -36,9 +36,12 @@ error: Linker option verification failed for bundle /var/folders/d6/bjdx752s38n5
 - Because we're not good at Swift, unexpected problems may happen when using Lookin in Swift project. For example, a Swift prefix may be displayed unexpectedly before class name.
 
 ## Lookin
-Lookin 是一款 macOS 软件，它可以查看与修改 iOS App 里的 UI 对象，类似于 Xcode 自带的 UI Inspector 工具，或另一款叫做 Reveal 的软件。
-但借助于“控制台”和“方法监听”功能，Lookin 还可以进行 UI 之外的调试。
-此外，它还可以嵌入你的 iOS App 而单独运行在 iPhone 或 iPad 上。
+Lookin 是一款 macOS 软件，它可以查看与修改 iOS App 里的 UI 对象，类似于 Xcode 自带的 UI Inspector 工具，或另一款叫做 Reveal 的软件。 
+
+但借助于“控制台”和“方法监听”功能，Lookin 还可以进行 UI 之外的调试。 
+
+此外，它还可以嵌入你的 iOS App 而单独运行在 iPhone 或 iPad 上。 
+
 最后，Lookin 完全免费。
 
 下载：https://lookin.work/get/
