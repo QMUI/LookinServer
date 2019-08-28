@@ -1,4 +1,4 @@
-![Preview](https://lookin.work/public/style/images/independent/homepage/preview_en_2x.jpg "Preview")
+![Preview](https://cdn.lookin.work/public/style/images/independent/homepage/preview_en_2x.jpg "Preview")
 
 ##Lookin
 Lookin 是一款 macOS 软件，它可以查看与修改 iOS App 里的 UI 对象，类似于 Xcode 自带的 UI Inspector 工具，或另一款叫做 Reveal 的软件。
