@@ -1,5 +1,37 @@
 ![Preview](https://cdn.lookin.work/public/style/images/independent/homepage/preview_en_2x.jpg "Preview")
 
+## 中文说明请滑到底部
+
+## Lookin
+You can inspect and modify views in iOS app via Lookin, just like UI Inspector in Xcode, or another app called Reveal.
+And you can do more with features like Console or Method Trace.
+Moreover, Lookin can run on your iPhone or iPad without connecting to a Mac.
+And one more thing, Lookin is free.
+
+Download: https://lookin.work/get/
+
+## Use Lookin on Your iPhone
+Tutorial: https://lookin.work/faq/lookin-ios/
+![Lookin iOS](https://cdn.lookin.work/public/style/images/independent/sec6_2x.png "Lookin iOS")
+
+## LookinServer
+You must embed LookinServer.framework into your iOS App before using Lookin.
+- Embed by CocoaPods: https://lookin.work/faq/integration-cocoapods/
+- Embed Manually：https://lookin.work/faq/integration-manual/
+
+## Source Code
+The source code of Lookin in iOS is open-sourced: https://github.com/QMUI/LookinServer/tree/master/SourceCode
+
+Download and open "Lookin.xcodeproj", you will see two targets named "LookinServer" and "LookinServer-Universal". After compiling and running "LookinServer-Universal", the finder will be opened and a file named "LookinServer.framework" will be displayed.
+
+## Contribute
+Feel free to push requests. For example, there're some issues that we don't know how to deal with. 
+- Some users got issues below while archiving:
+> error: exportArchive: Failed to verify bitcode in LookinServer.framework/LookinServer:
+error: Linker option verification failed for bundle /var/folders/d6/bjdx752s38n57nz1s0lz31yh0000gq/T/LookinServerar_KLA/LookinServer.armv7.xar (unrecognized arguments: -platform_version iOS 8.0.0 13.0.0)
+
+- Because we're not good at Swift, unexpected problems may happen when using Lookin in Swift project. For example, a Swift prefix may be displayed unexpectedly before class name.
+
 ## Lookin
 Lookin 是一款 macOS 软件，它可以查看与修改 iOS App 里的 UI 对象，类似于 Xcode 自带的 UI Inspector 工具，或另一款叫做 Reveal 的软件。
 但借助于“控制台”和“方法监听”功能，Lookin 还可以进行 UI 之外的调试。
