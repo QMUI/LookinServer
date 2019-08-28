@@ -3,9 +3,12 @@
 ## 中文说明请滑到底部
 
 ## Lookin
-You can inspect and modify views in iOS app via Lookin, just like UI Inspector in Xcode, or another app called Reveal.
-And you can do more with features like Console or Method Trace.
-Moreover, Lookin can run on your iPhone or iPad without connecting to a Mac.
+You can inspect and modify views in iOS app via Lookin, just like UI Inspector in Xcode, or another app called Reveal. 
+
+And you can do more with features like Console or Method Trace. 
+
+Moreover, Lookin can run on your iPhone or iPad without connecting to a Mac.  
+
 And one more thing, Lookin is free.
 
 Download: https://lookin.work/get/
