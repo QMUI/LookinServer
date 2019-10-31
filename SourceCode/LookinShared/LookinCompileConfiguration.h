@@ -12,6 +12,6 @@
 /// All codes of Lookin is embraced by “#ifdef CAN_COMPILE_LOOKIN_SERVER”. Therefore, " #if (defined(DEBUG)) " will make LookinServer only to be compiled in Debug configuration.
 /// If you want to use Lookin in both "DEBUG" and another configuration(e.g. "DailyBuild"), replace “ #if (defined(DEBUG)) ” below instead of “ #if (defined(DEBUG)) || (defined(DailyBuild)) ”
 
-//#if (defined(DEBU))
+#if (defined(DEBUG))
 #define CAN_COMPILE_LOOKIN_SERVER
-//#endif
+#endif
