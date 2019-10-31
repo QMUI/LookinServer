@@ -1,9 +1,12 @@
 //
 //  LookinDisplayInfo.m
+//  WeRead
 //
-//
+//  Created by Li Kai on 2018/10/22.
 //  Copyright © 2018年 tencent. All rights reserved.
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinHierarchyInfo.h"
 #import "LookinAttributesGroup.h"
@@ -47,32 +50,36 @@
 
 + (instancetype)staticInfo {
     LookinHierarchyInfo *info = [LookinHierarchyInfo new];
+    info.serverVersion = LOOKIN_SERVER_VERSION;
     info.displayItems = [LKS_HierarchyDisplayItemsMaker itemsWithScreenshots:NO attrList:NO lowImageQuality:NO includedWindows:nil excludedWindows:nil];
-    info.appInfo = [LookinAppInfo currentInfoWithScreenshotType:LookinAppsFetchScreenshotTypeNo appInfos:nil];
+    info.appInfo = [LookinAppInfo currentInfoWithScreenshot:NO icon:YES localIdentifiers:nil];
     info.collapsedClassList = [self collapsedClassList];
     info.colorAlias = [self colorAlias];
+    info.serverSetupType = LOOKIN_SERVER_SETUP_TYPE;
     return info;
 }
 
 + (instancetype)exportedInfo {
     LookinHierarchyInfo *info = [LookinHierarchyInfo new];
+    info.serverVersion = LOOKIN_SERVER_VERSION;
     info.displayItems = [LKS_HierarchyDisplayItemsMaker itemsWithScreenshots:YES attrList:YES lowImageQuality:YES includedWindows:nil excludedWindows:nil];
-    info.appInfo = [LookinAppInfo currentInfoWithScreenshotType:LookinAppsFetchScreenshotTypeNo appInfos:nil];
+    info.appInfo = [LookinAppInfo currentInfoWithScreenshot:NO icon:YES localIdentifiers:nil];
     info.collapsedClassList = [self collapsedClassList];
     info.colorAlias = [self colorAlias];
+    info.serverSetupType = LOOKIN_SERVER_SETUP_TYPE;
     return info;
 }
 
 + (instancetype)perspectiveInfoWithIncludedWindows:(NSArray<UIWindow *> *)includedWindows excludedWindows:(NSArray<UIWindow *> *)excludedWindows {
     LookinHierarchyInfo *info = [LookinHierarchyInfo new];
+    info.serverVersion = LOOKIN_SERVER_VERSION;
     info.displayItems = [LKS_HierarchyDisplayItemsMaker itemsWithScreenshots:YES attrList:YES lowImageQuality:NO includedWindows:includedWindows excludedWindows:excludedWindows];
-    info.appInfo = [LookinAppInfo currentInfoWithScreenshotType:LookinAppsFetchScreenshotTypeNo appInfos:nil];
+    info.appInfo = [LookinAppInfo currentInfoWithScreenshot:NO icon:YES localIdentifiers:nil];
     info.collapsedClassList = [self collapsedClassList];
     info.colorAlias = [self colorAlias];
+    info.serverSetupType = LOOKIN_SERVER_SETUP_TYPE;
     return info;
 }
-
-
 
 + (NSArray<NSString *> *)collapsedClassList {
     Class configClass = [self configClass];
@@ -157,6 +164,8 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
     [aCoder encodeObject:self.colorAlias forKey:LookinHierarchyInfoCodingKey_ColorAlias];
     [aCoder encodeObject:self.collapsedClassList forKey:LookinHierarchyInfoCodingKey_CollapsedClassList];
     [aCoder encodeObject:self.appInfo forKey:LookinHierarchyInfoCodingKey_AppInfo];
+    [aCoder encodeInt:self.serverVersion forKey:@"serverVersion"];
+    [aCoder encodeInt:self.serverSetupType forKey:@"serverSetupType"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -165,6 +174,8 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
         self.colorAlias = [aDecoder decodeObjectForKey:LookinHierarchyInfoCodingKey_ColorAlias];
         self.collapsedClassList = [aDecoder decodeObjectForKey:LookinHierarchyInfoCodingKey_CollapsedClassList];
         self.appInfo = [aDecoder decodeObjectForKey:LookinHierarchyInfoCodingKey_AppInfo];
+        self.serverVersion = [aDecoder decodeIntForKey:@"serverVersion"];
+        self.serverSetupType = [aDecoder decodeIntForKey:@"serverSetupType"];
     }
     return self;
 }
@@ -173,4 +184,22 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
     return YES;
 }
 
+#pragma mark - <NSCopying>
+
+- (id)copyWithZone:(NSZone *)zone {
+    LookinHierarchyInfo *newAppInfo = [[LookinHierarchyInfo allocWithZone:zone] init];
+    newAppInfo.serverVersion = self.serverVersion;
+    newAppInfo.appInfo = self.appInfo.copy;
+    newAppInfo.collapsedClassList = self.collapsedClassList;
+    newAppInfo.colorAlias = self.colorAlias;
+    newAppInfo.serverSetupType = self.serverSetupType;
+    newAppInfo.displayItems = [self.displayItems lookin_map:^id(NSUInteger idx, LookinDisplayItem *oldItem) {
+        return oldItem.copy;
+    }];
+    
+    return newAppInfo;
+}
+
 @end
+
+#endif

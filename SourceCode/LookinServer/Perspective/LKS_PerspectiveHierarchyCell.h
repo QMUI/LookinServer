@@ -2,9 +2,11 @@
 //  LKS_PerspectiveHierarchyCell.h
 //  LookinServer
 //
-//  
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/12/24.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <UIKit/UIKit.h>
 
@@ -19,3 +21,5 @@
 @property(nonatomic, strong, readonly) UIButton *indicatorButton;
 
 @end
+
+#endif

@@ -2,11 +2,13 @@
 //  LKS_LocalInspectPanelLabelView.m
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/15.
+//  https://lookin.work
 //
 
 #import "LKS_LocalInspectPanelLabelView.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 @implementation LKS_LocalInspectPanelLabelView {
     CGFloat _horInset;
@@ -67,3 +69,5 @@
 }
 
 @end
+
+#endif

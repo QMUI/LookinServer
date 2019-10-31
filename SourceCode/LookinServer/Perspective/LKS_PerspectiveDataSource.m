@@ -2,11 +2,15 @@
 //  LKS_PerspectiveDataSource.m
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/17.
+//  https://lookin.work
 //
 
 #import "LKS_PerspectiveDataSource.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
+#import "UIColor+LookinServer.h"
 #import "LookinDisplayItem.h"
 #import "LookinHierarchyInfo.h"
 #import "LKS_PerspectiveLayer.h"
@@ -39,28 +43,26 @@
         
         // 打平为二维数组
         self.flatItems = [LookinDisplayItem flatItemsFromHierarchicalItems:info.displayItems];
-        [LookinDisplayItem setUpIndentLevelForFlatItems:self.flatItems];
         
         // 设置 preferToBeCollapsed 属性
         NSSet<NSString *> *classesPreferredToCollapse = [NSSet setWithObjects:@"UILabel", @"UIPickerView", @"UIProgressView", @"UIActivityIndicatorView", @"UIAlertView", @"UIActionSheet", @"UISearchBar", @"UIButton", @"UITextView", @"UIDatePicker", @"UIPageControl", @"UISegmentedControl", @"UITextField", @"UISlider", @"UISwitch", @"UIVisualEffectView", @"UIImageView", @"WKCommonWebView", @"UITextEffectsWindow", @"LKS_LocalInspectContainerWindow", nil];
         if (info.collapsedClassList.count) {
             classesPreferredToCollapse = [classesPreferredToCollapse setByAddingObjectsFromArray:info.collapsedClassList];
         }
+        // no preview
+        NSSet<NSString *> *classesWithNoPreview = [NSSet setWithArray:@[@"UITextEffectsWindow", @"UIRemoteKeyboardWindow", @"LKS_LocalInspectContainerWindow"]];
+        
         [self.flatItems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj itemIsKindOfClassesWithNames:classesPreferredToCollapse]) {
                 [obj enumerateSelfAndChildren:^(LookinDisplayItem *item) {
                     item.preferToBeCollapsed = YES;
                 }];
             }
-        }];
-        
-        // 设置 noPreview 属性
-        NSSet<NSString *> *defaultNoPreviewClasses = [NSSet setWithArray:@[@"UITextEffectsWindow", @"UIRemoteKeyboardWindow", @"LKS_LocalInspectContainerWindow"]];
-        [self.flatItems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj itemIsKindOfClassesWithNames:defaultNoPreviewClasses]) {
-                obj.noPreview = YES;
-            } else {
-                obj.noPreview = NO;
+            
+            if (obj.indentLevel == 0) {
+                if ([obj itemIsKindOfClassesWithNames:classesWithNoPreview]) {
+                    obj.noPreview = YES;
+                }
             }
         }];
         
@@ -188,7 +190,7 @@
         }
     }];
     
-    LookinDisplayItem *keyWindowItem = [self.rawHierarchyInfo.displayItems firstFiltered:^BOOL(LookinDisplayItem *windowItem) {
+    LookinDisplayItem *keyWindowItem = [self.rawHierarchyInfo.displayItems lookin_firstFiltered:^BOOL(LookinDisplayItem *windowItem) {
         return windowItem.representedAsKeyWindow;
     }];
     if (!keyWindowItem) {
@@ -263,12 +265,17 @@
             item.isExpanded = YES;
             item.hasDeterminedExpansion = YES;
         }];
+        
+        BOOL hasTableOrCollectionView = [viewControllerItem.subitems.firstObject itemIsKindOfClassesWithNames:[NSSet setWithObjects:@"UITableView", @"UICollectionView", nil]];
+        // 如果是那种典型的 UITableView 或 UICollectionView 的话，则向 leaf 方向推进 2 层（这样就可以让 cell 恰好露出来而不露出来 cell 的 contentView），否则就推 3 层
+        NSUInteger indentsForward = hasTableOrCollectionView ? 2 : 3;
+        
         [viewControllerItem enumerateSelfAndChildren:^(LookinDisplayItem *item) {
             if (item.hasDeterminedExpansion) {
                 return;
             }
-            // 向 leaf 方向推 3 层
-            if (item.indentLevel <= viewControllerItem.indentLevel + 2) {
+            // 向 leaf 方向推 2 或 3 层
+            if (item.indentLevel < viewControllerItem.indentLevel + indentsForward) {
                 item.isExpanded = YES;
                 item.hasDeterminedExpansion = YES;
             }
@@ -310,3 +317,5 @@
 }
 
 @end
+
+#endif

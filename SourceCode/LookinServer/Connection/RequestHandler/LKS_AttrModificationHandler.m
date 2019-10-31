@@ -2,10 +2,15 @@
 //  LKS_AttrModificationHandler.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/6/12.
+//  https://lookin.work
 //
 
 #import "LKS_AttrModificationHandler.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
+#import "UIColor+LookinServer.h"
 #import "LookinAttributeModification.h"
 #import "LKS_AttrGroupsMaker.h"
 #import "LookinDisplayItemDetail.h"
@@ -41,8 +46,7 @@
     
     switch (modification.attrType) {
         case LookinAttrTypeNone:
-        case LookinAttrTypeVoid:
-        case LookinAttrTypeCustom: {
+        case LookinAttrTypeVoid: {
             completion(nil, LookinErr_Inner);
             return;
         }
@@ -158,8 +162,9 @@
             [setterInvocation setArgument:&expectedValue atIndex:2];
             break;
         }
+        case LookinAttrTypeCustomObj:
         case LookinAttrTypeNSString: {
-            NSString *expectedValue = modification.value;
+            NSObject *expectedValue = modification.value;
             [setterInvocation setArgument:&expectedValue atIndex:2];
             [setterInvocation retainArguments];
             break;
@@ -219,25 +224,7 @@
         LookinDisplayItemDetail *itemDetail = [LookinDisplayItemDetail new];
         itemDetail.displayItemOid = task.oid;
         id object = [NSObject lks_objectWithOid:task.oid];
-        if (!object) {
-            if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
-                itemDetail.soloScreenshotError = LookinErr_ObjNotFound;
-            } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
-                itemDetail.groupScreenshotError = LookinErr_ObjNotFound;
-            } else {
-                NSAssert(NO, @"");
-            }
-            block(itemDetail);
-            return;
-        }
-        if (![object isKindOfClass:[CALayer class]]) {
-            if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
-                itemDetail.soloScreenshotError = LookinErr_Inner;
-            } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
-                itemDetail.groupScreenshotError = LookinErr_Inner;
-            } else {
-                NSAssert(NO, @"");
-            }
+        if (!object || ![object isKindOfClass:[CALayer class]]) {
             block(itemDetail);
             return;
         }
@@ -255,3 +242,5 @@
 }
 
 @end
+
+#endif

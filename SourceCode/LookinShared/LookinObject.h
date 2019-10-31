@@ -1,15 +1,18 @@
 //
 //  LookinObject.h
-//  LookinClient
+//  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/4/20.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 
 @class LookinObjectIvar, LookinIvarTrace;
 
-@interface LookinObject : NSObject <NSSecureCoding>
+@interface LookinObject : NSObject <NSSecureCoding, NSCopying>
 
 #if TARGET_OS_IPHONE
 + (instancetype)instanceWithObject:(NSObject *)object;
@@ -24,19 +27,16 @@
  */
 @property(nonatomic, copy) NSArray<NSString *> *classChainList;
 
-/// 当该属性为 nil 时，说明尚未拉取
-@property(nonatomic, copy) NSArray<NSArray<LookinObjectIvar *> *> *ivarList;
-
 @property(nonatomic, copy) NSString *specialTrace;
 
 @property(nonatomic, copy) NSArray<LookinIvarTrace *> *ivarTraces;
 
 #pragma mark - Non Coding
 
-/// 在 OC 中，selfClassName 和 nonNamespaceSelfClassName 返回值一样。在 Swift 中，selfClassName 返回的是带命名空间的（比如 LBFM_Swift.LBFMHomeController），而 nonNamespaceSelfClassName 返回的是没有命名空间的（比如 LBFMHomeController）
-@property(nonatomic, copy, readonly) NSString *selfClassName;
-@property(nonatomic, copy, readonly) NSString *nonNamespaceSelfClassName;
-
-@property(nonatomic, copy) NSString *introduction;
+/// 在 OC 中，completedSelfClassName 和 shortSelfClassName 返回值一样。在 Swift 中，completedSelfClassName 返回的是带命名空间的（比如 LBFM_Swift.LBFMHomeController 或 _TtC 11TestRuntime14ViewController），而 shortSelfClassName 返回的是没有命名空间的（比如 LBFMHomeController）
+@property(nonatomic, copy, readonly) NSString *completedSelfClassName;
+@property(nonatomic, copy, readonly) NSString *shortSelfClassName;
 
 @end
+
+#endif

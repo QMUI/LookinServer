@@ -2,8 +2,13 @@
 //  NSSet+Lookin.h
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/1/13.
+//  https://lookin.work
 //
+
+#import "LookinDefines.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "TargetConditionals.h"
 #if TARGET_OS_IPHONE
@@ -28,3 +33,5 @@
 - (BOOL)lookin_any:(BOOL (^)(ValueType obj))block;
 
 @end
+
+#endif

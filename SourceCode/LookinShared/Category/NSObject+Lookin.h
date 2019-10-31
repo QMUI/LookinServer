@@ -2,8 +2,13 @@
 //  NSObject+Lookin.h
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/12/22.
+//  https://lookin.work
 //
+
+#import "LookinDefines.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 #import "LookinCodingValueType.h"
@@ -97,3 +102,5 @@
 - (id)lookin_decodedObjectWithType:(LookinCodingValueType)type;
 
 @end
+
+#endif

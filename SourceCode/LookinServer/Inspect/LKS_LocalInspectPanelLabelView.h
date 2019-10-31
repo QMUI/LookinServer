@@ -2,9 +2,11 @@
 //  LKS_LocalInspectPanelLabelView.h
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/15.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <UIKit/UIKit.h>
 
@@ -19,3 +21,5 @@
 - (void)addBottomBorderLayer;
 
 @end
+
+#endif

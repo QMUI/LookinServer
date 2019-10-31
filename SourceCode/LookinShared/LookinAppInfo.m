@@ -1,9 +1,12 @@
 //
 //  LookinAppInfo.m
+//  qmuidemo
 //
+//  Created by Li Kai on 2018/11/3.
+//  Copyright © 2018 QMUI Team. All rights reserved.
 //
-//  
-//
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinAppInfo.h"
 
@@ -20,10 +23,16 @@ static NSString * const CodingKey_DeviceType = @"8";
 
 - (id)copyWithZone:(NSZone *)zone {
     LookinAppInfo *newAppInfo = [[LookinAppInfo allocWithZone:zone] init];
+    newAppInfo.appIcon = self.appIcon;
     newAppInfo.appName = self.appName;
     newAppInfo.deviceDescription = self.deviceDescription;
     newAppInfo.osDescription = self.osDescription;
+    newAppInfo.osMainVersion = self.osMainVersion;
     newAppInfo.deviceType = self.deviceType;
+    newAppInfo.screenWidth = self.screenWidth;
+    newAppInfo.screenHeight = self.screenHeight;
+    newAppInfo.screenScale = self.screenScale;
+    newAppInfo.appInfoIdentifier = self.appInfoIdentifier;
     return newAppInfo;
 }
 
@@ -46,6 +55,9 @@ static NSString * const CodingKey_DeviceType = @"8";
         self.deviceType = [aDecoder decodeIntegerForKey:CodingKey_DeviceType];
         self.screenWidth = [aDecoder decodeDoubleForKey:CodingKey_ScreenWidth];
         self.screenHeight = [aDecoder decodeDoubleForKey:CodingKey_ScreenHeight];
+        self.screenScale = [aDecoder decodeDoubleForKey:@"screenScale"];
+        self.appInfoIdentifier = [aDecoder decodeIntegerForKey:@"appInfoIdentifier"];
+        self.shouldUseCache = [aDecoder decodeBoolForKey:@"shouldUseCache"];
     }
     return self;
 }
@@ -75,6 +87,9 @@ static NSString * const CodingKey_DeviceType = @"8";
     [aCoder encodeInteger:self.deviceType forKey:CodingKey_DeviceType];
     [aCoder encodeDouble:self.screenWidth forKey:CodingKey_ScreenWidth];
     [aCoder encodeDouble:self.screenHeight forKey:CodingKey_ScreenHeight];
+    [aCoder encodeDouble:self.screenScale forKey:@"screenScale"];
+    [aCoder encodeInteger:self.appInfoIdentifier forKey:@"appInfoIdentifier"];
+    [aCoder encodeBool:self.shouldUseCache forKey:@"shouldUseCache"];
 }
 
 + (BOOL)supportsSecureCoding {
@@ -110,10 +125,17 @@ static NSString * const CodingKey_DeviceType = @"8";
 
 #if TARGET_OS_IPHONE
 
-+ (LookinAppInfo *)currentInfoWithScreenshotType:(LookinAppsFetchScreenshotType)type appInfos:(NSArray<LookinAppInfo *> *)appInfos {
-    LookinAppInfo *info = [[LookinAppInfo alloc] init];
++ (LookinAppInfo *)currentInfoWithScreenshot:(BOOL)hasScreenshot icon:(BOOL)hasIcon localIdentifiers:(NSArray<NSNumber *> *)localIdentifiers {
+    NSInteger selfIdentifier = [self getAppInfoIdentifier];
+    if ([localIdentifiers containsObject:@(selfIdentifier)]) {
+        LookinAppInfo *info = [LookinAppInfo new];
+        info.appInfoIdentifier = selfIdentifier;
+        info.shouldUseCache = YES;
+        return info;
+    }
     
-    info.appIcon = [self appIcon];
+    LookinAppInfo *info = [[LookinAppInfo alloc] init];
+    info.appInfoIdentifier = selfIdentifier;
     info.appName = [self appName];
     info.deviceDescription = [UIDevice currentDevice].name;
     info.appBundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
@@ -133,11 +155,13 @@ static NSString * const CodingKey_DeviceType = @"8";
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
     info.screenWidth = screenSize.width;
     info.screenHeight = screenSize.height;
-    
-    if (type == LookinAppsFetchScreenshotTypeYES) {
+    info.screenScale = [UIScreen mainScreen].scale;
+
+    if (hasScreenshot) {
         info.screenshot = [self screenshotImage];
-    } else if (type == LookinAppsFetchScreenshotTypeUndetermined && ![appInfos containsObject:info]) {
-        info.screenshot = [self screenshotImage];
+    }
+    if (hasIcon) {
+        info.appIcon = [self appIcon];
     }
     
     return info;
@@ -151,7 +175,12 @@ static NSString * const CodingKey_DeviceType = @"8";
 }
 
 + (UIImage *)appIcon {
-    return [UIImage imageNamed:[[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"] lastObject]];
+    NSString *imageName = [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"] lastObject];
+    if (!imageName.length) {
+        // 正常情况下拿到的 name 可能比如 “AppIcon60x60”。但某些情况可能为 nil，此时直接 return 否则 [UIImage imageNamed:nil] 可能导致 console 报 "CUICatalog: Invalid asset name supplied: '(null)'" 的错误信息
+        return nil;
+    }
+    return [UIImage imageNamed:imageName];
 }
 
 + (UIImage *)screenshotImage {
@@ -176,4 +205,15 @@ static NSString * const CodingKey_DeviceType = @"8";
 
 #endif
 
++ (NSInteger)getAppInfoIdentifier {
+    static dispatch_once_t onceToken;
+    static NSInteger identifier = 0;
+    dispatch_once(&onceToken,^{
+        identifier = [[NSDate date] timeIntervalSince1970];
+    });
+    return identifier;
+}
+
 @end
+
+#endif

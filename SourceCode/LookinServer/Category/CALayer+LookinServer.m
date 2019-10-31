@@ -1,16 +1,21 @@
 //
-//  CALayer+LookinServer.m
+//  UIView+LookinMobile.m
+//  WeRead
 //
-//
+//  Created by Li Kai on 2018/11/30.
 //  Copyright © 2018 tencent. All rights reserved.
 //
 
 #import "CALayer+LookinServer.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_HierarchyDisplayItemsMaker.h"
 #import "LookinDisplayItem.h"
 #import "LKS_LocalInspectManager.h"
 #import <objc/runtime.h>
 #import "LKS_ConnectionManager.h"
+#import "LookinIvarTrace.h"
 
 @implementation CALayer (LookinServer)
 
@@ -81,10 +86,23 @@
 #pragma mark - Screenshot
 
 - (UIImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
-    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) {
+    
+    CGFloat screenScale = [UIScreen mainScreen].scale;
+    CGFloat pixelWidth = self.bounds.size.width * screenScale;
+    CGFloat pixelHeight = self.bounds.size.height * screenScale;
+    if (pixelWidth <= 0 || pixelHeight <= 0) {
         return nil;
     }
-    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, lowQuality ? 1 : 0);
+    
+    CGFloat renderScale = lowQuality ? 1 : 0;
+    CGFloat maxLength = MAX(pixelWidth, pixelHeight);
+    if (maxLength > LookinNodeImageMaxLengthInPx) {
+        // 确保最终绘制出的图片长和宽都不能超过 LookinNodeImageMaxLengthInPx
+        // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
+        renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, renderScale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
         [self.lks_hostView drawViewHierarchyInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) afterScreenUpdates:YES];
@@ -100,8 +118,20 @@
     if (!self.sublayers.count) {
         return nil;
     }
-    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) {
+    
+    CGFloat screenScale = [UIScreen mainScreen].scale;
+    CGFloat pixelWidth = self.bounds.size.width * screenScale;
+    CGFloat pixelHeight = self.bounds.size.height * screenScale;
+    if (pixelWidth <= 0 || pixelHeight <= 0) {
         return nil;
+    }
+    
+    CGFloat renderScale = lowQuality ? 1 : 0;
+    CGFloat maxLength = MAX(pixelWidth, pixelHeight);
+    if (maxLength > LookinNodeImageMaxLengthInPx) {
+        // 确保最终绘制出的图片长和宽都不能超过 LookinNodeImageMaxLengthInPx
+        // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
+        renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
     }
     
     if (self.sublayers.count) {
@@ -114,7 +144,7 @@
             }
         }];
         
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, lowQuality ? 1 : 0);
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, renderScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
             [self.lks_hostView drawViewHierarchyInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) afterScreenUpdates:YES];
@@ -131,6 +161,49 @@
         return image;
     }
     return nil;
+}
+
+- (NSArray<NSArray<NSString *> *> *)lks_relatedClassChainList {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
+    if (self.lks_hostView) {
+        [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:@"UIView"]];
+        if (self.lks_hostView.lks_hostViewController) {
+            [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView.lks_hostViewController endingClass:@"UIViewController"]];
+        }
+    } else {
+        [array addObject:[CALayer lks_getClassListOfObject:self endingClass:@"CALayer"]];
+    }
+    return array.copy;
+}
+
++ (NSArray<NSString *> *)lks_getClassListOfObject:(id)object endingClass:(NSString *)endingClass {
+    NSArray<NSString *> *completedList = [object lks_classChainListWithSwiftPrefix:NO];
+    NSUInteger endingIdx = [completedList indexOfObject:endingClass];
+    if (endingIdx != NSNotFound) {
+        completedList = [completedList subarrayWithRange:NSMakeRange(0, endingIdx + 1)];
+    }
+    return completedList;
+}
+
+- (NSArray<NSString *> *)lks_selfRelation {
+    NSMutableArray *array = [NSMutableArray array];
+    NSMutableArray<LookinIvarTrace *> *ivarTraces = [NSMutableArray array];
+    if (self.lks_hostView) {
+        if (self.lks_hostView.lks_hostViewController) {
+            [array addObject:[NSString stringWithFormat:@"(%@ *).view", NSStringFromClass(self.lks_hostView.lks_hostViewController.class)]];
+            
+            [ivarTraces addObjectsFromArray:self.lks_hostView.lks_hostViewController.lks_ivarTraces];
+        }
+        [ivarTraces addObjectsFromArray:self.lks_hostView.lks_ivarTraces];
+    } else {
+        [ivarTraces addObjectsFromArray:self.lks_ivarTraces];
+    }
+    if (ivarTraces.count) {
+        [array addObjectsFromArray:[ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
+            return [NSString stringWithFormat:@"(%@ *) -> %@", value.hostClassName, value.ivarName];
+        }]];
+    }
+    return array.count ? array.copy : nil;
 }
 
 - (UIColor *)lks_backgroundColor {
@@ -169,3 +242,5 @@
 }
 
 @end
+
+#endif

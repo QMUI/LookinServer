@@ -1,10 +1,12 @@
 //
 //  LKS_PerspectiveToolbarButtons.h
-//  
+//  qmuidemo
+//
+//  Created by Li Kai on 2018/12/20.
+//  Copyright © 2018 QMUI Team. All rights reserved.
 //
 
-//  
-//
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <UIKit/UIKit.h>
 
@@ -29,3 +31,5 @@
 @interface LKS_PerspectiveToolbarPropertyButton : UIButton
 
 @end
+
+#endif

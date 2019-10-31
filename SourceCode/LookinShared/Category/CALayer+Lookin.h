@@ -2,8 +2,13 @@
 //  CALayer+Lookin.h
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/8/4.
+//  https://lookin.work
 //
+
+#import "LookinDefines.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -12,3 +17,5 @@
 - (void)lookin_removeImplicitAnimations;
 
 @end
+
+#endif

@@ -2,22 +2,16 @@
 //  NSObject+Lookin.m
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/12/22.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "NSObject+Lookin.h"
 #import <Objc/runtime.h>
 #import "TargetConditionals.h"
-
-@interface LookinWeakContainer : NSObject
-
-@property (nonatomic, weak) id object;
-
-@end
-
-@implementation LookinWeakContainer
-
-@end
+#import "LookinWeakContainer.h"
 
 @implementation NSObject (Lookin)
 
@@ -236,3 +230,5 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
 }
 
 @end
+
+#endif

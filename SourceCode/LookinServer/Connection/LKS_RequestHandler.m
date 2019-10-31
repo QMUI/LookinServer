@@ -2,19 +2,23 @@
 //  LKS_RequestHandler.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/1/15.
+//  https://lookin.work
 //
 
 #import "LKS_RequestHandler.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
+#import "NSObject+LookinServer.h"
+#import "UIImage+LookinServer.h"
 #import "LKS_ConnectionManager.h"
 #import "LookinConnectionResponseAttachment.h"
-#import "LookinDefines.h"
 #import "LookinAttributeModification.h"
 #import "LookinDisplayItemDetail.h"
 #import "LookinHierarchyInfo.h"
 #import <objc/runtime.h>
 #import "LookinObject.h"
-#import "LookinObjectIvar.h"
 #import "LKS_LocalInspectManager.h"
 #import "LookinAppInfo.h"
 #import "LKS_MethodTraceManager.h"
@@ -47,8 +51,11 @@
                               @(LookinRequestTypeDeleteMethodTrace),
                               @(LookinRequestTypeClassesAndMethodTraceLit),
                               @(LookinRequestTypeInvokeMethod),
+                              @(LookinRequestTypeFetchImageViewImage),
+                              @(LookinRequestTypeModifyRecognizerEnable),
                               
                               @(LookinPush_BringForwardScreenshotTask),
+                              @(LookinPush_CanceHierarchyDetails),
                               nil];
     }
     return self;
@@ -64,18 +71,20 @@
 
 - (void)handleRequestType:(uint32_t)requestType tag:(uint32_t)tag object:(id)object {
     if (requestType == LookinRequestTypePing) {
-        if ([LKS_ConnectionManager sharedInstance].applicationIsActive) {
-            LookinConnectionResponseAttachment *responseAttachment = [LookinConnectionResponseAttachment new];
-            [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag];            
+        LookinConnectionResponseAttachment *responseAttachment = [LookinConnectionResponseAttachment new];
+        // 当 app 处于后台时，可能可以执行代码也可能不能执行代码，如果运气好了可以执行代码，则这里直接主动使用 appIsInBackground 标识 app 处于后台，不要让 Lookin 客户端傻傻地等待超时了
+        if (![LKS_ConnectionManager sharedInstance].applicationIsActive) {
+            responseAttachment.appIsInBackground = YES;            
         }
+        [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag];
         
     } else if (requestType == LookinRequestTypeApp) {
         // 请求可用设备信息
-        NSDictionary *params = (NSDictionary *)object;
+        NSDictionary<NSString *, id> *params = object;
+        BOOL needImages = ((NSNumber *)params[@"needImages"]).boolValue;
+        NSArray<NSNumber *> *localIdentifiers = params[@"local"];
         
-        LookinAppsFetchScreenshotType screenshotType = [[params objectForKey:@"screenshotType"] integerValue];
-        NSArray<LookinAppInfo *> *appInfos = [params objectForKey:@"appInfos"];
-        LookinAppInfo *appInfo = [LookinAppInfo currentInfoWithScreenshotType:screenshotType appInfos:appInfos];
+        LookinAppInfo *appInfo = [LookinAppInfo currentInfoWithScreenshot:needImages icon:needImages localIdentifiers:localIdentifiers];
         
         LookinConnectionResponseAttachment *responseAttachment = [LookinConnectionResponseAttachment new];
         responseAttachment.data = appInfo;
@@ -146,14 +155,16 @@
         [self _submitResponseWithData:list requestType:LookinRequestTypeAllAttrGroups tag:tag];
         
     } else if (requestType == LookinRequestTypeAllSelectorNames) {
-        Class targetClass = NSClassFromString(object);
+        NSDictionary *params = object;
+        Class targetClass = NSClassFromString(params[@"className"]);
+        BOOL hasArg = [(NSNumber *)params[@"hasArg"] boolValue];
         if (!targetClass) {
             NSString *errorMsg = [NSString stringWithFormat:LKS_Localized(@"Didn't find the class named \"%@\". Please input another class and try again."), object];
             [self _submitResponseWithError:LookinErrorMake(errorMsg, @"") requestType:requestType tag:tag];
             return;
         }
         
-        NSArray<NSString *> *selNames = [self _methodNameListForClass:targetClass];
+        NSArray<NSString *> *selNames = [self _methodNameListForClass:targetClass hasArg:hasArg];
         [self _submitResponseWithData:selNames requestType:requestType tag:tag];
         
     } else if (requestType == LookinRequestTypeAddMethodTrace) {
@@ -174,7 +185,7 @@
         
         SEL targetSelector = NSSelectorFromString(selName);
         if (class_getInstanceMethod(targetClass, targetSelector) == NULL) {
-            NSString *errorMsg = [NSString stringWithFormat:LKS_Localized(@"%@ doesn't have a method called %@. Please input another method name and try again."), className, selName];
+            NSString *errorMsg = [NSString stringWithFormat:LKS_Localized(@"%@ doesn't have a method called \"%@\". Please input another method name and try again."), className, selName];
             [self _submitResponseWithError:LookinErrorMake(errorMsg, @"") requestType:requestType tag:tag];
             return;
         }
@@ -232,16 +243,58 @@
             }
             [self _submitResponseWithData:responseData requestType:requestType tag:tag];
         } else {
-            NSString *errMsg = [NSString stringWithFormat:LKS_Localized(@"%@ doesn't have an instance method called %@."), NSStringFromClass(targerObj.class), text];
+            NSString *errMsg = [NSString stringWithFormat:LKS_Localized(@"%@ doesn't have an instance method called \"%@\"."), NSStringFromClass(targerObj.class), text];
             [self _submitResponseWithError:LookinErrorMake(errMsg, @"") requestType:requestType tag:tag];
         }
         
     } else if (requestType == LookinPush_BringForwardScreenshotTask) {
         [[LKS_HierarchyDetailsHandler sharedInstance] bringForwardWithPackages:object];
+    
+    } else if (requestType == LookinPush_CanceHierarchyDetails) {
+        [[LKS_HierarchyDetailsHandler sharedInstance] cancel];
+        
+    } else if (requestType == LookinRequestTypeFetchImageViewImage) {
+        if (![object isKindOfClass:[NSNumber class]]) {
+            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
+            return;
+        }
+        unsigned long imageViewOid = [(NSNumber *)object unsignedLongValue];
+        UIImageView *imageView = (UIImageView *)[NSObject lks_objectWithOid:imageViewOid];
+        if (!imageView) {
+            [self _submitResponseWithError:LookinErr_ObjNotFound requestType:requestType tag:tag];
+            return;
+        }
+        if (![imageView isKindOfClass:[UIImageView class]]) {
+            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
+            return;
+        }
+        UIImage *image = imageView.image;
+        NSData *imageData = [image lookin_data];
+        [self _submitResponseWithData:imageData requestType:requestType tag:tag];
+    
+    } else if (requestType == LookinRequestTypeModifyRecognizerEnable) {
+        NSDictionary<NSString *, NSNumber *> *params = object;
+        unsigned long recognizerOid = ((NSNumber *)params[@"oid"]).unsignedLongValue;
+        BOOL shouldBeEnabled = ((NSNumber *)params[@"enable"]).boolValue;
+        
+        UIGestureRecognizer *recognizer = (UIGestureRecognizer *)[NSObject lks_objectWithOid:recognizerOid];
+        if (!recognizer) {
+            [self _submitResponseWithError:LookinErr_ObjNotFound requestType:requestType tag:tag];
+            return;
+        }
+        if (![recognizer isKindOfClass:[UIGestureRecognizer class]]) {
+            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
+            return;
+        }
+        recognizer.enabled = shouldBeEnabled;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // dispatch 以确保拿到的 enabled 是比较新的
+            [self _submitResponseWithData:@(recognizer.enabled) requestType:requestType tag:tag];
+        });
     }
 }
 
-- (NSArray<NSString *> *)_methodNameListForClass:(Class)aClass {
+- (NSArray<NSString *> *)_methodNameListForClass:(Class)aClass hasArg:(BOOL)hasArg {
     NSSet<NSString *> *prefixesToVoid = [NSSet setWithObjects:@"_", @"CA_", @"cpl", @"mf_", @"vs_", @"pep_", @"isNS", @"avkit_", @"PG_", @"px_", @"pl_", @"nsli_", @"pu_", @"pxg_", nil];
     NSMutableArray<NSString *> *array = [NSMutableArray array];
     
@@ -254,6 +307,10 @@
         Method *methods = class_copyMethodList(currentClass, &methodCount);
         for (unsigned int i = 0; i < methodCount; i++) {
             NSString *selName = NSStringFromSelector(method_getName(methods[i]));
+            
+            if (!hasArg && [selName containsString:@":"]) {
+                continue;
+            }
             
             if (isSystemClass) {
                 BOOL invalid = [prefixesToVoid lookin_any:^BOOL(NSString *prefix) {
@@ -291,7 +348,8 @@
     
     if (strcmp(returnType, @encode(void)) == 0) {
         //void, do nothing
-
+        *description = LookinStringFlag_VoidReturn;
+        
     } else if (strcmp(returnType, @encode(char)) == 0) {
         char charValue;
         [invocation getReturnValue:&charValue];
@@ -502,3 +560,5 @@
 }
 
 @end
+
+#endif

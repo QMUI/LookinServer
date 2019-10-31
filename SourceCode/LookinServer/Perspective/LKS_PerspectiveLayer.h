@@ -2,9 +2,11 @@
 //  LKS_PerspectiveLayer.h
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/17.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <QuartzCore/QuartzCore.h>
 #import "LKS_PerspectiveDataSource.h"
@@ -26,3 +28,5 @@ typedef NS_ENUM (NSUInteger, LKS_PerspectiveDimension) {
 - (void)setRotation:(CGFloat)rotation animated:(BOOL)animated completion:(void (^)(void))completionBlock;
 
 @end
+
+#endif

@@ -2,11 +2,14 @@
 //  LKS_PerspectiveManager.m
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/17.
+//  https://lookin.work
 //
 
 #import "LKS_PerspectiveManager.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_PerspectiveViewController.h"
 #import "UIViewController+LookinServer.h"
 #import "LookinHierarchyInfo.h"
@@ -162,3 +165,5 @@
 }
 
 @end
+
+#endif

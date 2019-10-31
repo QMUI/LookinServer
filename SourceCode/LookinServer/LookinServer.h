@@ -2,8 +2,8 @@
 //  LookinServer.h
 //  LookinServer
 //
-//  
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/7/20.
+//  https://lookin.work
 //
 
 #ifndef LookinServer_h

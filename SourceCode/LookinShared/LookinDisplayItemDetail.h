@@ -2,8 +2,11 @@
 //  LookinDisplayItemDetail.h
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/2/19.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 
@@ -17,10 +20,6 @@
 
 @property(nonatomic, strong) LookinImage *soloScreenshot;
 
-@property(nonatomic, strong) NSError *groupScreenshotError;
-@property(nonatomic, strong) NSError *soloScreenshotError;
-@property(nonatomic, strong) NSError *attrGroupsError;
-
 @property(nonatomic, strong) NSValue *frameValue;
 
 @property(nonatomic, strong) NSValue *boundsValue;
@@ -32,3 +31,5 @@
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *attributesGroupList;
 
 @end
+
+#endif

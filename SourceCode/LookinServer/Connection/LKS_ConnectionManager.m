@@ -1,13 +1,16 @@
 //
-//  LKS_ConnectionManager.m
+//  LookinServer.m
 //  LookinServer
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/8/5.
+//  https://lookin.work
 //
 
 #import "LKS_ConnectionManager.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "PTChannel.h"
-#import "LookinDefines.h"
 #import "LKS_RequestHandler.h"
 #import "LookinConnectionResponseAttachment.h"
 #import "LKS_LocalInspectManager.h"
@@ -36,6 +39,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 + (void)load {
+    // 触发 init 方法
     [LKS_ConnectionManager sharedInstance];
 }
 
@@ -62,6 +66,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 - (void)_handleApplicationDidBecomeActive {
+//    NSLog(@"LookinServer(0.8.0) - UIApplicationDidBecomeActiveNotification");
     self.applicationIsActive = YES;
     if (self.peerChannel_ && (self.peerChannel_.isConnected || self.peerChannel_.isListening)) {
         return;
@@ -97,6 +102,9 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         } else {
             // 成功
             NSLog(@"LookinServer - Connected successfully on 127.0.0.1:%d", currentPort);
+        
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@", @(currentPort)] message:nil preferredStyle:UIAlertControllerStyleAlert];
+//            [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
         }
     }];
 }
@@ -159,6 +167,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     [self.requestHandler handleRequestType:type tag:tag object:object];
 }
 
+/// 当连接过 Lookin 客户端，然后 Lookin 客户端又被关闭时，会走到这里
 - (void)ioFrameChannel:(PTChannel*)channel didEndWithError:(NSError*)error {
     [[NSNotificationCenter defaultCenter] postNotificationName:LKS_ConnectionDidEndNotificationName object:self];
 }
@@ -252,6 +261,8 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 
 @end
 
+/// 这个类使得用户可以通过 NSClassFromString(@"Lookin") 来判断 LookinServer 是否被编译进了项目里
+
 @interface Lookin : NSObject
 
 @end
@@ -259,3 +270,5 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 @implementation Lookin
 
 @end
+
+#endif

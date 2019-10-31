@@ -2,10 +2,13 @@
 //  UIColor+LookinServer.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/6/5.
+//  https://lookin.work
 //
 
 #import "UIColor+LookinServer.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 @implementation UIColor (LookinServer)
 
@@ -23,6 +26,11 @@
         g = components[0];
         b = components[0];
         a = components[1];
+    } else if (CGColorGetNumberOfComponents(cgColor) == 1) {
+        r = components[0];
+        g = components[0];
+        b = components[0];
+        a = components[0];
     } else {
         r = 0;
         g = 0;
@@ -162,3 +170,5 @@
 
 
 @end
+
+#endif

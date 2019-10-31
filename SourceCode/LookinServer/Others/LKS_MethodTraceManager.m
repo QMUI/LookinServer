@@ -2,11 +2,14 @@
 //  LKS_MethodTraceManager.m
 //  LookinServer
 //
-//  
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/22.
+//  https://lookin.work
 //
 
 #import "LKS_MethodTraceManager.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "LKS_connectionManager.h"
@@ -19,7 +22,7 @@ static NSArray<NSString *> *LKS_ArgumentsDescriptionsFromInvocation(NSInvocation
     NSMethodSignature *signature = [invocation methodSignature];
     NSUInteger argsCount = signature.numberOfArguments;
     
-    NSArray<NSString *> *strings = [NSArray arrayWithCount:(argsCount - 2) block:^id(NSUInteger idx) {
+    NSArray<NSString *> *strings = [NSArray lookin_arrayWithCount:(argsCount - 2) block:^id(NSUInteger idx) {
         NSUInteger argIdx = idx + 2;
         
         const char *argType = [signature getArgumentTypeAtIndex:argIdx];
@@ -276,7 +279,7 @@ static void Lookin_PleaseRemoveMethodTraceInLookinAppIfCrashHere(Class targetCla
                 NSString *invocationSelName = NSStringFromSelector(invocation.selector);
                 isHookedSel = [obj containsObject:invocationSelName];
                 
-                NSArray<NSString *> *activeSels = [[LKS_ActiveList() firstFiltered:^BOOL(NSDictionary<NSString *,id> *obj) {
+                NSArray<NSString *> *activeSels = [[LKS_ActiveList() lookin_firstFiltered:^BOOL(NSDictionary<NSString *,id> *obj) {
                     return [obj[kActiveListKey_Class] isEqualToString:enumeratedClassName];
                 }] objectForKey:kActiveListKey_Sels];
                 shouldNotify = [activeSels lookin_any:^BOOL(NSString *obj) {
@@ -389,7 +392,7 @@ static void Lookin_PleaseRemoveMethodTraceInLookinAppIfCrashHere(Class targetCla
 - (BOOL)_addToActiveListWithClassName:(NSString *)targetClassName selName:(NSString *)targetSelName {
     __block BOOL addSuccessfully = YES;
     
-    NSDictionary *activeList_dict = [LKS_ActiveList() firstFiltered:^BOOL(NSDictionary<NSString *,id> *obj) {
+    NSDictionary *activeList_dict = [LKS_ActiveList() lookin_firstFiltered:^BOOL(NSDictionary<NSString *,id> *obj) {
         return [obj[kActiveListKey_Class] isEqualToString:targetClassName];
     }];
     if (activeList_dict) {
@@ -458,3 +461,5 @@ static void Lookin_PleaseRemoveMethodTraceInLookinAppIfCrashHere(Class targetCla
 }
 
 @end
+
+#endif

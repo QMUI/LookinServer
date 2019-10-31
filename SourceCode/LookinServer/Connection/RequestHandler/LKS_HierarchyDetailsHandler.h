@@ -2,8 +2,11 @@
 //  LKS_HierarchyDetailsHandler.h
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/6/20.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 
@@ -20,4 +23,9 @@ typedef void (^LKS_HierarchyDetailsHandler_Block)(NSArray<LookinDisplayItemDetai
 
 - (void)bringForwardWithPackages:(NSArray<LookinStaticAsyncUpdateTasksPackage *> *)packages;
 
+/// 取消所有任务
+- (void)cancel;
+
 @end
+
+#endif

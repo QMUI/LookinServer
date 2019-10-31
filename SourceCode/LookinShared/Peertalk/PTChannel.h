@@ -1,3 +1,5 @@
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 //
 // Represents a communication channel between two endpoints talking the same
 // PTProtocol.
@@ -124,3 +126,5 @@
 - (void)ioFrameChannel:(PTChannel*)channel didAcceptConnection:(PTChannel*)otherChannel fromAddress:(PTAddress*)address;
 
 @end
+
+#endif

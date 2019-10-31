@@ -2,11 +2,14 @@
 //  LKS_PerspectiveHierarchyView.m
 //  LookinServer
 //
-//  
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/12/24.
+//  https://lookin.work
 //
 
 #import "LKS_PerspectiveHierarchyView.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_PerspectiveHierarchyCell.h"
 #import "LookinDisplayItem.h"
 
@@ -198,3 +201,4 @@
 
 @end
 
+#endif

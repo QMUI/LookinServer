@@ -2,8 +2,11 @@
 //  LookinAttrIdentifiers.h
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/12/1.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 typedef NS_ENUM(NSInteger, LookinAttrType) {
     LookinAttrTypeNone,
@@ -35,6 +38,8 @@ typedef NS_ENUM(NSInteger, LookinAttrType) {
     LookinAttrTypeEnumLong,
     /// value 实际为 RGBA 数组，即 @[NSNumber, NSNumber, NSNumber, NSNumber]，NSNumber 范围是 0 ~ 1
     LookinAttrTypeUIColor,
-    /// 业务需要根据具体的 AttrType 来解析
-    LookinAttrTypeCustom,
+    /// 业务需要根据具体的 AttrIdentifier 来解析
+    LookinAttrTypeCustomObj,
 };
+
+#endif

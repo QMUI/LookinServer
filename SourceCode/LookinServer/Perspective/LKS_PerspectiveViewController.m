@@ -2,11 +2,14 @@
 //  LKS_PerspectiveViewController.m
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/17.
+//  https://lookin.work
 //
 
 #import "LKS_PerspectiveViewController.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_PerspectiveDataSource.h"
 #import "LKS_PerspectiveLayer.h"
 #import "LKS_PerspectiveHierarchyView.h"
@@ -440,3 +443,5 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
 }
 
 @end
+
+#endif

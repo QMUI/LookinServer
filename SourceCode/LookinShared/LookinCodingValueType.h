@@ -2,8 +2,11 @@
 //  LookinCodingValueType.h
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/2/13.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 typedef NS_ENUM(NSInteger, LookinCodingValueType) {
     LookinCodingValueTypeUnknown,
@@ -23,3 +26,5 @@ typedef NS_ENUM(NSInteger, LookinCodingValueType) {
 //    LookinCodingValueTypeRange,
     LookinCodingValueTypeImage
 };
+
+#endif

@@ -2,10 +2,14 @@
 //  LKS_ExportManager.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/13.
+//  https://lookin.work
 //
 
 #import "LKS_ExportManager.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "UIViewController+LookinServer.h"
 #import "LookinHierarchyInfo.h"
 #import "LookinHierarchyFile.h"
@@ -126,6 +130,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         LookinHierarchyInfo *info = [LookinHierarchyInfo exportedInfo];
         LookinHierarchyFile *file = [LookinHierarchyFile new];
+        file.serverVersion = info.serverVersion;
         file.hierarchyInfo = info;
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:file];
         if (!data) {
@@ -175,3 +180,5 @@
 }
 
 @end
+
+#endif

@@ -2,12 +2,19 @@
 //  LookinIvarTrace.m
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/4/30.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinIvarTrace.h"
 
+NSString *const LookinIvarTraceRelationValue_Self = @"self";
+
 @implementation LookinIvarTrace
+
+#pragma mark - Equal
 
 - (NSUInteger)hash {
     return self.hostClassName.hash ^ self.ivarName.hash;
@@ -27,13 +34,27 @@
     return NO;
 }
 
+#pragma mark - <NSCopying>
+    
+- (id)copyWithZone:(NSZone *)zone {
+    LookinIvarTrace *newTrace = [[LookinIvarTrace allocWithZone:zone] init];
+    newTrace.relation = self.relation;
+    newTrace.hostClassName = self.hostClassName;
+    newTrace.ivarName = self.ivarName;
+    return newTrace;
+}
+
+#pragma mark - <NSCoding>
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.relation forKey:@"relation"];
     [aCoder encodeObject:self.hostClassName forKey:@"hostClassName"];
     [aCoder encodeObject:self.ivarName forKey:@"ivarName"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
+        self.relation = [aDecoder decodeObjectForKey:@"relation"];
         self.hostClassName = [aDecoder decodeObjectForKey:@"hostClassName"];
         self.ivarName = [aDecoder decodeObjectForKey:@"ivarName"];
     }
@@ -45,3 +66,5 @@
 }
 
 @end
+
+#endif

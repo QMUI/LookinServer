@@ -2,8 +2,11 @@
 //  LookinConnectionAttachment.m
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/2/15.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinConnectionAttachment.h"
 #import "LookinDefines.h"
@@ -42,3 +45,5 @@ static NSString * const Key_DataType = @"1";
 }
 
 @end
+
+#endif

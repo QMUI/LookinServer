@@ -2,8 +2,13 @@
 //  UIView+LookinServer.h
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/3/19.
+//  https://lookin.work
 //
+
+#import "LookinDefines.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <UIKit/UIKit.h>
 
@@ -21,4 +26,19 @@
 - (CGFloat)lks_bestHeight;
 - (CGSize)lks_bestSize;
 
+@property(nonatomic, assign) float lks_horizontalContentHuggingPriority;
+@property(nonatomic, assign) float lks_verticalContentHuggingPriority;
+
+@property(nonatomic, assign) float lks_horizontalContentCompressionResistancePriority;
+@property(nonatomic, assign) float lks_verticalContentCompressionResistancePriority;
+
+/// 遍历全局的 view 并给他们设置 lks_involvedRawConstraints 属性
++ (void)lks_rebuildGlobalInvolvedRawConstraints;
+/// 该属性保存了牵扯到当前 view 的所有 constraints，包括那些没有生效的
+@property(nonatomic, strong) NSMutableArray<NSLayoutConstraint *> *lks_involvedRawConstraints;
+
+- (NSArray<NSDictionary<NSString *, id> *> *)lks_constraints;
+
 @end
+
+#endif

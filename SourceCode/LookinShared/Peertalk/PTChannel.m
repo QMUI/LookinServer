@@ -1,4 +1,7 @@
 #import "PTChannel.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "PTPrivate.h"
 
 #include <sys/ioctl.h>
@@ -632,3 +635,4 @@ static const uint8_t kUserInfoKey;
 
 @end
 
+#endif

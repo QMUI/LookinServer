@@ -2,10 +2,14 @@
 //  LKS_TraceManager.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/5.
+//  https://lookin.work
 //
 
 #import "LKS_TraceManager.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import <Objc/runtime.h>
 #import "LookinIvarTrace.h"
 #import "LKS_LocalInspectManager.h"
@@ -73,27 +77,30 @@
         } else {
             view.lks_specialTrace = [NSString stringWithFormat:@"WindowLevel: %@", @(currentWindowLevel)];
         }
-    } else if ([view isKindOfClass:[UICollectionViewCell class]]) {
-        ((UICollectionViewCell *)view).contentView.lks_specialTrace = @"cell.contentView";
-        
     } else if ([view isKindOfClass:[UITableViewCell class]]) {
         ((UITableViewCell *)view).backgroundView.lks_specialTrace = @"cell.backgroundView";
-        ((UITableViewCell *)view).contentView.lks_specialTrace = @"cell.contentView";
-        ((UITableViewCell *)view).textLabel.lks_specialTrace = @"cell.textLabel";
-        ((UITableViewCell *)view).detailTextLabel.lks_specialTrace = @"cell.detailTextLabel";
-        ((UITableViewCell *)view).imageView.lks_specialTrace = @"cell.imageView";
         ((UITableViewCell *)view).accessoryView.lks_specialTrace = @"cell.accessoryView";
-    }
-
-    if ([view isKindOfClass:[UITableView class]]) {
+    
+    } else if ([view isKindOfClass:[UITableView class]]) {
         UITableView *tableView = (UITableView *)view;
-        tableView.backgroundView.lks_specialTrace = @"tableView.backgroundView";
-        tableView.tableHeaderView.lks_specialTrace = @"tableHeaderView";
-        tableView.tableFooterView.lks_specialTrace = @"tableFooterView";
         
+        NSMutableArray<NSNumber *> *relatedSectionIdx = [NSMutableArray array];
         [[tableView visibleCells] enumerateObjectsUsingBlock:^(__kindof UITableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
             NSIndexPath *indexPath = [tableView indexPathForCell:cell];
             cell.lks_specialTrace = [NSString stringWithFormat:@"{ sec:%@, row:%@ }", @(indexPath.section), @(indexPath.row)];
+            
+            if (![relatedSectionIdx containsObject:@(indexPath.section)]) {
+                [relatedSectionIdx addObject:@(indexPath.section)];
+            }
+        }];
+        
+        [relatedSectionIdx enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSUInteger secIdx = [obj unsignedIntegerValue];
+            UIView *secHeaderView = [tableView headerViewForSection:secIdx];
+            secHeaderView.lks_specialTrace = [NSString stringWithFormat:@"sectionHeader { sec: %@ }", @(secIdx)];
+            
+            UIView *secFooterView = [tableView footerViewForSection:secIdx];
+            secFooterView.lks_specialTrace = [NSString stringWithFormat:@"sectionFooter { sec: %@ }", @(secIdx)];
         }];
         
     } else if ([view isKindOfClass:[UICollectionView class]]) {
@@ -113,16 +120,13 @@
         
         [[collectionView visibleCells] enumerateObjectsUsingBlock:^(__kindof UICollectionViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
             NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
-            cell.lks_specialTrace = [NSString stringWithFormat:@"{ sec:%@, item:%@ }", @(indexPath.section), @(indexPath.item)];
+            cell.lks_specialTrace = [NSString stringWithFormat:@"{ item:%@, sec:%@ }", @(indexPath.item), @(indexPath.section)];
         }];
         
     } else if ([view isKindOfClass:[UITableViewHeaderFooterView class]]) {
         UITableViewHeaderFooterView *headerFooterView = (UITableViewHeaderFooterView *)view;
-        headerFooterView.lks_specialTrace = @"sectionHeaderFooter";
         headerFooterView.textLabel.lks_specialTrace = @"sectionHeaderFooter.textLabel";
         headerFooterView.detailTextLabel.lks_specialTrace = @"sectionHeaderFooter.detailTextLabel";
-        headerFooterView.contentView.lks_specialTrace = @"sectionHeaderFooter.contentView";
-        headerFooterView.backgroundView.lks_specialTrace = @"sectionHeaderFooter.backgroundView";
     }
 }
 
@@ -130,7 +134,7 @@
     [self _markIVarsOfObject:object class:object.class];
 }
 
-- (void)_markIVarsOfObject:(NSObject *)object class:(Class)targetClass {
+- (void)_markIVarsOfObject:(NSObject *)hostObject class:(Class)targetClass {
     if (!targetClass) {
         return;
     }
@@ -153,37 +157,56 @@
         }
         NSString *ivarClassName = [ivarType substringWithRange:NSMakeRange(2, ivarType.length - 3)];
         Class ivarClass = NSClassFromString(ivarClassName);
-        if (![ivarClass isSubclassOfClass:[UIView class]] && ![ivarClass isSubclassOfClass:[CALayer class]] && ![ivarClass isSubclassOfClass:[UIViewController class]]) {
+        if (![ivarClass isSubclassOfClass:[UIView class]]
+            && ![ivarClass isSubclassOfClass:[CALayer class]]
+            && ![ivarClass isSubclassOfClass:[UIViewController class]]
+            && ![ivarClass isSubclassOfClass:[UIGestureRecognizer class]]) {
             continue;
         }
         const char * ivarNameChar = ivar_getName(ivar);
         if (!ivarNameChar) {
             continue;
         }
-        NSObject *ivar_viewLayerOrController = object_getIvar(object, ivar);
-        if (!ivar_viewLayerOrController) {
+        // 这个 ivarObject 可能的类型：UIView, CALayer, UIViewController, UIGestureRecognizer
+        NSObject *ivarObject = object_getIvar(hostObject, ivar);
+        if (!ivarObject) {
             continue;
         }
 
         LookinIvarTrace *ivarTrace = [LookinIvarTrace new];
+        ivarTrace.hostObject = hostObject;
         ivarTrace.hostClassName = NSStringFromClass(targetClass);
         ivarTrace.ivarName = [[NSString alloc] lookin_safeInitWithUTF8String:ivarNameChar];
+        
+        if (hostObject == ivarObject) {
+            ivarTrace.relation = LookinIvarTraceRelationValue_Self;
+        } else if ([hostObject isKindOfClass:[UIView class]]) {
+            CALayer *ivarLayer = nil;
+            if ([ivarObject isKindOfClass:[CALayer class]]) {
+                ivarLayer = (CALayer *)ivarObject;
+            } else if ([ivarObject isKindOfClass:[UIView class]]) {
+                ivarLayer = ((UIView *)ivarObject).layer;
+            }
+            if (ivarLayer && (ivarLayer.superlayer == ((UIView *)hostObject).layer)) {
+                ivarTrace.relation = @"superview";
+            }
+        }
 
         if ([LKS_InvalidIvarTraces() containsObject:ivarTrace]) {
             continue;
         }
         
-        if (!ivar_viewLayerOrController.lks_ivarTraces) {
-            ivar_viewLayerOrController.lks_ivarTraces = [NSArray array];
+        if (!ivarObject.lks_ivarTraces) {
+            ivarObject.lks_ivarTraces = [NSArray array];
         }
-        if (![ivar_viewLayerOrController.lks_ivarTraces containsObject:ivarTrace]) {
-            ivar_viewLayerOrController.lks_ivarTraces = [ivar_viewLayerOrController.lks_ivarTraces arrayByAddingObject:ivarTrace];
+        if (![ivarObject.lks_ivarTraces containsObject:ivarTrace]) {
+            ivarObject.lks_ivarTraces = [ivarObject.lks_ivarTraces arrayByAddingObject:ivarTrace];
         }
     }
     free(ivars);
     
     Class superClass = [targetClass superclass];
-    [self _markIVarsOfObject:object class:superClass];
+    [self _markIVarsOfObject:hostObject class:superClass];
 }
 
 static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces() {
@@ -222,3 +245,5 @@ static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces() {
 }
 
 @end
+
+#endif

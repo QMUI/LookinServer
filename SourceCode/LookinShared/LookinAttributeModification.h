@@ -2,8 +2,11 @@
 //  LookinAttributeModification.h
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/11/20.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 #import "LookinAttrType.h"
@@ -19,3 +22,5 @@
 @property(nonatomic, strong) id value;
 
 @end
+
+#endif

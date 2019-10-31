@@ -2,8 +2,11 @@
 //  CALayer+Lookin.m
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/8/4.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "CALayer+Lookin.h"
 
@@ -61,3 +64,5 @@
 }
 
 @end
+
+#endif

@@ -2,16 +2,16 @@
   Localizable.strings
   Lookin
 
-  
-  Copyright © 2019 hughkli. All rights reserved.
+  Created by 李凯 on 2019/7/20.
+  https://lookin.work
 */
 "Tap or swipe to inspect" = "Tap or swipe to inspect";
 "Exit" = "Exit";
 "Didn't find the class named \"%@\". Please input another class and try again." = "Didn't find the class named \"%@\". Please input another class and try again.";
-"%@ doesn't have a method called %@. Please input another method name and try again." = "%@ doesn't have a method called %@. Please input another method name and try again.";
+"%@ doesn't have a method called \"%@\". Please input another method name and try again." = "%@ doesn't have a method called \"%@\". Please input another method name and try again.";
 "Lookin doesn't support invoking methods with arguments yet." = "Lookin doesn't support invoking methods with arguments yet.";
 "%@ was invoked successfully, but Lookin can't parse the return value:%@" = "%@ was invoked successfully, but Lookin can't parse the return value:%@";
-"%@ doesn't have an instance method called %@." = "%@ doesn't have an instance method called %@.";
+"%@ doesn't have an instance method called \"%@\"." = "%@ doesn't have an instance method called \"%@\".";
 "<%@: %p>: an exception was raised when invoking %@. (%@)" = "<%@: %p>: an exception was raised when invoking %@. (%@)";
 "The modification may failed." = "The modification may failed.";
 "Creating File…" = "Creating File…";

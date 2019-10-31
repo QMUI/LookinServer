@@ -1,9 +1,14 @@
 //
-//  CALayer+LookinServer.h
+//  UIView+LookinMobile.h
+//  WeRead
 //
-//
+//  Created by Li Kai on 2018/11/30.
 //  Copyright © 2018 tencent. All rights reserved.
 //
+
+#import "LookinDefines.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "TargetConditionals.h"
 #import <UIKit/UIKit.h>
@@ -25,6 +30,11 @@
 /// 当没有 sublayers 时，该方法返回 nil
 - (UIImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality;
 
+/// 获取和该对象有关的对象的 Class 层级树
+- (NSArray<NSArray<NSString *> *> *)lks_relatedClassChainList;
+
+- (NSArray<NSString *> *)lks_selfRelation;
+
 @property(nonatomic, strong) UIColor *lks_backgroundColor;
 @property(nonatomic, strong) UIColor *lks_borderColor;
 @property(nonatomic, strong) UIColor *lks_shadowColor;
@@ -32,3 +42,5 @@
 @property(nonatomic, assign) CGFloat lks_shadowOffsetHeight;
 
 @end
+
+#endif

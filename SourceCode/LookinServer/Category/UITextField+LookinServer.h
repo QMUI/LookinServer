@@ -2,8 +2,11 @@
 //  UITextField+LookinServer.h
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/2/26.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <UIKit/UIKit.h>
 
@@ -11,4 +14,8 @@
 
 @property(nonatomic, assign) CGFloat lks_fontSize;
 
+- (NSString *)lks_fontName;
+
 @end
+
+#endif

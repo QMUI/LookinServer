@@ -2,10 +2,14 @@
 //  NSObject+LookinServer.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/4/21.
+//  https://lookin.work
 //
 
 #import "NSObject+LookinServer.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_ObjectRegistry.h"
 #import <objc/runtime.h>
 
@@ -13,12 +17,12 @@
 
 #pragma mark - oid
 
-- (void)lks_registerOid {
-    if (self.lks_oid) {
-        return;
+- (unsigned long)lks_registerOid {
+    if (!self.lks_oid) {
+        unsigned long oid = [[LKS_ObjectRegistry sharedInstance] addObject:self];
+        self.lks_oid = oid;
     }
-    unsigned long oid = [[LKS_ObjectRegistry sharedInstance] addObject:self];
-    self.lks_oid = oid;
+    return self.lks_oid;
 }
 
 - (void)setLks_oid:(unsigned long)lks_oid {
@@ -75,11 +79,14 @@
     return lks_allObjectsWithTraces;
 }
 
-- (NSArray<NSString *> *)lks_classChainList {
+- (NSArray<NSString *> *)lks_classChainListWithSwiftPrefix:(BOOL)hasSwiftPrefix {
     NSMutableArray<NSString *> *classChainList = [NSMutableArray array];
     Class currentClass = self.class;
+    
     while (currentClass) {
-        NSString *currentClassName = NSStringFromClass(currentClass);
+        NSString *rawClassName = NSStringFromClass(currentClass);
+        
+        NSString *currentClassName = hasSwiftPrefix ? rawClassName : [rawClassName lookin_shortClassNameString];
         if (currentClassName) {
             [classChainList addObject:currentClassName];
         }
@@ -88,4 +95,12 @@
     return classChainList.copy;
 }
 
+- (NSString *)lks_shortClassName {
+    NSString *rawName = NSStringFromClass([self class]);
+    NSString *shortName = [rawName lookin_shortClassNameString];
+    return shortName;
+}
+
 @end
+
+#endif

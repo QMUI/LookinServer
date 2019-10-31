@@ -2,10 +2,17 @@
 //  LookinDisplayItemDetail.m
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/2/19.
+//  https://lookin.work
 //
 
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LookinDisplayItemDetail.h"
+
+#if TARGET_OS_IPHONE
+#import "UIImage+LookinServer.h"
+#endif
 
 @implementation LookinDisplayItemDetail
 
@@ -13,9 +20,6 @@
     [aCoder encodeObject:@(self.displayItemOid) forKey:@"displayItemOid"];
     [aCoder encodeObject:self.groupScreenshot.lookin_data forKey:@"groupScreenshot"];
     [aCoder encodeObject:self.soloScreenshot.lookin_data forKey:@"soloScreenshot"];
-    [aCoder encodeObject:self.groupScreenshotError forKey:@"groupScreenshotError"];
-    [aCoder encodeObject:self.soloScreenshotError forKey:@"soloScreenshotError"];
-    [aCoder encodeObject:self.attrGroupsError forKey:@"attrGroupsError"];
     [aCoder encodeObject:self.frameValue forKey:@"frameValue"];
     [aCoder encodeObject:self.boundsValue forKey:@"boundsValue"];
     [aCoder encodeObject:self.hiddenValue forKey:@"hiddenValue"];
@@ -28,9 +32,6 @@
         self.displayItemOid = [[aDecoder decodeObjectForKey:@"displayItemOid"] unsignedLongValue];
         self.groupScreenshot = [[LookinImage alloc] initWithData:[aDecoder decodeObjectForKey:@"groupScreenshot"]];
         self.soloScreenshot = [[LookinImage alloc] initWithData:[aDecoder decodeObjectForKey:@"soloScreenshot"]];
-        self.groupScreenshotError = [aDecoder decodeObjectForKey:@"groupScreenshotError"];
-        self.soloScreenshotError = [aDecoder decodeObjectForKey:@"soloScreenshotError"];
-        self.attrGroupsError = [aDecoder decodeObjectForKey:@"attrGroupsError"];
         self.frameValue = [aDecoder decodeObjectForKey:@"frameValue"];
         self.boundsValue = [aDecoder decodeObjectForKey:@"boundsValue"];
         self.hiddenValue = [aDecoder decodeObjectForKey:@"hiddenValue"];
@@ -45,3 +46,5 @@
 }
 
 @end
+
+#endif

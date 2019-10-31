@@ -1,4 +1,7 @@
 #import "PTUSBHub.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "PTPrivate.h"
 
 #include <netinet/in.h>
@@ -665,3 +668,5 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 }
 
 @end
+
+#endif

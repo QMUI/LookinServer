@@ -2,8 +2,11 @@
 //  LookinStaticAsyncUpdateTask.m
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/6/21.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinStaticAsyncUpdateTask.h"
 
@@ -64,3 +67,5 @@
 }
 
 @end
+
+#endif

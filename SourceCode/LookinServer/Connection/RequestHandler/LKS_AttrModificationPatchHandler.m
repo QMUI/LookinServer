@@ -2,10 +2,14 @@
 //  LKS_AttrModificationPatchHandler.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/6/12.
+//  https://lookin.work
 //
 
 #import "LKS_AttrModificationPatchHandler.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LookinDisplayItemDetail.h"
 
 @implementation LKS_AttrModificationPatchHandler
@@ -43,3 +47,5 @@
 }
 
 @end
+
+#endif

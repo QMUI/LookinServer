@@ -1,8 +1,14 @@
 //
-//  LookinDefine.h
+//  LookinMessageProtocol.h
+//  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/8/6.
+//  https://lookin.work
 //
+
+#import "LookinCompileConfiguration.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "TargetConditionals.h"
 #if TARGET_OS_IPHONE
@@ -16,20 +22,27 @@
 #pragma mark - Version
 
 /// 当前 LookinServer 的版本
-static const int LOOKIN_SERVER_VERSION = 6;
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"0.9.4";
+static const int LOOKIN_SERVER_VERSION = 8;
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"0.9.5";
 
 /// 当前 LookinClient 的版本
-static const int LOOKIN_CLIENT_VERSION = 6;
+static const int LOOKIN_CLIENT_VERSION = 8;
 
 /// 当前 LookinServer 和 LookinClient 是否是内部实验版本
 static BOOL LOOKIN_SERVER_IS_EXPERIMENTAL = NO;
 static BOOL LOOKIN_CLIENT_IS_EXPERIMENTAL = NO;
 
 /// 当前 Lookin 客户端所支持的 LookinServer 的最低版本
-static const int LOOKIN_SUPPORTED_SERVER_MIN = 6;
+static const int LOOKIN_SUPPORTED_SERVER_MIN = 8;
 /// 当前 Lookin 客户端所支持的 LookinServer 的最高版本
-static const int LOOKIN_SUPPORTED_SERVER_MAX = 6;
+static const int LOOKIN_SUPPORTED_SERVER_MAX = 8;
+
+/// 标记该 LookinServer 是通过什么方式安装的，0:未知，1:CocoaPods，2:手动，3:源代码，4:断点
+static const int LOOKIN_SERVER_SETUP_TYPE = 3;
+
+#pragma mark - Links
+
+static NSString * const LOOKIN_SERVER_FRAMEWORK_URL = @"https://lookin.work/download/framework/LookinServer-0-9-4.zip";
 
 #pragma mark - Connection
 
@@ -37,7 +50,7 @@ static const int LOOKIN_SUPPORTED_SERVER_MAX = 6;
 static const int LookinUSBDeviceIPv4PortNumberStart = 47175;
 static const int LookinUSBDeviceIPv4PortNumberEnd = 47179;
 
-/// LookinServer 在模拟器中会依次尝试监听 47164 ~ 47179 这几个端口
+/// LookinServer 在模拟器中会依次尝试监听 47164 ~ 47169 这几个端口
 static const int LookinSimulatorIPv4PortNumberStart = 47164;
 static const int LookinSimulatorIPv4PortNumberEnd = 47169;
 
@@ -62,6 +75,10 @@ enum {
      */
     LookinRequestTypeFetchObject = 207,
     
+    LookinRequestTypeFetchImageViewImage = 208,
+    
+    LookinRequestTypeModifyRecognizerEnable = 209,
+    
     /// 请求 attribute group list
     LookinRequestTypeAllAttrGroups = 210,
     
@@ -77,6 +94,8 @@ enum {
     LookinRequestTypeDeleteMethodTrace = 215,
 
     LookinPush_BringForwardScreenshotTask = 303,
+    // 用户在 Lookin 客户端取消了之前 HierarchyDetails 的拉取
+    LookinPush_CanceHierarchyDetails = 304,
     
     /// iOS 端推送 method trace 信息
     LookinPush_MethodTraceRecord = 403
@@ -87,6 +106,8 @@ static NSString * const LookinParam_ViewLayerTag = @"tag";
 static NSString * const LookinParam_SelectorName = @"sn";
 static NSString * const LookinParam_MethodType = @"mt";
 static NSString * const LookinParam_SelectorClassName = @"scn";
+
+static NSString * const LookinStringFlag_VoidReturn = @"LOOKIN_TAG_RETURN_VALUE_VOID";
 
 #pragma mark - Error
 
@@ -100,12 +121,14 @@ enum {
     LookinErrCode_PeerTalk = -402,
     /// 连接不存在或已断开
     LookinErrCode_NoConnect = -403,
-    /// Ping 失败
-    LookinErrCode_PingFail = -404,
+    /// ping 失败了，原因是 ping 请求超时
+    LookinErrCode_PingFailForTimeout = -404,
     /// 请求超时未返回
     LookinErrCode_Timeout = -405,
     /// 有相同 Type 的新请求被发出，因此旧请求被丢弃
     LookinErrCode_Discard = -406,
+    /// ping 失败了，原因是 app 主动报告自身正处于后台模式
+    LookinErrCode_PingFailForBackgroundState = -407,
     
     /// 没有找到对应的对象，可能已被释放
     LookinErrCode_ObjectNotFound = -500,
@@ -121,9 +144,12 @@ enum {
     LookinErrCode_ServerIsPrivate = -602,
     // LookinServer 是现网版本，但 client 是私有版本
     LookinErrCode_ClientIsPrivate = - 603,
+    
+    // 不支持的文件类型
+    LookinErrCode_UnsupportedFileType = -700,
 };
 
-#define LookinErr_ObjNotFound [NSError errorWithDomain:LookinErrorDomain code:LookinErrCode_ObjectNotFound userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Failed to get target object in iOS app", nil), NSLocalizedRecoverySuggestionErrorKey:NSLocalizedString(@"Perhaps the object was deallocated. You can reload Lookin to get newest data.", nil)}]
+#define LookinErr_ObjNotFound [NSError errorWithDomain:LookinErrorDomain code:LookinErrCode_ObjectNotFound userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Failed to get target object in iOS app", nil), NSLocalizedRecoverySuggestionErrorKey:NSLocalizedString(@"Perhaps the related object was deallocated. You can reload Lookin to get newest data.", nil)}]
 
 #define LookinErr_NoConnect [NSError errorWithDomain:LookinErrorDomain code:LookinErrCode_NoConnect userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"The operation failed due to disconnection with the iOS app.", nil)}]
 
@@ -147,3 +173,20 @@ enum {
 
 #define LookinColorRGBAMake(r, g, b, a) [LookinColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
 #define LookinColorMake(r, g, b) [LookinColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]
+
+#pragma mark - Preview
+
+/// SCNNode 所允许的图片的最大的长和宽，单位是 px，这个值是 Scenekit 自身指定的
+static const double LookinNodeImageMaxLengthInPx = 16384;
+
+typedef NS_OPTIONS(NSUInteger, LookinPreviewBitMask) {
+    LookinPreviewBitMask_None = 0,
+    
+    LookinPreviewBitMask_Selectable = 1 << 1,
+    LookinPreviewBitMask_Unselectable = 1 << 2,
+    
+    LookinPreviewBitMask_HasLight = 1 << 3,
+    LookinPreviewBitMask_NoLight = 1 << 4
+};
+
+#endif

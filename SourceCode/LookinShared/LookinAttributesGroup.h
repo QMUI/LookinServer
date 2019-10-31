@@ -2,11 +2,14 @@
 //  LookinAttributesGroup.h
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/11/19.
+//  https://lookin.work
 //
 
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import <Foundation/Foundation.h>
-#import "LookinAttributeIdentifiers.h"
+#import "LookinAttrIdentifiers.h"
 
 @class LookinAttributesSection;
 
@@ -15,12 +18,12 @@
  
  如果两个 attrGroup 有相同的 LookinAttrGroupIdentifier，则 isEqual: 返回 YES
  */
-@interface LookinAttributesGroup : NSObject <NSSecureCoding>
+@interface LookinAttributesGroup : NSObject <NSSecureCoding, NSCopying>
 
-@property(nonatomic, assign) LookinAttrGroupIdentifier identifier;
+@property(nonatomic, copy) LookinAttrGroupIdentifier identifier;
 
 @property(nonatomic, copy) NSArray<LookinAttributesSection *> *attrSections;
 
-+ (NSString *)titleWithIdentifier:(LookinAttrGroupIdentifier)identifier;
-
 @end
+
+#endif

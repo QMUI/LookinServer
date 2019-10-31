@@ -2,9 +2,11 @@
 //  LKS_ObjectRegistry.h
 //  LookinServer
 //
-//  
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/4/21.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 
@@ -17,3 +19,5 @@
 - (NSObject *)objectWithOid:(unsigned long)oid;
 
 @end
+
+#endif

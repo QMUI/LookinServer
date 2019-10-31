@@ -2,8 +2,13 @@
 //  NSObject+LookinServer.h
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/4/21.
+//  https://lookin.work
 //
+
+#import "LookinDefines.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 
@@ -13,8 +18,8 @@
 
 #pragma mark - oid
 
-/// 如果 oid 已经存在，则该方法不会产生任何作用
-- (void)lks_registerOid;
+/// 如果 oid 不存在则会创建新的 oid
+- (unsigned long)lks_registerOid;
 
 /// 0 表示不存在
 @property(nonatomic, assign) unsigned long lks_oid;
@@ -30,8 +35,14 @@
 + (void)lks_clearAllObjectsTraces;
 
 /**
- 获取当前对象的 Class 层级树，如 @[@"UIView", @"UIResponder", @"NSObject"];
+ 获取当前对象的 Class 层级树，如 @[@"UIView", @"UIResponder", @"NSObject"]
+ hasSwiftPrefix 决定了是否在 Swift 项目中显示类名前缀
  */
-- (NSArray<NSString *> *)lks_classChainList;
+- (NSArray<NSString *> *)lks_classChainListWithSwiftPrefix:(BOOL)hasSwiftPrefix;
+
+/// 返回当前类名，Swift 项目下将返回不带前缀的名称
+- (NSString *)lks_shortClassName;
 
 @end
+
+#endif

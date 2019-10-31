@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import <Foundation/Foundation.h>
 
 //! Project version number for Peertalk.
@@ -20,3 +22,5 @@ FOUNDATION_EXPORT const unsigned char PeertalkVersionString[];
 #import <Peertalk/PTChannel.h>
 #import <Peertalk/PTProtocol.h>
 #import <Peertalk/PTUSBHub.h>
+
+#endif

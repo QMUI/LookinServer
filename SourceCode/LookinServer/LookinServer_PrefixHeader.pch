@@ -2,10 +2,12 @@
 //  LookinServer_PrefixHeader.pch
 //  LookinServer
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/12/21.
+//  https://lookin.work
 //
 
 #import "TargetConditionals.h"
+#import "LookinDefines.h"
 #import "LKS_Helper.h"
 #import "NSObject+LookinServer.h"
 #import "NSArray+Lookin.h"
@@ -15,5 +17,3 @@
 #import "CALayer+LookinServer.h"
 #import "NSObject+Lookin.h"
 #import "NSString+Lookin.h"
-#import "UIImage+LookinServer.h"
-#import "UIColor+LookinServer.h"

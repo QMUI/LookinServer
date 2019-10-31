@@ -2,8 +2,11 @@
 //  LookinAttributesGroup.m
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/11/19.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinAttributesGroup.h"
 #import "LookinAttribute.h"
@@ -11,21 +14,34 @@
 
 @implementation LookinAttributesGroup
 
+#pragma mark - <NSCopying>
+
+- (id)copyWithZone:(NSZone *)zone {
+    LookinAttributesGroup *newGroup = [[LookinAttributesGroup allocWithZone:zone] init];
+    newGroup.identifier = self.identifier;
+    newGroup.attrSections = [self.attrSections lookin_map:^id(NSUInteger idx, LookinAttributesSection *value) {
+        return value.copy;
+    }];
+    return newGroup;
+}
+
+#pragma mark - <NSCoding>
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:@(self.identifier) forKey:@"identifier"];
+    [aCoder encodeObject:self.identifier forKey:@"identifier"];
     [aCoder encodeObject:self.attrSections forKey:@"attrSections"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        self.identifier = [[aDecoder decodeObjectForKey:@"identifier"] unsignedIntegerValue];
+        self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
         self.attrSections = [aDecoder decodeObjectForKey:@"attrSections"];
     }
     return self;
 }
 
 - (NSUInteger)hash {
-    return self.identifier;
+    return self.identifier.hash;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -45,38 +61,6 @@
     return YES;
 }
 
-+ (NSString *)titleWithIdentifier:(LookinAttrGroupIdentifier)identifier {
-    switch (identifier) {
-        case LookinAttrGroup_Class:
-            return @"Class";
-        case LookinAttrGroup_Relation:
-            return @"Relation";
-        case LookinAttrGroup_Frame:
-            return @"Frame";
-        case LookinAttrGroup_Bounds:
-            return @"Bounds";
-        case LookinAttrGroup_SafeArea:
-            return @"Safe Area";
-        case LookinAttrGroup_LayerView:
-            return @"CALayer / UIView";
-        case LookinAttrGroup_UILabel:
-            return @"UILabel";
-        case LookinAttrGroup_UIControl:
-            return @"UIControl";
-        case LookinAttrGroup_UIButton:
-            return @"UIButton";
-        case LookinAttrGroup_UIScrollView:
-            return @"UIScrollView";
-        case LookinAttrGroup_UITableView:
-            return @"UITableView";
-        case LookinAttrGroup_UITextView:
-            return @"UITextView";
-        case LookinAttrGroup_UITextField:
-            return @"UITextField";
-        default:
-            NSAssert(NO, @"");
-            return @"";
-    }
-}
-
 @end
+
+#endif

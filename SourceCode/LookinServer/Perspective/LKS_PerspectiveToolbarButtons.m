@@ -1,12 +1,14 @@
 //
 //  LKS_PerspectiveToolbarButtons.m
-//  
+//  qmuidemo
 //
-
-//  
+//  Created by Li Kai on 2018/12/20.
+//  Copyright © 2018 QMUI Team. All rights reserved.
 //
 
 #import "LKS_PerspectiveToolbarButtons.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 static CGFloat const kConerRadius = 6;
 
@@ -239,3 +241,5 @@ static CGFloat const kConerRadius = 6;
 }
 
 @end
+
+#endif

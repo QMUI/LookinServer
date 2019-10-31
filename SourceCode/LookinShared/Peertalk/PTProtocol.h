@@ -1,3 +1,5 @@
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 //
 // A universal frame-based communication protocol which can be used to exchange
 // arbitrary structured data.
@@ -114,3 +116,5 @@ FOUNDATION_EXPORT NSString * const PTProtocolErrorDomain;
 // Decode *data* as a peroperty list-encoded dictionary. Returns nil on failure.
 + (NSDictionary*)dictionaryWithContentsOfDispatchData:(dispatch_data_t)data;
 @end
+
+#endif

@@ -1,14 +1,27 @@
 //
 //  LookinDisplayItem.m
-//  
+//  qmuidemo
 //
-//  
+//  Created by Li Kai on 2018/11/15.
+//  Copyright © 2018 QMUI Team. All rights reserved.
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinDisplayItem.h"
 #import "LookinAttributesGroup.h"
 #import "LookinAttributesSection.h"
 #import "LookinAttribute.h"
+#import "LookinEventHandler.h"
+#import "LookinIvarTrace.h"
+
+#if TARGET_OS_IPHONE
+#import "UIColor+LookinServer.h"
+#elif TARGET_OS_MAC
+#ifdef DEBUG
+#import "LKEfficiencyMonitor.h"
+#endif
+#endif
 
 @interface LookinDisplayItem ()
 
@@ -23,6 +36,34 @@
 
 @implementation LookinDisplayItem
 
+#pragma mark - <NSCopying>
+
+- (id)copyWithZone:(NSZone *)zone {
+    LookinDisplayItem *newDisplayItem = [[LookinDisplayItem allocWithZone:zone] init];
+    newDisplayItem.subitems = [self.subitems lookin_map:^id(NSUInteger idx, LookinDisplayItem *value) {
+        return value.copy;
+    }];
+    newDisplayItem.isHidden = self.isHidden;
+    newDisplayItem.alpha = self.alpha;
+    newDisplayItem.frame = self.frame;
+    newDisplayItem.bounds = self.bounds;
+    newDisplayItem.soloScreenshot = self.soloScreenshot;
+    newDisplayItem.groupScreenshot = self.groupScreenshot;
+    newDisplayItem.viewObject = self.viewObject.copy;
+    newDisplayItem.layerObject = self.layerObject.copy;
+    newDisplayItem.hostViewControllerObject = self.hostViewControllerObject.copy;
+    newDisplayItem.attributesGroupList = [self.attributesGroupList lookin_map:^id(NSUInteger idx, LookinAttributesGroup *value) {
+        return value.copy;
+    }];
+    newDisplayItem.eventHandlers = [self.eventHandlers lookin_map:^id(NSUInteger idx, LookinEventHandler *value) {
+        return value.copy;
+    }];
+    newDisplayItem.representedAsKeyWindow = self.representedAsKeyWindow;
+    [newDisplayItem _updateDisplayingInHierarchyProperty];
+    return newDisplayItem;
+}
+#pragma mark - <NSCoding>
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.subitems forKey:@"subitems"];
     [aCoder encodeBool:self.isHidden forKey:@"hidden"];
@@ -32,17 +73,23 @@
     [aCoder encodeObject:self.hostViewControllerObject forKey:@"hostViewControllerObject"];
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
     [aCoder encodeBool:self.representedAsKeyWindow forKey:@"representedAsKeyWindow"];
-    if (self.shouldEncodeScreenshot) {
+    [aCoder encodeObject:self.eventHandlers forKey:@"eventHandlers"];
+    if (self.screenshotEncodeType == LookinDisplayItemImageEncodeTypeNSData) {
         [aCoder encodeObject:[self.soloScreenshot lookin_encodedObjectWithType:LookinCodingValueTypeImage] forKey:@"soloScreenshot"];
         [aCoder encodeObject:[self.groupScreenshot lookin_encodedObjectWithType:LookinCodingValueTypeImage] forKey:@"groupScreenshot"];
+    } else if (self.screenshotEncodeType == LookinDisplayItemImageEncodeTypeImage) {
+        [aCoder encodeObject:self.soloScreenshot forKey:@"soloScreenshot"];
+        [aCoder encodeObject:self.groupScreenshot forKey:@"groupScreenshot"];
     }
 #if TARGET_OS_IPHONE
     [aCoder encodeCGRect:self.frame forKey:@"frame"];
     [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
+    [aCoder encodeObject:self.backgroundColor.lks_rgbaComponents forKey:@"backgroundColor"];
     
 #elif TARGET_OS_MAC
     [aCoder encodeRect:self.frame forKey:@"frame"];
     [aCoder encodeRect:self.bounds forKey:@"bounds"];
+    [aCoder encodeObject:self.backgroundColor.lk_rgbaComponents forKey:@"backgroundColor"];
 #endif
 }
 
@@ -56,34 +103,44 @@
         self.hostViewControllerObject = [aDecoder decodeObjectForKey:@"hostViewControllerObject"];
         self.attributesGroupList = [aDecoder decodeObjectForKey:@"attributesGroupList"];
         self.representedAsKeyWindow = [aDecoder decodeBoolForKey:@"representedAsKeyWindow"];
-        self.soloScreenshot = [[aDecoder decodeObjectForKey:@"soloScreenshot"] lookin_decodedObjectWithType:LookinCodingValueTypeImage];
-        self.groupScreenshot = [[aDecoder decodeObjectForKey:@"groupScreenshot"] lookin_decodedObjectWithType:LookinCodingValueTypeImage];
+        
+        id soloScreenshotObj = [aDecoder decodeObjectForKey:@"soloScreenshot"];
+        if (soloScreenshotObj) {
+            if ([soloScreenshotObj isKindOfClass:[NSData class]]) {
+                self.soloScreenshot = [soloScreenshotObj lookin_decodedObjectWithType:LookinCodingValueTypeImage];
+            } else if ([soloScreenshotObj isKindOfClass:[LookinImage class]]) {
+                self.soloScreenshot = soloScreenshotObj;
+            } else {
+                NSAssert(NO, @"");
+            }
+        }
+        
+        id groupScreenshotObj = [aDecoder decodeObjectForKey:@"groupScreenshot"];
+        if (groupScreenshotObj) {
+            if ([groupScreenshotObj isKindOfClass:[NSData class]]) {
+                self.groupScreenshot = [groupScreenshotObj lookin_decodedObjectWithType:LookinCodingValueTypeImage];
+            } else if ([groupScreenshotObj isKindOfClass:[LookinImage class]]) {
+                self.groupScreenshot = groupScreenshotObj;
+            } else {
+                NSAssert(NO, @"");
+            }            
+        }
+        
+        self.eventHandlers = [aDecoder decodeObjectForKey:@"eventHandlers"];
 #if TARGET_OS_IPHONE
         self.frame = [aDecoder decodeCGRectForKey:@"frame"];
         self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
+        self.backgroundColor = [UIColor lks_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
 #elif TARGET_OS_MAC
         self.frame = [aDecoder decodeRectForKey:@"frame"];
         self.bounds = [aDecoder decodeRectForKey:@"bounds"];
+        self.backgroundColor = [NSColor lk_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
         
-        static NSSet<NSString *> *defaultNoPreviewClasses;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            defaultNoPreviewClasses = [NSSet setWithArray:@[@"UITextEffectsWindow", @"UIRemoteKeyboardWindow", @"LKS_LocalInspectContainerWindow"]];
-        });
-        if ([self itemIsKindOfClassesWithNames:defaultNoPreviewClasses]) {
-            self.noPreview = YES;
-        } else {
-            self.noPreview = NO;
-        }
+#ifdef DEBUG
+        [[LKEfficiencyMonitor sharedInstance] displayItemDidInit];
 #endif
         
-        [self _updateDisplayingInHierarchyProperty];
-    }
-    return self;
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
+#endif
         [self _updateDisplayingInHierarchyProperty];
     }
     return self;
@@ -93,15 +150,19 @@
     return YES;
 }
 
-- (NSString *)title {
-    if (self.viewObject) {
-        return self.viewObject.nonNamespaceSelfClassName;
+- (instancetype)init {
+    if (self = [super init]) {
+        /// 在手机端，displayItem 被创建时会调用这个方法
+        [self _updateDisplayingInHierarchyProperty];
+        
+#ifdef DEBUG
+#if TARGET_OS_IPHONE
+#elif TARGET_OS_MAC
+        [[LKEfficiencyMonitor sharedInstance] displayItemDidInit];
+#endif
+#endif
     }
-    if (self.layerObject) {
-        return self.layerObject.nonNamespaceSelfClassName;
-    }
-    NSAssert(NO, @"");
-    return nil;
+    return self;
 }
 
 - (LookinObject *)displayingObject {
@@ -176,6 +237,14 @@
     }];
 }
 
+- (void)setIsExpandable:(BOOL)isExpandable {
+    if (_isExpandable == isExpandable) {
+        return;
+    }
+    _isExpandable = isExpandable;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsExpandable];
+}
+
 - (void)setIsExpanded:(BOOL)isExpanded {
     if (_isExpanded == isExpanded) {
         return;
@@ -184,6 +253,47 @@
     [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj _updateDisplayingInHierarchyProperty];
     }];
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsExpanded];
+}
+
+- (void)setSoloScreenshot:(LookinImage *)soloScreenshot {
+    if (_soloScreenshot == soloScreenshot) {
+        return;
+    }
+    _soloScreenshot = soloScreenshot;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_SoloScreenshot];
+}
+
+- (void)setIsSelected:(BOOL)isSelected {
+    if (_isSelected == isSelected) {
+        return;
+    }
+    _isSelected = isSelected;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsSelected];
+}
+
+- (void)setAvoidSyncScreenshot:(BOOL)avoidSyncScreenshot {
+    if (_avoidSyncScreenshot == avoidSyncScreenshot) {
+        return;
+    }
+    _avoidSyncScreenshot = avoidSyncScreenshot;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_AvoidSyncScreenshot];
+}
+
+- (void)setIsHovered:(BOOL)isHovered {
+    if (_isHovered == isHovered) {
+        return;
+    }
+    _isHovered = isHovered;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsHovered];
+}
+
+- (void)setGroupScreenshot:(LookinImage *)groupScreenshot {
+    if (_groupScreenshot == groupScreenshot) {
+        return;
+    }
+    _groupScreenshot = groupScreenshot;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_GroupScreenshot];
 }
 
 - (void)setDisplayingInHierarchy:(BOOL)displayingInHierarchy {
@@ -194,6 +304,8 @@
     [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj _updateDisplayingInHierarchyProperty];
     }];
+    
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_DisplayingInHierarchy];
 }
 
 - (void)_updateDisplayingInHierarchyProperty {
@@ -222,6 +334,8 @@
     [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj _updateInHiddenHierarchyProperty];
     }];
+    
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_InHiddenHierarchy];
 }
 
 - (void)_updateInHiddenHierarchyProperty {
@@ -266,6 +380,9 @@
     NSMutableArray *resultArray = [NSMutableArray array];
     
     [items enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.superItem) {
+            obj.indentLevel = obj.superItem.indentLevel + 1;
+        }
         [resultArray addObject:obj];
         if (obj.subitems.count) {
             [resultArray addObjectsFromArray:[self flatItemsFromHierarchicalItems:obj.subitems]];
@@ -273,15 +390,6 @@
     }];
     
     return resultArray;
-}
-
-+ (void)setUpIndentLevelForFlatItems:(NSArray<LookinDisplayItem *> *)items {
-    [items enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
-        item.indentLevel = 0;
-        [item enumerateAncestors:^(LookinDisplayItem *ancestorItem, BOOL *stop) {
-            item.indentLevel++;
-        }];
-    }];
 }
 
 - (NSString *)description {
@@ -297,6 +405,33 @@
         [obj _updateFrameToRoot];
         [obj _updateInNoPreviewHierarchy];
     }];
+    
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_FrameToRoot];
+}
+
+- (void)setPreviewItemDelegate:(id<LookinDisplayItemDelegate>)previewItemDelegate {
+    _previewItemDelegate = previewItemDelegate;
+    
+    if (![previewItemDelegate respondsToSelector:@selector(displayItem:propertyDidChange:)]) {
+        NSAssert(NO, @"");
+        _previewItemDelegate = nil;
+        return;
+    }
+    [self.previewItemDelegate displayItem:self propertyDidChange:LookinDisplayItemProperty_None];
+}
+
+- (void)setRowViewDelegate:(id<LookinDisplayItemDelegate>)rowViewDelegate {
+    if (_rowViewDelegate == rowViewDelegate) {
+        return;
+    }
+    _rowViewDelegate = rowViewDelegate;
+    
+    if (![rowViewDelegate respondsToSelector:@selector(displayItem:propertyDidChange:)]) {
+        NSAssert(NO, @"");
+        _rowViewDelegate = nil;
+        return;
+    }
+    [self.rowViewDelegate displayItem:self propertyDidChange:LookinDisplayItemProperty_None];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -336,6 +471,7 @@
     [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj _updateInNoPreviewHierarchy];
     }];
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_InNoPreviewHierarchy];
 }
 
 - (void)setNoPreview:(BOOL)noPreview {
@@ -358,4 +494,91 @@
     return self.groupScreenshot;
 }
 
+- (void)_notifyDelegatesWith:(LookinDisplayItemProperty)property {
+    [self.previewItemDelegate displayItem:self propertyDidChange:property];
+    [self.rowViewDelegate displayItem:self propertyDidChange:property];
+}
+
+- (BOOL)isMatchedWithSearchString:(NSString *)string {
+    if (string.length == 0) {
+        NSAssert(NO, @"");
+        return NO;
+    }
+    if ([self.title.lowercaseString containsString:string.lowercaseString]) {
+        return YES;
+    }
+    if ([self.subtitle.lowercaseString containsString:string.lowercaseString]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)setIsInSearch:(BOOL)isInSearch {
+    _isInSearch = isInSearch;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsInSearch];
+}
+
+- (void)setHighlightedSearchString:(NSString *)highlightedSearchString {
+    _highlightedSearchString = highlightedSearchString;
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_HighlightedSearchString];
+}
+
+- (void)setHostViewControllerObject:(LookinObject *)hostViewControllerObject {
+    _hostViewControllerObject = hostViewControllerObject;
+    [self _updateSubtitleProperty];
+}
+
+- (void)setViewObject:(LookinObject *)viewObject {
+    _viewObject = viewObject;
+    [self _updateSubtitleProperty];
+    [self _updateTitleProperty];
+}
+
+- (void)setLayerObject:(LookinObject *)layerObject {
+    _layerObject = layerObject;
+    [self _updateSubtitleProperty];
+    [self _updateTitleProperty];
+}
+
+- (void)_updateTitleProperty {
+    if (self.viewObject) {
+        _title = self.viewObject.shortSelfClassName;
+    } else if (self.layerObject) {
+        _title = self.layerObject.shortSelfClassName;
+    } else {
+        _title = nil;
+    }
+}
+
+- (void)_updateSubtitleProperty {
+    NSString *subtitle = @"";
+    if (self.hostViewControllerObject.shortSelfClassName.length) {
+        subtitle = [NSString stringWithFormat:@"%@.view", self.hostViewControllerObject.shortSelfClassName];
+        
+    } else {
+        LookinObject *representedObject = self.viewObject ? : self.layerObject;
+        if (representedObject.specialTrace.length) {
+            subtitle = representedObject.specialTrace;
+            
+        } else if (representedObject.ivarTraces.count) {
+            NSArray<NSString *> *ivarNameList = [representedObject.ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
+                return value.ivarName;
+            }];
+            subtitle = [[[NSSet setWithArray:ivarNameList] allObjects] componentsJoinedByString:@"   "];
+        }
+    }
+    _subtitle = subtitle;
+}
+
+- (void)dealloc {
+#if TARGET_OS_IPHONE
+#elif TARGET_OS_MAC
+#ifdef DEBUG
+    [[LKEfficiencyMonitor sharedInstance] displayItemDidDealloc];
+#endif
+#endif
+}
+
 @end
+
+#endif

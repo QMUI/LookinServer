@@ -2,11 +2,15 @@
 //  NSString+Lookin.h
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/11.
+//  https://lookin.work
 //
 
-#import <Foundation/Foundation.h>
 #import "LookinDefines.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
+#import <Foundation/Foundation.h>
 
 @interface NSString (Lookin)
 
@@ -28,4 +32,9 @@
 
 - (NSString *)lookin_safeInitWithUTF8String:(const char *)string;
 
+/// 在 swift 中，类名可能会被加前缀，比如 MyApp.MyView 或 _TtC5MyApp8TestView 这种，该方法会返回简化后的末尾的类名，比如 MyView
+- (NSString *)lookin_shortClassNameString;
+
 @end
+
+#endif

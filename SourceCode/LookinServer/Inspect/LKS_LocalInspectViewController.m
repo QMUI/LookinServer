@@ -2,14 +2,18 @@
 //  LKS_LocalInspectViewController.m
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/15.
+//  https://lookin.work
 //
 
 #import "LKS_LocalInspectViewController.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_LocalInspectPanelLabelView.h"
 #import "LookinIvarTrace.h"
 #import "LookinHierarchyInfo.h"
+#import "UIImage+LookinServer.h"
 
 static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 
@@ -80,7 +84,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     }) forState:UIControlStateNormal];
     [self.view addSubview:self.titleButton];
     
-    self.rulerLayers = [NSArray arrayWithCount:4 block:^id(NSUInteger idx) {
+    self.rulerLayers = [NSArray lookin_arrayWithCount:4 block:^id(NSUInteger idx) {
         CALayer *layer = [CALayer new];
         [layer lookin_removeImplicitAnimations];
         layer.backgroundColor = [UIColor colorWithRed:69/255.0 green:143/255.0 blue:208/255.0 alpha:.4].CGColor;
@@ -88,7 +92,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
         return layer;
     }];
     
-    self.rulerLabels = [NSArray arrayWithCount:4 block:^id(NSUInteger idx) {
+    self.rulerLabels = [NSArray lookin_arrayWithCount:4 block:^id(NSUInteger idx) {
         UILabel *label = [UILabel new];
         label.userInteractionEnabled = NO;
         label.backgroundColor = [UIColor colorWithRed:26/255.0 green:154/255.0 blue:251/255.0 alpha:1];
@@ -185,7 +189,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     self.titleLabelView.rightLabel.text = [self _subtitleStringForLayer:layer];
     NSArray<NSArray<NSString *> *> *contents = [self _contentStringsForLayer:layer];
     
-    self.contentLabelViews = [self.contentLabelViews resizeWithCount:contents.count add:^LKS_LocalInspectPanelLabelView *(NSUInteger idx) {
+    self.contentLabelViews = [self.contentLabelViews lookin_resizeWithCount:contents.count add:^LKS_LocalInspectPanelLabelView *(NSUInteger idx) {
         LKS_LocalInspectPanelLabelView *view = [LKS_LocalInspectPanelLabelView new];
         view.verInset = 4;
         view.leftLabel.font = [UIFont systemFontOfSize:13];
@@ -731,3 +735,5 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 }
 
 @end
+
+#endif

@@ -2,10 +2,14 @@
 //  LKS_HierarchyDetailsHandler.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/6/20.
+//  https://lookin.work
 //
 
 #import "LKS_HierarchyDetailsHandler.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LookinDisplayItemDetail.h"
 #import "LKS_AttrGroupsMaker.h"
 #import "LookinStaticAsyncUpdateTask.h"
@@ -62,6 +66,9 @@
     [self.attrGroupsSyncedOids removeAllObjects];
     self.taskPackages = [packages mutableCopy];
     self.handlerBlock = block;
+    
+    [UIView lks_rebuildGlobalInvolvedRawConstraints];
+    
     [self _dequeueAndHandlePackage];
 }
 
@@ -69,6 +76,10 @@
     NSLog(@"LookinServer - willBringForward");
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, packages.count)];
     [self.taskPackages insertObjects:packages atIndexes:indexSet];
+}
+
+- (void)cancel {
+    [self.taskPackages removeAllObjects];
 }
 
 - (void)_dequeueAndHandlePackage {
@@ -88,24 +99,7 @@
             itemDetail.displayItemOid = task.oid;
             
             id object = [NSObject lks_objectWithOid:task.oid];
-            if (!object) {
-                if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
-                    itemDetail.soloScreenshotError = LookinErr_ObjNotFound;
-                } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
-                    itemDetail.groupScreenshotError = LookinErr_ObjNotFound;
-                } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeNoScreenshot) {
-                    itemDetail.attrGroupsError = LookinErr_ObjNotFound;
-                }
-                return itemDetail;
-            }
-            if (![object isKindOfClass:[CALayer class]]) {
-                if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
-                    itemDetail.soloScreenshotError = LookinErr_Inner;
-                } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
-                    itemDetail.groupScreenshotError = LookinErr_Inner;
-                } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeNoScreenshot) {
-                    itemDetail.attrGroupsError = LookinErr_Inner;
-                }
+            if (!object || ![object isKindOfClass:[CALayer class]]) {
                 return itemDetail;
             }
             
@@ -132,7 +126,9 @@
 }
 
 - (void)_handleConnectionDidEnd:(id)obj {
-    [self.taskPackages removeAllObjects];
+    [self cancel];
 }
 
 @end
+
+#endif

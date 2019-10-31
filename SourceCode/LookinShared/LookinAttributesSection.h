@@ -2,11 +2,14 @@
 //  LookinAttributesSection.h
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/3/2.
+//  https://lookin.work
 //
 
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import <Foundation/Foundation.h>
-#import "LookinAttributeIdentifiers.h"
+#import "LookinAttrIdentifiers.h"
 
 @class LookinAttribute;
 
@@ -17,18 +20,12 @@ typedef NS_ENUM (NSInteger, LookinAttributesSectionStyle) {
     LookinAttributesSectionStyle2   // 第一排独占一行，剩下的在同一行且均分宽度
 };
 
-@interface LookinAttributesSection : NSObject <NSSecureCoding>
+@interface LookinAttributesSection : NSObject <NSSecureCoding, NSCopying>
 
-@property(nonatomic, assign) LookinAttrSectionIdentifier identifier;
+@property(nonatomic, copy) LookinAttrSectionIdentifier identifier;
 
 @property(nonatomic, copy) NSArray<LookinAttribute *> *attributes;
 
-#pragma mark - No Coding
-
-+ (NSString *)titleWithIdentifier:(LookinAttrSectionIdentifier)identifier;
-+ (NSString *)introductionWithIdentifier:(LookinAttrSectionIdentifier)identifier;
-
-@property(nonatomic, assign) LookinAttributesSectionStyle style;
-
-
 @end
+
+#endif

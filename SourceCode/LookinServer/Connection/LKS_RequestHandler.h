@@ -2,8 +2,11 @@
 //  LKS_RequestHandler.h
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/1/15.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>
 
@@ -14,3 +17,5 @@
 - (void)handleRequestType:(uint32_t)requestType tag:(uint32_t)tag object:(id)object;
 
 @end
+
+#endif

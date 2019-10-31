@@ -2,10 +2,13 @@
 //  UITextView+LookinServer.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/2/26.
+//  https://lookin.work
 //
 
 #import "UITextView+LookinServer.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 @implementation UITextView (LookinServer)
 
@@ -17,4 +20,10 @@
     self.font = font;
 }
 
+- (NSString *)lks_fontName {
+    return self.font.fontName;
+}
+
 @end
+
+#endif

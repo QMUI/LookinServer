@@ -2,8 +2,11 @@
 //  LookinConnectionResponse.m
 //  Lookin
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/1/15.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinConnectionResponseAttachment.h"
 #import "LookinDefines.h"
@@ -21,6 +24,7 @@
     [aCoder encodeObject:@(self.dataTotalCount) forKey:@"dataTotalCount"];
     [aCoder encodeObject:@(self.currentDataCount) forKey:@"currentDataCount"];
     [aCoder encodeBool:self.lookinServerIsExprimental forKey:@"lookinServerIsExprimental"];
+    [aCoder encodeBool:self.appIsInBackground forKey:@"appIsInBackground"];
 }
 
 - (instancetype)init {
@@ -39,6 +43,7 @@
         self.error = [aDecoder decodeObjectForKey:@"error"];
         self.dataTotalCount = [[aDecoder decodeObjectForKey:@"dataTotalCount"] unsignedIntegerValue];
         self.currentDataCount = [[aDecoder decodeObjectForKey:@"currentDataCount"] unsignedIntegerValue];
+        self.appIsInBackground = [aDecoder decodeBoolForKey:@"appIsInBackground"];
     }
     return self;
 }
@@ -54,3 +59,5 @@
 }
 
 @end
+
+#endif

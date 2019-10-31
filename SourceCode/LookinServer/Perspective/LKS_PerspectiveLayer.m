@@ -2,11 +2,14 @@
 //  LKS_PerspectiveLayer.m
 //  LookinServer
 //
-
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/17.
+//  https://lookin.work
 //
 
 #import "LKS_PerspectiveLayer.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_PerspectiveDataSource.h"
 #import "LKS_PerspectiveItemLayer.h"
 #import "LookinAppInfo.h"
@@ -108,7 +111,7 @@
     NSArray<LookinDisplayItem *> *validItems = [self.dataSource.flatItems lookin_filter:^BOOL(LookinDisplayItem *obj) {
         return !obj.inNoPreviewHierarchy;
     }];
-    self.itemLayers = [self.itemLayers resizeWithCount:validItems.count add:^LKS_PerspectiveItemLayer *(NSUInteger idx) {
+    self.itemLayers = [self.itemLayers lookin_resizeWithCount:validItems.count add:^LKS_PerspectiveItemLayer *(NSUInteger idx) {
         LKS_PerspectiveItemLayer *layer = [LKS_PerspectiveItemLayer new];
         [self.rotateLayer addSublayer:layer];
         return layer;
@@ -255,3 +258,5 @@
 }
 
 @end
+
+#endif

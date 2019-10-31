@@ -2,15 +2,20 @@
 //  LKS_AttrGroupsMaker.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/6/6.
+//  https://lookin.work
 //
 
 #import "LKS_AttrGroupsMaker.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LookinAttributesGroup.h"
 #import "LookinAttributesSection.h"
 #import "LookinAttribute.h"
 #import "LookinDashboardBlueprint.h"
 #import "LookinIvarTrace.h"
+#import "UIColor+LookinServer.h"
 
 @implementation LKS_AttrGroupsMaker
 
@@ -19,38 +24,32 @@
         NSAssert(NO, @"");
         return nil;
     }
-    NSArray<LookinAttributesGroup *> *groups = [[LookinDashboardBlueprint groupIDs] lookin_map:^id(NSUInteger idx, NSNumber *groupID_Num) {
-        NSInteger groupID = [groupID_Num integerValue];
-        
+    NSArray<LookinAttributesGroup *> *groups = [[LookinDashboardBlueprint groupIDs] lookin_map:^id(NSUInteger idx, LookinAttrGroupIdentifier groupID) {
         LookinAttributesGroup *group = [LookinAttributesGroup new];
         group.identifier = groupID;
 
-        NSArray<NSNumber *> *secIDs = [LookinDashboardBlueprint sectionIDsForGroupID:groupID];
-        group.attrSections = [secIDs lookin_map:^id(NSUInteger idx, NSNumber *secID_Num) {
-            LookinAttrSectionIdentifier secID = [secID_Num integerValue];
-            
+        NSArray<LookinAttrSectionIdentifier> *secIDs = [LookinDashboardBlueprint sectionIDsForGroupID:groupID];
+        group.attrSections = [secIDs lookin_map:^id(NSUInteger idx, LookinAttrSectionIdentifier secID) {
             LookinAttributesSection *sec = [LookinAttributesSection new];
             sec.identifier = secID;
             
-            NSArray<NSNumber *> *attrIDs = [LookinDashboardBlueprint attrIDsForSectionID:secID];
-            sec.attributes = [attrIDs lookin_map:^id(NSUInteger idx, NSNumber *attrID_Num) {
-                LookinAttrIdentifier attrID = [attrID_Num integerValue];
-                if (attrID == LookinAttr_ViewLayer_SafeArea_Area
-                    || attrID == LookinAttr_UIScrollView_AdjustedInset_Inset ||
-                    attrID == LookinAttr_UIScrollView_Behavior_Behavior) {
-                    if (@available(iOS 11.0, *)) {
-                    } else {
-                        return nil;
-                    }
+            NSArray<LookinAttrIdentifier> *attrIDs = [LookinDashboardBlueprint attrIDsForSectionID:secID];
+            sec.attributes = [attrIDs lookin_map:^id(NSUInteger idx, LookinAttrIdentifier attrID) {
+                NSInteger minAvailableVersion = [LookinDashboardBlueprint minAvailableOSVersionWithAttrID:attrID];
+                if (minAvailableVersion > 0 && (NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < minAvailableVersion)) {
+                    // iOS 版本过低不支持该属性
+                    return nil;
                 }
                 
-                LookinAttributeHostType hostType = [LookinAttribute hostTypeWithIdentifier:attrID];
-                id targetObj = layer;
-                if (hostType == LookinAttributeHostTypeView) {
+                id targetObj = nil;
+                if ([LookinDashboardBlueprint isUIViewPropertyWithAttrID:attrID]) {
                     targetObj = layer.lks_hostView;
+                } else {
+                    targetObj = layer;
                 }
+                
                 if (targetObj) {
-                    Class targetClass = NSClassFromString([LookinAttribute hostClassNameWithIdentifier:attrID]);
+                    Class targetClass = NSClassFromString([LookinDashboardBlueprint classNameWithAttrID:attrID]);
                     if (![targetObj isKindOfClass:targetClass]) {
                         return nil;
                     }
@@ -68,6 +67,16 @@
                 return nil;
             }
         }];
+        
+        if ([groupID isEqualToString:LookinAttrGroup_AutoLayout]) {
+            // 这里特殊处理一下，如果 AutoLayout 里面不包含 Constraints 的话（只有 Hugging 和 Resistance），就丢弃掉这整个 AutoLayout 不显示
+            BOOL hasConstraits = [group.attrSections lookin_any:^BOOL(LookinAttributesSection *obj) {
+                return [obj.identifier isEqualToString:LookinAttrSec_AutoLayout_Constraints];
+            }];
+            if (!hasConstraits) {
+                return nil;
+            }
+        }
         
         if (group.attrSections.count) {
             return group;
@@ -88,25 +97,13 @@
     LookinAttribute *attribute = [LookinAttribute new];
     attribute.identifier = identifier;
     
-    if (identifier == LookinAttr_UITableView_RowsNumber_Number) {
-        attribute.attrType = LookinAttrTypeCustom;
-        attribute.value = [self _numberOfRowsInTableView:target];
-        return attribute.value ? attribute : nil;
-    }
-    if (identifier == LookinAttr_Class_Class_Class) {
-        attribute.attrType = LookinAttrTypeCustom;
-        attribute.value = [self _relatedClassChainListWithLayer:target];
-        return attribute.value ? attribute : nil;
-    }
-    if (identifier == LookinAttr_Relation_Relation_Relation) {
-        attribute.attrType = LookinAttrTypeCustom;
-        attribute.value = [self _relationWithLayer:target];
-        return attribute.value ? attribute : nil;
-    }
-    
-    SEL getter = attribute.getter;
-    if (!getter || ![target respondsToSelector:getter]) {
+    SEL getter = [LookinDashboardBlueprint getterWithAttrID:identifier];
+    if (!getter) {
         NSAssert(NO, @"");
+        return nil;
+    }
+    if (![target respondsToSelector:getter]) {
+        // 比如某些 QMUI 的属性，不引入 QMUI 就会走到这个分支里
         return nil;
     }
     NSMethodSignature *signature = [target methodSignatureForSelector:getter];
@@ -136,7 +133,7 @@
         int targetValue;
         [invocation getReturnValue:&targetValue];
         attribute.value = @(targetValue);
-        if ([LookinAttribute enumListNameWithIdentifier:identifier]) {
+        if ([LookinDashboardBlueprint enumListNameWithAttrID:identifier]) {
             attribute.attrType = LookinAttrTypeEnumInt;
         } else {
             attribute.attrType = LookinAttrTypeInt;
@@ -152,7 +149,7 @@
         long targetValue;
         [invocation getReturnValue:&targetValue];
         attribute.value = @(targetValue);
-        if ([LookinAttribute enumListNameWithIdentifier:identifier]) {
+        if ([LookinDashboardBlueprint enumListNameWithAttrID:identifier]) {
             attribute.attrType = LookinAttrTypeEnumLong;
         } else {
             attribute.attrType = LookinAttrTypeLong;
@@ -266,23 +263,22 @@
         attribute.attrType = LookinAttrTypeUIOffset;
         attribute.value = [NSValue valueWithUIOffset:targetValue];
         
-    } else if (strcmp(returnType, @encode(NSString)) == 0) {
-        __unsafe_unretained NSString *targetValue;
-        [invocation getReturnValue:&targetValue];
-        attribute.attrType = LookinAttrTypeNSString;
-        attribute.value = targetValue;
-        
     } else {
         NSString *argType_string = [[NSString alloc] lookin_safeInitWithUTF8String:returnType];
         if ([argType_string hasPrefix:@"@"]) {
             __unsafe_unretained id returnObjValue;
             [invocation getReturnValue:&returnObjValue];
             
-            attribute.attrType = [LookinAttribute objectAttrTypeWithIdentifer:identifier];
+            if (!returnObjValue && [LookinDashboardBlueprint hideIfNilWithAttrID:identifier]) {
+                // 对于某些属性，若 value 为 nil 则不显示
+                return nil;
+            }
+            
+            attribute.attrType = [LookinDashboardBlueprint objectAttrTypeWithAttrID:identifier];
             if (attribute.attrType == LookinAttrTypeUIColor) {
                 attribute.value = [returnObjValue lks_rgbaComponents];
             } else {
-                return nil;
+                attribute.value = returnObjValue;
             }
             
         } else {
@@ -294,60 +290,6 @@
     return attribute;
 }
 
-+ (NSArray<NSNumber *> *)_numberOfRowsInTableView:(UITableView *)tableView {
-    if (!tableView || ![tableView isKindOfClass:[UITableView class]]) {
-        return nil;
-    }
-    NSUInteger sectionsCount = MIN(tableView.numberOfSections, 10);
-    NSArray<NSNumber *> *rowsCount = [NSArray arrayWithCount:sectionsCount block:^id(NSUInteger idx) {
-        return @([tableView numberOfRowsInSection:idx]);
-    }];
-    if (rowsCount.count == 0) {
-        return nil;
-    }
-    return rowsCount;
-}
-
-/// 获取和该对象有关的对象的 Class 层级树
-+ (NSArray<NSArray<NSString *> *> *)_relatedClassChainListWithLayer:(CALayer *)layer {
-    if (![layer isKindOfClass:[CALayer class]]) {
-        return nil;
-    }
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
-    if (layer.lks_hostView) {
-        [array addObject:layer.lks_hostView.lks_classChainList];
-        
-        if (layer.lks_hostView.lks_hostViewController) {
-            [array addObject:layer.lks_hostView.lks_hostViewController.lks_classChainList];
-        }
-    } else {
-        [array addObject:layer.lks_classChainList];
-    }
-    return array.copy;
-}
-
-+ (NSArray<NSString *> *)_relationWithLayer:(CALayer *)layer {
-    if (![layer isKindOfClass:[CALayer class]]) {
-        return nil;
-    }
-    NSMutableArray *array = [NSMutableArray array];
-    NSMutableArray<LookinIvarTrace *> *ivarTraces = [NSMutableArray array];
-    if (layer.lks_hostView) {
-        if (layer.lks_hostView.lks_hostViewController) {
-            [array addObject:[NSString stringWithFormat:@"(%@ *).view", NSStringFromClass(layer.lks_hostView.lks_hostViewController.class)]];
-            
-            [ivarTraces addObjectsFromArray:layer.lks_hostView.lks_hostViewController.lks_ivarTraces];
-        }
-        [ivarTraces addObjectsFromArray:layer.lks_hostView.lks_ivarTraces];
-    } else {
-        [ivarTraces addObjectsFromArray:layer.lks_ivarTraces];
-    }
-    if (ivarTraces.count) {
-        [array addObjectsFromArray:[ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
-            return [NSString stringWithFormat:@"(%@ *) -> %@", value.hostClassName, value.ivarName];
-        }]];
-    }
-    return array.count ? array.copy : nil;
-}
-
 @end
+
+#endif

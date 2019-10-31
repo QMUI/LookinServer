@@ -2,10 +2,14 @@
 //  UIImage+LookinServer.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/14.
+//  https://lookin.work
 //
 
 #import "UIImage+LookinServer.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "Objc/runtime.h"
 
 @implementation UIImage (LookinServer)
@@ -50,3 +54,5 @@
 }
 
 @end
+
+#endif

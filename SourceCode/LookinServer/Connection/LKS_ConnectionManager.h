@@ -1,9 +1,12 @@
 //
-//  LKS_ConnectionManager.h
-//  LookinServer
+//  Lookin.h
+//  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/8/5.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <UIKit/UIKit.h>
 
@@ -24,3 +27,5 @@ extern NSString *const LKS_ConnectionDidEndNotificationName;
 - (void)pushData:(NSObject *)data type:(uint32_t)type;
 
 @end
+
+#endif

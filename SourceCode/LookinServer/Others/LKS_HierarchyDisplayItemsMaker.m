@@ -2,14 +2,18 @@
 //  LKS_HierarchyDisplayItemsMaker.m
 //  LookinServer
 //
-//  
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/2/19.
+//  https://lookin.work
 //
 
 #import "LKS_HierarchyDisplayItemsMaker.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LookinDisplayItem.h"
 #import "LKS_TraceManager.h"
 #import "LKS_AttrGroupsMaker.h"
+#import "LKS_EventHandlerMaker.h"
 
 @implementation LKS_HierarchyDisplayItemsMaker
 
@@ -47,7 +51,7 @@
     if (hasScreenshots) {
         item.soloScreenshot = [layer lks_soloScreenshotWithLowQuality:lowQuality];
         item.groupScreenshot = [layer lks_groupScreenshotWithLowQuality:lowQuality];
-        item.shouldEncodeScreenshot = YES;
+        item.screenshotEncodeType = LookinDisplayItemImageEncodeTypeNSData;
     }
     
     if (hasAttrList) {
@@ -61,10 +65,14 @@
     if (layer.lks_hostView) {
         UIView *view = layer.lks_hostView;
         item.viewObject = [LookinObject instanceWithObject:view];
+        item.eventHandlers = [LKS_EventHandlerMaker makeForView:view];
+        item.backgroundColor = view.backgroundColor;
         
         if (view.lks_hostViewController) {
             item.hostViewControllerObject = [LookinObject instanceWithObject:view.lks_hostViewController];
         }
+    } else {
+        item.backgroundColor = [UIColor colorWithCGColor:layer.backgroundColor];
     }
     
     if (layer.sublayers.count) {
@@ -83,3 +91,5 @@
 }
 
 @end
+
+#endif

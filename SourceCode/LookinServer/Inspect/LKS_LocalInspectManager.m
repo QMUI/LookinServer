@@ -2,12 +2,15 @@
 //  LKS_LocalInspectManager.m
 //  LookinServer
 //
-//  Copyright © 2019 hughkli. All rights reserved.
+//  Created by Li Kai on 2019/5/8.
+//  https://lookin.work
 //
 
 #import "LKS_LocalInspectManager.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LKS_ConnectionManager.h"
-#import "LookinDefines.h"
 #import "LKS_TraceManager.h"
 #import "LKS_LocalInspectViewController.h"
 
@@ -119,3 +122,5 @@
 }
 
 @end
+
+#endif

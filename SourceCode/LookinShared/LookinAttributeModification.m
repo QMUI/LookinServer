@@ -2,8 +2,11 @@
 //  LookinAttributeModification.m
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/11/20.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinAttributeModification.h"
 
@@ -31,3 +34,5 @@
 }
 
 @end
+
+#endif

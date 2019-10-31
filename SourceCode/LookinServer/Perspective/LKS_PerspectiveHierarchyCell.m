@@ -2,11 +2,14 @@
 //  LKS_PerspectiveHierarchyCell.m
 //  LookinServer
 //
-//  
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/12/24.
+//  https://lookin.work
 //
 
 #import "LKS_PerspectiveHierarchyCell.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "LookinDisplayItem.h"
 #import "LookinIvarTrace.h"
 
@@ -106,25 +109,8 @@
     self.titleLabel.text = self.displayItem.title;
     
     // subtitle
-    NSString *subtitle = nil;
-    
-    NSString *hostViewControllerName = self.displayItem.hostViewControllerObject.nonNamespaceSelfClassName;
-    if (hostViewControllerName.length) {
-        subtitle = [NSString stringWithFormat:@"%@.view", hostViewControllerName];
-    } else {
-        LookinObject *representedObject = self.displayItem.viewObject ? : self.displayItem.layerObject;
-        if (representedObject.specialTrace.length) {
-            subtitle = representedObject.specialTrace;
-            
-        } else if (representedObject.ivarTraces.count) {
-            NSArray<NSString *> *ivarNameList = [representedObject.ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
-                return value.ivarName;
-            }];
-            subtitle = [[[NSSet setWithArray:ivarNameList] allObjects] componentsJoinedByString:@"  "];
-        }
-    }
-    self.subtitleLabel.text = subtitle;
-    self.subtitleLabel.hidden = (subtitle.length == 0);
+    self.subtitleLabel.text = self.displayItem.subtitle;
+    self.subtitleLabel.hidden = (self.displayItem.subtitle.length == 0);
     
     // select
     if (self.displayItem.isSelected) {
@@ -267,7 +253,7 @@
         
     } else if (item.viewObject) {
         [item.viewObject.classChainList enumerateObjectsUsingBlock:^(NSString * _Nonnull className, NSUInteger idx, BOOL * _Nonnull stop) {
-            imageName = [viewsList firstFiltered:^BOOL(NSDictionary<NSString *, NSString*> *obj) {
+            imageName = [viewsList lookin_firstFiltered:^BOOL(NSDictionary<NSString *, NSString*> *obj) {
                 return !!obj[className];
             }][className];
             
@@ -342,3 +328,5 @@
 }
 
 @end
+
+#endif

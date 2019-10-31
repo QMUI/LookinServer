@@ -60,11 +60,3 @@ Lookin 是一款 macOS 软件，它可以查看与修改 iOS App 里的 UI 对�
 Lookin 在 macOS 端的代码未开源，但在 iOS 端的代码已经全部开源，它包含了数据拉取、通讯、图像渲染等完整的相关代码：https://github.com/QMUI/LookinServer/tree/master/SourceCode
 
 下载并打开 “Lookin.xcodeproj” 后，你会看到 “LookinServer” 和 “LookinServer-Universal” 两个 target，选择 “LookinServer-Universal” 并编译，编译完成后项目文件夹会被自动打开，然后你就会看到新生成的 “LookinServer.framework” 文件。
-
-## 加入该项目
-你可以自行探索并向该项目提交代码，我们也已经有了一些已知但不知道如何解决的问题，比如
-- 有的用户在打包时，会报告以下错误，我们尚不知道如何解决：
-> error: exportArchive: Failed to verify bitcode in LookinServer.framework/LookinServer:
-error: Linker option verification failed for bundle /var/folders/d6/bjdx752s38n57nz1s0lz31yh0000gq/T/LookinServerar_KLA/LookinServer.armv7.xar (unrecognized arguments: -platform_version iOS 8.0.0 13.0.0)
-
-- 由于我们团队自身使用 Objective-C 而非 Swift，因此该项目在 Swift 项目中可能遇到一些问题我们难以解决，比如无法正常显示类名（类名前会有难看的 Swift 前缀）、iVar 名称等

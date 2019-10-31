@@ -1,4 +1,7 @@
 #import "PTProtocol.h"
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
+
 #import "PTPrivate.h"
 #import <objc/runtime.h>
 
@@ -422,3 +425,5 @@ static void _release_queue_local_protocol(void *objcobj) {
 }
 
 @end
+
+#endif

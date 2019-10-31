@@ -2,14 +2,17 @@
 //  NSArray+Lookin.m
 //  Lookin
 //
-//  Copyright © 2019 Lookin. All rights reserved.
+//  Created by Li Kai on 2018/9/3.
+//  https://lookin.work
 //
+
+#ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "NSArray+Lookin.h"
 
 @implementation NSArray (Lookin)
 
-- (NSArray *)resizeWithCount:(NSUInteger)count add:(id (^)(NSUInteger idx))addBlock remove:(void (^)(NSUInteger idx, id obj))removeBlock doNext:(void (^)(NSUInteger idx, id obj))doBlock {
+- (NSArray *)lookin_resizeWithCount:(NSUInteger)count add:(id (^)(NSUInteger idx))addBlock remove:(void (^)(NSUInteger idx, id obj))removeBlock doNext:(void (^)(NSUInteger idx, id obj))doBlock {
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:count];
     
     for (NSUInteger i = 0; i < count; i++) {
@@ -48,7 +51,7 @@
     return [resultArray copy];
 }
 
-+ (NSArray *)arrayWithCount:(NSUInteger)count block:(id (^)(NSUInteger idx))block {
++ (NSArray *)lookin_arrayWithCount:(NSUInteger)count block:(id (^)(NSUInteger idx))block {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:count];
     for (NSUInteger i = 0; i < count; i++) {
         id obj = block(i);
@@ -59,7 +62,7 @@
     return [array copy];
 }
 
-- (BOOL)hasIndex:(NSInteger)index {
+- (BOOL)lookin_hasIndex:(NSInteger)index {
     if (index == NSNotFound || index < 0) {
         return NO;
     }
@@ -97,7 +100,7 @@
     return [mArray copy];
 }
 
-- (id)firstFiltered:(BOOL (^)(id obj))block {
+- (id)lookin_firstFiltered:(BOOL (^)(id obj))block {
     if (!block) {
         NSAssert(NO, @"");
         return nil;
@@ -168,7 +171,7 @@
     return accumulator;
 }
 
-- (BOOL)all:(BOOL (^)(id obj))block {
+- (BOOL)lookin_all:(BOOL (^)(id obj))block {
     if (!block) {
         NSAssert(NO, @"");
         return NO;
@@ -239,3 +242,57 @@
 }
 
 @end
+
+@implementation NSMutableArray (Lookin)
+
+- (void)lookin_dequeueWithCount:(NSUInteger)count add:(id (^)(NSUInteger idx))addBlock notDequeued:(void (^)(NSUInteger idx, id obj))notDequeuedBlock doNext:(void (^)(NSUInteger idx, id obj))doBlock {
+    for (NSUInteger i = 0; i < count; i++) {
+        if ([self lookin_hasIndex:i]) {
+            id obj = [self objectAtIndex:i];
+            if (doBlock) {
+                doBlock(i, obj);
+            }
+        } else {
+            if (addBlock) {
+                id newObj = addBlock(i);
+                if (newObj) {
+                    [self addObject:newObj];
+                    if (doBlock) {
+                        doBlock(i, newObj);
+                    }
+                } else {
+                    NSAssert(NO, @"");
+                }
+            } else {
+                NSAssert(NO, @"");
+            }
+        }
+    }
+    
+    if (notDequeuedBlock) {
+        if (self.count > count) {
+            for (NSUInteger i = count; i < self.count; i++) {
+                id obj = [self objectAtIndex:i];
+                notDequeuedBlock(i, obj);
+            }
+        }
+    }
+}
+
+- (void)lookin_removeObjectsPassingTest:(BOOL (^)(NSUInteger idx, id obj))block {
+    if (!block) {
+        return;
+    }
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    [self enumerateObjectsUsingBlock:^(id  _Nonnull currentObj, NSUInteger idx, BOOL * _Nonnull stop) {
+        BOOL boolValue = block(idx, currentObj);
+        if (boolValue) {
+            [indexSet addIndex:idx];
+        }
+    }];
+    [self removeObjectsAtIndexes:indexSet];
+}
+
+@end
+
+#endif
