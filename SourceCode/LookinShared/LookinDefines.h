@@ -22,27 +22,27 @@
 #pragma mark - Version
 
 /// 当前 LookinServer 的版本
-static const int LOOKIN_SERVER_VERSION = 8;
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"0.9.5";
+static const int LOOKIN_SERVER_VERSION = 7;
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.0.0";
 
 /// 当前 LookinClient 的版本
-static const int LOOKIN_CLIENT_VERSION = 8;
+static const int LOOKIN_CLIENT_VERSION = 7;
 
 /// 当前 LookinServer 和 LookinClient 是否是内部实验版本
 static BOOL LOOKIN_SERVER_IS_EXPERIMENTAL = NO;
 static BOOL LOOKIN_CLIENT_IS_EXPERIMENTAL = NO;
 
 /// 当前 Lookin 客户端所支持的 LookinServer 的最低版本
-static const int LOOKIN_SUPPORTED_SERVER_MIN = 8;
+static const int LOOKIN_SUPPORTED_SERVER_MIN = 7;
 /// 当前 Lookin 客户端所支持的 LookinServer 的最高版本
-static const int LOOKIN_SUPPORTED_SERVER_MAX = 8;
+static const int LOOKIN_SUPPORTED_SERVER_MAX = 7;
 
 /// 标记该 LookinServer 是通过什么方式安装的，0:未知，1:CocoaPods，2:手动，3:源代码，4:断点
 static const int LOOKIN_SERVER_SETUP_TYPE = 3;
 
 #pragma mark - Links
 
-static NSString * const LOOKIN_SERVER_FRAMEWORK_URL = @"https://lookin.work/download/framework/LookinServer-0-9-4.zip";
+static NSString * const LOOKIN_SERVER_FRAMEWORK_URL = @"https://lookin.work/download/framework/LookinServer-1-0-0.zip";
 
 #pragma mark - Connection
 
