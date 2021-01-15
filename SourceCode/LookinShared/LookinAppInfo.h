@@ -8,6 +8,8 @@
 
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
+#import "LookinDefines.h"
+
 typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
     LookinAppInfoDeviceSimulator,   // 模拟器
     LookinAppInfoDeviceIPad,    // iPad 真机

@@ -14,6 +14,7 @@
 #import "LKS_TraceManager.h"
 #import "LKS_AttrGroupsMaker.h"
 #import "LKS_EventHandlerMaker.h"
+#import "LookinServerDefines.h"
 
 @implementation LKS_HierarchyDisplayItemsMaker
 

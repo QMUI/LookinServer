@@ -6,6 +6,8 @@
 //  https://lookin.work
 //
 
+#import "LookinCompileConfiguration.h"
+
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import <Foundation/Foundation.h>

@@ -8,7 +8,7 @@
 
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
-#import <Foundation/Foundation.h>
+#import "LookinDefines.h"
 
 typedef NS_ENUM(NSInteger, LookinStaticAsyncUpdateTaskType) {
     LookinStaticAsyncUpdateTaskTypeNoScreenshot,

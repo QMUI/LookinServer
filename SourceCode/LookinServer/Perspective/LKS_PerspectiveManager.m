@@ -13,6 +13,7 @@
 #import "LKS_PerspectiveViewController.h"
 #import "UIViewController+LookinServer.h"
 #import "LookinHierarchyInfo.h"
+#import "LookinServerDefines.h"
 #import "LKS_PerspectiveToolbarButtons.h"
 
 @interface LKS_PerspectiveLoadingMaskView : UIView

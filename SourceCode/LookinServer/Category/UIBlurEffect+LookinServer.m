@@ -7,6 +7,7 @@
 //
 
 #import "UIBlurEffect+LookinServer.h"
+#import "NSObject+Lookin.h"
 
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 

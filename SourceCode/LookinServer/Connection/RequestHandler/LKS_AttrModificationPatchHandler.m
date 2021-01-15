@@ -11,6 +11,7 @@
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinDisplayItemDetail.h"
+#import "LookinServerDefines.h"
 
 @implementation LKS_AttrModificationPatchHandler
 

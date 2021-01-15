@@ -12,6 +12,7 @@
 
 #import "LookinDisplayItem.h"
 #import "LookinIvarTrace.h"
+#import "LookinServerDefines.h"
 
 @interface LKS_PerspectiveHierarchyCell ()
 

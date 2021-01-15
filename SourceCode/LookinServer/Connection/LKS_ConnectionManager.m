@@ -16,6 +16,7 @@
 #import "LKS_LocalInspectManager.h"
 #import "LKS_ExportManager.h"
 #import "LKS_PerspectiveManager.h"
+#import "LookinServerDefines.h"
 
 NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNotificationName";
 

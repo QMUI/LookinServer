@@ -14,6 +14,7 @@
 #import "LKS_PerspectiveItemLayer.h"
 #import "LookinAppInfo.h"
 #import "LookinHierarchyInfo.h"
+#import "LookinServerDefines.h"
 
 @interface LookinDisplayItem (LKS_PerspectiveLayer)
 

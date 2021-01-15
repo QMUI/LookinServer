@@ -11,6 +11,7 @@
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "UIImage+LookinServer.h"
+#import "NSObject+LookinServer.h"
 
 @implementation UIImageView (LookinServer)
 

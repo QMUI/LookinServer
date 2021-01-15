@@ -12,6 +12,7 @@
 
 #import <Objc/runtime.h>
 #import "LookinIvarTrace.h"
+#import "LookinServerDefines.h"
 #import "LKS_LocalInspectManager.h"
 
 @implementation LKS_TraceManager

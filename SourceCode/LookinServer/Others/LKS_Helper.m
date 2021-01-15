@@ -28,6 +28,18 @@
     return [NSString stringWithFormat:@"(%@ *)", className];
 }
 
++ (NSBundle *)bundle {
+    static id bundle = nil;
+    if (bundle != nil) {
+#ifdef SPM_RESOURCE_BUNDLE_IDENTIFITER
+        bundle = [NSBundle bundleWithIdentifier:SPM_RESOURCE_BUNDLE_IDENTIFITER];
+#else
+        bundle = [NSBundle bundleForClass:self.class];
+#endif
+    }
+    return bundle;
+}
+    
 @end
-
+    
 #endif

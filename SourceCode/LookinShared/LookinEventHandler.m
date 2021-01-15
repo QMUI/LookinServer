@@ -12,6 +12,8 @@
 #import "LookinObject.h"
 #import "LookinTuple.h"
 
+#import "NSArray+Lookin.h"
+
 @implementation LookinEventHandler
 
 #pragma mark - <NSCopying>

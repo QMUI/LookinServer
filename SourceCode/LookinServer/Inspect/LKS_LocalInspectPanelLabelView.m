@@ -10,6 +10,8 @@
 
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
+#import "LookinServerDefines.h"
+
 @implementation LKS_LocalInspectPanelLabelView {
     CGFloat _horInset;
 }

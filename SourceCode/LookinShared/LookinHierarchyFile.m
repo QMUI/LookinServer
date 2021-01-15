@@ -10,6 +10,8 @@
 
 #import "LookinHierarchyFile.h"
 
+#import "NSArray+Lookin.h"
+
 @implementation LookinHierarchyFile
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

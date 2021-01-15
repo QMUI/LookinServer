@@ -11,6 +11,7 @@
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "Objc/runtime.h"
+#import "LookinServerDefines.h"
 
 @implementation UIImage (LookinServer)
 
