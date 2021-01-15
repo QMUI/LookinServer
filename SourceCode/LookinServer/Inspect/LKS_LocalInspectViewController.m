@@ -14,6 +14,7 @@
 #import "LookinIvarTrace.h"
 #import "LookinHierarchyInfo.h"
 #import "UIImage+LookinServer.h"
+#import "LookinServerDefines.h"
 
 static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 

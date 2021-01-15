@@ -10,6 +10,7 @@
 
 #import "LookinConnectionAttachment.h"
 #import "LookinDefines.h"
+#import "NSObject+Lookin.h"
 
 static NSString * const Key_Data = @"0";
 static NSString * const Key_DataType = @"1";

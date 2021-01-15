@@ -17,6 +17,7 @@
 #import "LookinAttributeModification.h"
 #import "LookinDisplayItemDetail.h"
 #import "LookinHierarchyInfo.h"
+#import "LookinServerDefines.h"
 #import <objc/runtime.h>
 #import "LookinObject.h"
 #import "LKS_LocalInspectManager.h"

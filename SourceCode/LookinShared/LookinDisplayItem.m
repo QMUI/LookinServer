@@ -15,8 +15,12 @@
 #import "LookinEventHandler.h"
 #import "LookinIvarTrace.h"
 
+#import "NSArray+Lookin.h"
+#import "NSObject+Lookin.h"
+
 #if TARGET_OS_IPHONE
 #import "UIColor+LookinServer.h"
+#import "UIImage+LookinServer.h"
 #elif TARGET_OS_MAC
 #ifdef DEBUG
 #import "LKEfficiencyMonitor.h"

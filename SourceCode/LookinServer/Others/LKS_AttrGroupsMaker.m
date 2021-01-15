@@ -16,6 +16,7 @@
 #import "LookinDashboardBlueprint.h"
 #import "LookinIvarTrace.h"
 #import "UIColor+LookinServer.h"
+#import "LookinServerDefines.h"
 
 @implementation LKS_AttrGroupsMaker
 

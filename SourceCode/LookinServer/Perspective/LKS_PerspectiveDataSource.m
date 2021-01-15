@@ -13,6 +13,7 @@
 #import "UIColor+LookinServer.h"
 #import "LookinDisplayItem.h"
 #import "LookinHierarchyInfo.h"
+#import "LookinServerDefines.h"
 #import "LKS_PerspectiveLayer.h"
 
 @interface LKS_PerspectiveDataSource ()

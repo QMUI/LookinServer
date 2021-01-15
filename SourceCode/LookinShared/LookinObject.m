@@ -11,6 +11,11 @@
 #import "LookinObject.h"
 #import "LookinIvarTrace.h"
 
+#import "NSArray+Lookin.h"
+#import "NSString+Lookin.h"
+
+#import "NSObject+LookinServer.h"
+
 @implementation LookinObject
 
 #if TARGET_OS_IPHONE

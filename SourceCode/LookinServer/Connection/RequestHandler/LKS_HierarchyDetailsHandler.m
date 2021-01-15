@@ -14,6 +14,7 @@
 #import "LKS_AttrGroupsMaker.h"
 #import "LookinStaticAsyncUpdateTask.h"
 #import "LKS_ConnectionManager.h"
+#import "LookinServerDefines.h"
 
 @interface LKS_HierarchyDetailsHandler ()
 

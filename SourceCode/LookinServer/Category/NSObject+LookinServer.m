@@ -6,10 +6,12 @@
 //  https://lookin.work
 //
 
+#import "NSObject+Lookin.h"
 #import "NSObject+LookinServer.h"
 
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
+#import "LookinServerDefines.h"
 #import "LKS_ObjectRegistry.h"
 #import <objc/runtime.h>
 

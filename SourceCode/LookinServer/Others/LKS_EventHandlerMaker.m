@@ -16,6 +16,7 @@
 #import "UIGestureRecognizer+LookinServer.h"
 #import "LookinWeakContainer.h"
 #import "LookinIvarTrace.h"
+#import "LookinServerDefines.h"
 
 @implementation LKS_EventHandlerMaker
 

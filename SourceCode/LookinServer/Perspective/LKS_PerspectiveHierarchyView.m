@@ -12,6 +12,7 @@
 
 #import "LKS_PerspectiveHierarchyCell.h"
 #import "LookinDisplayItem.h"
+#import "LookinServerDefines.h"
 
 @interface LKS_PerspectiveHierarchyView () <UITableViewDelegate, UITableViewDataSource>
 

@@ -7,6 +7,7 @@
 //
 
 #import "UITableView+LookinServer.h"
+#import "LookinServerDefines.h"
 
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 

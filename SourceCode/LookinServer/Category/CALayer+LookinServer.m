@@ -16,6 +16,7 @@
 #import <objc/runtime.h>
 #import "LKS_ConnectionManager.h"
 #import "LookinIvarTrace.h"
+#import "LookinServerDefines.h"
 
 @implementation CALayer (LookinServer)
 

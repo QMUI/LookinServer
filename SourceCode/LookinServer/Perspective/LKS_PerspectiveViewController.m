@@ -16,6 +16,8 @@
 #import "LKS_PerspectiveToolbarButtons.h"
 #import "LKS_PerspectiveItemLayer.h"
 
+#import "LookinServerDefines.h"
+
 typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     LKS_PerspectiveLayoutFullScreen,
     LKS_PerspectiveLayoutHorizontal,

@@ -14,6 +14,7 @@
 #import "LookinHierarchyInfo.h"
 #import "LookinHierarchyFile.h"
 #import "LookinAppInfo.h"
+#import "LookinServerDefines.h"
 
 @interface LKS_ExportManagerMaskView : UIView
 

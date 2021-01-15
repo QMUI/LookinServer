@@ -14,6 +14,7 @@
 #import "NSObject+Lookin.h"
 #import "LookinTuple.h"
 #import "LookinWeakContainer.h"
+#import "LookinServerDefines.h"
 
 @implementation UIGestureRecognizer (LookinServer)
 

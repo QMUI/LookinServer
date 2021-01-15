@@ -80,7 +80,7 @@
 		AA5ECCEA21EDF37600547641 /* LookinConnectionResponseAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = AA5ECCE721EDF37600547641 /* LookinConnectionResponseAttachment.m */; };
 		AA60A09323212F080057DEAA /* UITableView+LookinServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AA60A09123212F080057DEAA /* UITableView+LookinServer.h */; };
 		AA60A09423212F080057DEAA /* UITableView+LookinServer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA60A09223212F080057DEAA /* UITableView+LookinServer.m */; };
-		AA6C5B3421CD31FF00968C26 /* LookinServer_PrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA6C5B3321CD31FF00968C26 /* LookinServer_PrefixHeader.pch */; };
+		AA6C5B3421CD31FF00968C26 /* LookinServerDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = AA6C5B3321CD31FF00968C26 /* LookinServerDefines.h */; };
 		AA74B1CF2289C67200366865 /* LKS_ExportManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AA74B1CD2289C67200366865 /* LKS_ExportManager.h */; };
 		AA74B1D02289C67200366865 /* LKS_ExportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA74B1CE2289C67200366865 /* LKS_ExportManager.m */; };
 		AA88712D2241209A00D8AEEC /* UIView+LookinServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AA88712B2241209A00D8AEEC /* UIView+LookinServer.h */; };
@@ -236,7 +236,7 @@
 		AA5ECCE721EDF37600547641 /* LookinConnectionResponseAttachment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LookinConnectionResponseAttachment.m; sourceTree = "<group>"; };
 		AA60A09123212F080057DEAA /* UITableView+LookinServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+LookinServer.h"; sourceTree = "<group>"; };
 		AA60A09223212F080057DEAA /* UITableView+LookinServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+LookinServer.m"; sourceTree = "<group>"; };
-		AA6C5B3321CD31FF00968C26 /* LookinServer_PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LookinServer_PrefixHeader.pch; sourceTree = "<group>"; };
+		AA6C5B3321CD31FF00968C26 /* LookinServerDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LookinServerDefines.h; sourceTree = "<group>"; };
 		AA74B1CD2289C67200366865 /* LKS_ExportManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LKS_ExportManager.h; sourceTree = "<group>"; };
 		AA74B1CE2289C67200366865 /* LKS_ExportManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKS_ExportManager.m; sourceTree = "<group>"; };
 		AA88712B2241209A00D8AEEC /* UIView+LookinServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+LookinServer.h"; sourceTree = "<group>"; };
@@ -459,7 +459,7 @@
 				AA157848228DD4680064FD39 /* Inspect */,
 				AA15784E228DD5ED0064FD39 /* Perspective */,
 				AAD8C02E22C612DA009253F4 /* Others */,
-				AA6C5B3321CD31FF00968C26 /* LookinServer_PrefixHeader.pch */,
+				AA6C5B3321CD31FF00968C26 /* LookinServerDefines.h */,
 				AA2DB79422E337870045C0EB /* LookinServer.h */,
 				AA48F2B721CC0D030032EC2C /* LookinServer_Info.plist */,
 				AA24D46622E5B7720061D7ED /* LookinServerImages.bundle */,
@@ -657,7 +657,7 @@
 				AAB87305221C387700C25294 /* LookinDisplayItemDetail.h in Headers */,
 				AA5ECCE421EDF33100547641 /* LKS_RequestHandler.h in Headers */,
 				AA15785D228DE1180064FD39 /* LKS_PerspectiveLayer.h in Headers */,
-				AA6C5B3421CD31FF00968C26 /* LookinServer_PrefixHeader.pch in Headers */,
+				AA6C5B3421CD31FF00968C26 /* LookinServerDefines.h in Headers */,
 				AA580DAE22FB053C00D6D4CA /* LKS_EventHandlerMaker.h in Headers */,
 				AAC0880E22255BF200273A5E /* UITextField+LookinServer.h in Headers */,
 				AA8B872322B0EF40009BDAA2 /* LKS_AttrModificationHandler.h in Headers */,
@@ -1005,7 +1005,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "$(SRCROOT)/LookinServer/LookinServer_PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"CAN_COMPILE_LOOKIN_SERVER=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = LookinServer/LookinServer_Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1038,7 +1043,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "$(SRCROOT)/LookinServer/LookinServer_PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = LookinServer/LookinServer_Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

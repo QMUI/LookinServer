@@ -12,8 +12,9 @@
 
 #import <objc/message.h>
 #import <objc/runtime.h>
-#import "LKS_connectionManager.h"
+#import "LKS_ConnectionManager.h"
 #import "LookinMethodTraceRecord.h"
+#import "LookinServerDefines.h"
 
 static NSString * const kActiveListKey_Class = @"class";
 static NSString * const kActiveListKey_Sels = @"sels";

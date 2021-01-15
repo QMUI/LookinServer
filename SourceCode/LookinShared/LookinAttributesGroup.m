@@ -12,6 +12,8 @@
 #import "LookinAttribute.h"
 #import "LookinAttributesSection.h"
 
+#import "NSArray+Lookin.h"
+
 @implementation LookinAttributesGroup
 
 #pragma mark - <NSCopying>

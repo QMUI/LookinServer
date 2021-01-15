@@ -10,6 +10,8 @@
 
 #import "LookinMethodTraceRecord.h"
 
+#import "NSArray+Lookin.h"
+
 @implementation LookinMethodTraceRecordStackItem
 
 @end

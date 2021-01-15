@@ -6,13 +6,16 @@
 //  Copyright © 2018年 tencent. All rights reserved.
 //
 
+#import <objc/runtime.h>
+
 #ifdef CAN_COMPILE_LOOKIN_SERVER
 
 #import "LookinHierarchyInfo.h"
 #import "LookinAttributesGroup.h"
 #import "LookinDisplayItem.h"
 #import "LookinAppInfo.h"
-#import <objc/runtime.h>
+
+#import "NSArray+Lookin.h"
 
 #if TARGET_OS_IPHONE
 #import "LKS_HierarchyDisplayItemsMaker.h"

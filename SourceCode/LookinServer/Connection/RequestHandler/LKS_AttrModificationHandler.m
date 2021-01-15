@@ -15,6 +15,7 @@
 #import "LKS_AttrGroupsMaker.h"
 #import "LookinDisplayItemDetail.h"
 #import "LookinStaticAsyncUpdateTask.h"
+#import "LookinServerDefines.h"
 
 @implementation LKS_AttrModificationHandler
 
