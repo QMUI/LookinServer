@@ -8,6 +8,6 @@ Pod::Spec.new do |spec|
   spec.author       = { "Li Kai" => "lookin@lookin.work" }
   spec.platform     = :ios, "8.0"
   spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "1.0.0"}
-  spec.vendored_frameworks = "LookinServer.framework"
+  spec.vendored_frameworks = "LookinServer.xcframework"
   spec.framework  = "UIKit"
 end
