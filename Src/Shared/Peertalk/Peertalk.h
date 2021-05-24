@@ -19,8 +19,6 @@ FOUNDATION_EXPORT const unsigned char PeertalkVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <Peertalk/PublicHeader.h>
 
 
-#import <Peertalk/PTChannel.h>
-#import <Peertalk/PTProtocol.h>
-#import <Peertalk/PTUSBHub.h>
-
-#endif
+#import "PTChannel.h"
+#import "PTProtocol.h"
+#import "PTUSBHub.h"
