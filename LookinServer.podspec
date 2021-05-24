@@ -6,7 +6,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = "https://lookin.work"
   spec.license      = "GPL-3.0"
   spec.author       = { "Li Kai" => "lookin@lookin.work" }
-  spec.platform     = :ios, "8.0"
+  spec.platform     = :ios, "9.0"
   spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "1.0.1"}
   spec.framework  = "UIKit"
   spec.requires_arc = true
