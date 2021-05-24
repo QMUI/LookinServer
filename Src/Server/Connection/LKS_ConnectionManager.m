@@ -70,11 +70,27 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         return;
     }
     NSLog(@"LookinServer - Trying to connect ...");
+    if ([self isiOSAppOnMac]) {
+        [self _tryToListenOnPortFrom:LookinSimulatorIPv4PortNumberStart to:LookinSimulatorIPv4PortNumberEnd current:LookinSimulatorIPv4PortNumberStart];
+    } else {
+        [self _tryToListenOnPortFrom:LookinUSBDeviceIPv4PortNumberStart to:LookinUSBDeviceIPv4PortNumberEnd current:LookinUSBDeviceIPv4PortNumberStart];
+    }
+}
+
+- (BOOL)isiOSAppOnMac {
 #if TARGET_OS_SIMULATOR
-    [self _tryToListenOnPortFrom:LookinSimulatorIPv4PortNumberStart to:LookinSimulatorIPv4PortNumberEnd current:LookinSimulatorIPv4PortNumberStart];
-#else
-    [self _tryToListenOnPortFrom:LookinUSBDeviceIPv4PortNumberStart to:LookinUSBDeviceIPv4PortNumberEnd current:LookinUSBDeviceIPv4PortNumberStart];
+    return YES;
 #endif
+
+#ifdef IOS14_SDK_ALLOWED
+    if (@available(iOS 14.0, *)) {
+        return [NSProcessInfo processInfo].isiOSAppOnMac || [NSProcessInfo processInfo].isMacCatalystApp;
+    }
+#endif
+    if (@available(iOS 13.0, *)) {
+        return [NSProcessInfo processInfo].isMacCatalystApp;
+    }
+    return NO;
 }
 
 - (void)_tryToListenOnPortFrom:(int)fromPort to:(int)toPort current:(int)currentPort  {
