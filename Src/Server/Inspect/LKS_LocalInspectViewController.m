@@ -601,7 +601,12 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     static dispatch_once_t onceToken;
     static NSArray<Class> *classes = nil;
     dispatch_once(&onceToken,^{
+#if TARGET_OS_TV
+        NSMutableArray<Class> *array = @[[UILabel class], [UIProgressView class], [UIActivityIndicatorView class], [UITextView class], [UITextField class], [UIVisualEffectView class]].mutableCopy;
+#else
         NSMutableArray<Class> *array = @[[UILabel class], [UIProgressView class], [UIActivityIndicatorView class], [UITextView class], [UITextField class], [UISlider class], [UISwitch class], [UIVisualEffectView class]].mutableCopy;
+#endif
+
         NSArray<NSString *> *custom = [LookinHierarchyInfo collapsedClassList];
         if (custom.count) {
             NSArray<Class> *customClasses = [custom lookin_map:^id(NSUInteger idx, NSString *value) {

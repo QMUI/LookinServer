@@ -98,19 +98,28 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
     
     self.hierarchyDragGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handleHierarchyDragGestureRecognizer:)];
+#if TARGET_OS_TV
+#else
     self.hierarchyDragGestureRecognizer.maximumNumberOfTouches = 1;
+#endif
     self.hierarchyDragGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:self.hierarchyDragGestureRecognizer];
     
     self.rotationGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handleRotationGestureRecognizer:)];
+#if TARGET_OS_TV
+#else
     self.rotationGestureRecognizer.maximumNumberOfTouches = 1;
+#endif
     self.rotationGestureRecognizer.delegate = self;
     [self.rotationGestureRecognizer requireGestureRecognizerToFail:self.hierarchyDragGestureRecognizer];
     [self.view addGestureRecognizer:self.rotationGestureRecognizer];
     
     self.twoFingersGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handleTwoFingersGestureRecognizer:)];
+#if TARGET_OS_TV
+#else
     self.twoFingersGestureRecognizer.minimumNumberOfTouches = 2;
     self.twoFingersGestureRecognizer.maximumNumberOfTouches = 2;
+#endif
     [self.view addGestureRecognizer:self.twoFingersGestureRecognizer];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -392,8 +401,12 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     self.closeButton.alpha = 0;
     self.dimensionButtonsView.alpha = 0;
     self.layoutButtonsView.alpha = 0;
-    
+#if TARGET_OS_TV
+    BOOL isLandScape = YES;
+#else
     BOOL isLandScape = UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]);
+#endif
+
     if (isLandScape) {
         self.layoutType = LKS_PerspectiveLayoutHorizontal;
         self.previewAndHierarchySepPosition = 0;

@@ -89,7 +89,11 @@
 
 @interface LKS_ExportManager ()
 
+#if TARGET_OS_TV
+#else
 @property(nonatomic, strong) UIDocumentInteractionController *documentController;
+#endif
+
 
 @property(nonatomic, strong) LKS_ExportManagerMaskView *maskView;
 
@@ -157,6 +161,8 @@
         
         [self.maskView removeFromSuperview];
         
+#if TARGET_OS_TV
+#else
         if (!self.documentController) {
             self.documentController = [UIDocumentInteractionController new];
         }
@@ -166,6 +172,8 @@
         } else {
             [self.documentController presentOpenInMenuFromRect:visibleVc.view.bounds inView:visibleVc.view animated:YES];
         }
+#endif
+
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Lookin_DidFinishExport" object:nil];
         

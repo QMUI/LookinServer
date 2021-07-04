@@ -52,7 +52,10 @@
         
         self.tableView = [[UITableView alloc] init];
         self.tableView.backgroundColor = [UIColor clearColor];
+#if TARGET_OS_TV
+#else
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+#endif
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         [self.scrollView addSubview:self.tableView];
