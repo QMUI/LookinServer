@@ -32,10 +32,26 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
         NSAssert(NO, @"");
         return;
     }
-    if (object) {
-        [[self lookin_allBindObjects] setObject:object forKey:key];
-    } else {
-        [[self lookin_allBindObjects] removeObjectForKey:key];
+    @synchronized (self) {
+        if (object) {
+            [[self lookin_allBindObjects] setObject:object forKey:key];
+        } else {
+            [[self lookin_allBindObjects] removeObjectForKey:key];
+        }
+    }
+}
+
+- (id)lookin_getBindObjectForKey:(NSString *)key {
+    if (!key.length) {
+        NSAssert(NO, @"");
+        return nil;
+    }
+    @synchronized (self) {
+        id storedObj = [[self lookin_allBindObjects] objectForKey:key];
+        if ([storedObj isKindOfClass:[LookinWeakContainer class]]) {
+            storedObj = [(LookinWeakContainer *)storedObj object];
+        }
+        return storedObj;
     }
 }
 
@@ -49,20 +65,8 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
         container.object = object;
         [self lookin_bindObject:container forKey:key];
     } else {
-        [[self lookin_allBindObjects] removeObjectForKey:key];
+        [self lookin_bindObject:nil forKey:key];
     }
-}
-
-- (id)lookin_getBindObjectForKey:(NSString *)key {
-    if (!key.length) {
-        NSAssert(NO, @"");
-        return nil;
-    }
-    id storedObj = [[self lookin_allBindObjects] objectForKey:key];
-    if ([storedObj isKindOfClass:[LookinWeakContainer class]]) {
-        storedObj = [(LookinWeakContainer *)storedObj object];
-    }
-    return storedObj;
 }
 
 - (void)lookin_bindDouble:(double)doubleValue forKey:(NSString *)key {

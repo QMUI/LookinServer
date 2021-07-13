@@ -135,13 +135,13 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     
     CGFloat buttonHeight = 30;
     CGFloat y = 20;
-    if (@available(iOS 11, *)) {
+    if (@available(iOS 11, tvOS 11.0, *)) {
         y = MAX(self.view.safeAreaInsets.top, 20);
     }
     
     self.closeButton.frame = ({
         CGFloat x = 20;
-        if (@available(iOS 11, *)) {
+        if (@available(iOS 11, tvOS 11.0, *)) {
             x = MAX(self.view.safeAreaInsets.left, 20);
         }
         CGRectMake(x, y, buttonHeight, buttonHeight);
@@ -150,7 +150,7 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     CGFloat buttonGroupWidth = 70;
     self.layoutButtonsView.frame = ({
         CGFloat right = 20;
-        if (@available(iOS 11, *)) {
+        if (@available(iOS 11, tvOS 11.0, *)) {
             right = MAX(self.view.safeAreaInsets.right, 20);
         }
         CGRectMake(self.view.bounds.size.width - right - buttonGroupWidth, y, buttonGroupWidth, buttonHeight);
@@ -401,12 +401,12 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     self.closeButton.alpha = 0;
     self.dimensionButtonsView.alpha = 0;
     self.layoutButtonsView.alpha = 0;
+    
 #if TARGET_OS_TV
     BOOL isLandScape = YES;
 #else
     BOOL isLandScape = UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]);
 #endif
-
     if (isLandScape) {
         self.layoutType = LKS_PerspectiveLayoutHorizontal;
         self.previewAndHierarchySepPosition = 0;

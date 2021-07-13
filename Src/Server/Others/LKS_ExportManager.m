@@ -94,7 +94,6 @@
 @property(nonatomic, strong) UIDocumentInteractionController *documentController;
 #endif
 
-
 @property(nonatomic, strong) LKS_ExportManagerMaskView *maskView;
 
 @end
@@ -114,7 +113,13 @@
     return [self sharedInstance];
 }
 
+#if TARGET_OS_TV
 - (void)exportAndShare {
+    NSAssert(NO, @"not supported");
+}
+#else
+- (void)exportAndShare {
+    
     UIViewController *visibleVc = [UIViewController lks_visibleViewController];
     if (!visibleVc) {
         NSLog(@"LookinServer - Failed to export because we didn't find any visible view controller.");
@@ -161,8 +166,6 @@
         
         [self.maskView removeFromSuperview];
         
-#if TARGET_OS_TV
-#else
         if (!self.documentController) {
             self.documentController = [UIDocumentInteractionController new];
         }
@@ -172,8 +175,6 @@
         } else {
             [self.documentController presentOpenInMenuFromRect:visibleVc.view.bounds inView:visibleVc.view animated:YES];
         }
-#endif
-
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Lookin_DidFinishExport" object:nil];
         
@@ -184,5 +185,6 @@
 //        NSLog(@"LookinServer - 导出 UI 结构耗时：%@", @(consumingTime));
     });
 }
+#endif
 
 @end

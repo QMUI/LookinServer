@@ -89,7 +89,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // 注意这里 UIScreenEdgePanGestureRecognizer 在 UIPanGestureRecognizer 前面，因为 UIScreenEdgePanGestureRecognizer 继承于 UIPanGestureRecognizer
-
 #if TARGET_OS_TV
         baseRecognizers = @[[UILongPressGestureRecognizer class],
                             [UIPanGestureRecognizer class],

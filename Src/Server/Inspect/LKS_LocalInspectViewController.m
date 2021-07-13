@@ -289,12 +289,12 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
         CGFloat y = 0;
         
         CGFloat panelMinY = screenInset;
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 11.0, tvOS 11.0, *)) {
             panelMinY = self.view.safeAreaInsets.top;
         }
         
         CGFloat panelMinBottomNeeded = screenInset;
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 11.0, tvOS 11.0, *)) {
             panelMinBottomNeeded = self.view.safeAreaInsets.bottom;
         }
         panelMinBottomNeeded += panelSize.height;
@@ -310,7 +310,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
             } else {
                 // 放到目标内部的上方
                 y = contentRect.origin.y + panelMargin;
-                if (@available(iOS 11.0, *)) {
+                if (@available(iOS 11.0, tvOS 11.0, *)) {
                     y = MAX(y, self.view.safeAreaInsets.top);
                 }
             }
@@ -470,7 +470,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
         CGFloat y;
         if (positionType == 1) {
             // 放到屏幕底部
-            if (@available(iOS 11.0, *)) {
+            if (@available(iOS 11.0, tvOS 11.0, *)) {
                 y = self.view.bounds.size.height - size.height - MAX(self.view.safeAreaInsets.bottom, 20);
             } else {
                 y = self.view.bounds.size.height - size.height - 20;
@@ -478,7 +478,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
         } else {
             NSAssert(positionType == 2, @"");
             // 放到屏幕顶部
-            if (@available(iOS 11.0, *)) {
+            if (@available(iOS 11.0, tvOS 11.0, *)) {
                 y = MAX(self.view.safeAreaInsets.top, 20);
             } else {
                 y = 20;
@@ -606,7 +606,6 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 #else
         NSMutableArray<Class> *array = @[[UILabel class], [UIProgressView class], [UIActivityIndicatorView class], [UITextView class], [UITextField class], [UISlider class], [UISwitch class], [UIVisualEffectView class]].mutableCopy;
 #endif
-
         NSArray<NSString *> *custom = [LookinHierarchyInfo collapsedClassList];
         if (custom.count) {
             NSArray<Class> *customClasses = [custom lookin_map:^id(NSUInteger idx, NSString *value) {
@@ -695,7 +694,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
         [resultArray addObject:@[@"ContentSize", [NSString lookin_stringFromSize:scrollView.contentSize]]];
         [resultArray addObject:@[@"ContentOffset", [NSString lookin_stringFromPoint:scrollView.contentOffset]]];
         [resultArray addObject:@[@"ContentInset", [NSString lookin_stringFromInset:scrollView.contentInset]]];
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 11.0, tvOS 11.0, *)) {
             [resultArray addObject:@[@"AdjustedContentInset", [NSString lookin_stringFromInset:scrollView.adjustedContentInset]]];
         }
         
