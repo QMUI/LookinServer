@@ -517,7 +517,7 @@
         *description = NSStringFromUIOffset(targetValue);
         
     } else {
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 11.0, tvOS 11.0, *)) {
             if (strcmp(returnType, @encode(NSDirectionalEdgeInsets)) == 0) {
                 NSDirectionalEdgeInsets targetValue;
                 [invocation getReturnValue:&targetValue];

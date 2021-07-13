@@ -175,12 +175,16 @@ static NSString * const CodingKey_DeviceType = @"8";
 }
 
 + (UIImage *)appIcon {
+#if TARGET_OS_TV
+    return nil;
+#else
     NSString *imageName = [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"] lastObject];
     if (!imageName.length) {
         // 正常情况下拿到的 name 可能比如 “AppIcon60x60”。但某些情况可能为 nil，此时直接 return 否则 [UIImage imageNamed:nil] 可能导致 console 报 "CUICatalog: Invalid asset name supplied: '(null)'" 的错误信息
         return nil;
     }
     return [UIImage imageNamed:imageName];
+#endif
 }
 
 + (UIImage *)screenshotImage {

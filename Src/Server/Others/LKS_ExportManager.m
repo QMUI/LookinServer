@@ -89,7 +89,10 @@
 
 @interface LKS_ExportManager ()
 
+#if TARGET_OS_TV
+#else
 @property(nonatomic, strong) UIDocumentInteractionController *documentController;
+#endif
 
 @property(nonatomic, strong) LKS_ExportManagerMaskView *maskView;
 
@@ -110,7 +113,13 @@
     return [self sharedInstance];
 }
 
+#if TARGET_OS_TV
 - (void)exportAndShare {
+    NSAssert(NO, @"not supported");
+}
+#else
+- (void)exportAndShare {
+    
     UIViewController *visibleVc = [UIViewController lks_visibleViewController];
     if (!visibleVc) {
         NSLog(@"LookinServer - Failed to export because we didn't find any visible view controller.");
@@ -176,5 +185,6 @@
 //        NSLog(@"LookinServer - 导出 UI 结构耗时：%@", @(consumingTime));
     });
 }
+#endif
 
 @end

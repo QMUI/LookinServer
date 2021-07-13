@@ -98,19 +98,28 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
     
     self.hierarchyDragGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handleHierarchyDragGestureRecognizer:)];
+#if TARGET_OS_TV
+#else
     self.hierarchyDragGestureRecognizer.maximumNumberOfTouches = 1;
+#endif
     self.hierarchyDragGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:self.hierarchyDragGestureRecognizer];
     
     self.rotationGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handleRotationGestureRecognizer:)];
+#if TARGET_OS_TV
+#else
     self.rotationGestureRecognizer.maximumNumberOfTouches = 1;
+#endif
     self.rotationGestureRecognizer.delegate = self;
     [self.rotationGestureRecognizer requireGestureRecognizerToFail:self.hierarchyDragGestureRecognizer];
     [self.view addGestureRecognizer:self.rotationGestureRecognizer];
     
     self.twoFingersGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handleTwoFingersGestureRecognizer:)];
+#if TARGET_OS_TV
+#else
     self.twoFingersGestureRecognizer.minimumNumberOfTouches = 2;
     self.twoFingersGestureRecognizer.maximumNumberOfTouches = 2;
+#endif
     [self.view addGestureRecognizer:self.twoFingersGestureRecognizer];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -126,13 +135,13 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     
     CGFloat buttonHeight = 30;
     CGFloat y = 20;
-    if (@available(iOS 11, *)) {
+    if (@available(iOS 11, tvOS 11.0, *)) {
         y = MAX(self.view.safeAreaInsets.top, 20);
     }
     
     self.closeButton.frame = ({
         CGFloat x = 20;
-        if (@available(iOS 11, *)) {
+        if (@available(iOS 11, tvOS 11.0, *)) {
             x = MAX(self.view.safeAreaInsets.left, 20);
         }
         CGRectMake(x, y, buttonHeight, buttonHeight);
@@ -141,7 +150,7 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     CGFloat buttonGroupWidth = 70;
     self.layoutButtonsView.frame = ({
         CGFloat right = 20;
-        if (@available(iOS 11, *)) {
+        if (@available(iOS 11, tvOS 11.0, *)) {
             right = MAX(self.view.safeAreaInsets.right, 20);
         }
         CGRectMake(self.view.bounds.size.width - right - buttonGroupWidth, y, buttonGroupWidth, buttonHeight);
@@ -393,7 +402,11 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
     self.dimensionButtonsView.alpha = 0;
     self.layoutButtonsView.alpha = 0;
     
+#if TARGET_OS_TV
+    BOOL isLandScape = YES;
+#else
     BOOL isLandScape = UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]);
+#endif
     if (isLandScape) {
         self.layoutType = LKS_PerspectiveLayoutHorizontal;
         self.previewAndHierarchySepPosition = 0;
