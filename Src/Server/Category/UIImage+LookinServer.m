@@ -6,8 +6,8 @@
 //  https://lookin.work
 //
 
+#import <objc/runtime.h>
 #import "UIImage+LookinServer.h"
-#import "Objc/runtime.h"
 #import "LookinServerDefines.h"
 
 @implementation UIImage (LookinServer)
