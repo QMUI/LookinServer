@@ -47,7 +47,12 @@
     }
     
     LookinDisplayItem *item = [LookinDisplayItem new];
-    item.frame = layer.frame;
+    if ([self validateFrame:layer.frame]) {
+        item.frame = layer.frame;
+    } else {
+        NSLog(@"LookinServer - 该 layer 的 frame(%@) 不太寻常，可能导致 Lookin 客户端中图像渲染错误，因此这里暂时将其视为 CGRectZero", NSStringFromCGRect(layer.frame));
+        item.frame = CGRectZero;
+    }
     item.bounds = layer.bounds;
     if (hasScreenshots) {
         item.soloScreenshot = [layer lks_soloScreenshotWithLowQuality:lowQuality];
@@ -90,5 +95,23 @@
     
     return item;
 }
+
++ (BOOL)validateFrame:(CGRect)frame {
+    return !CGRectIsNull(frame) && !CGRectIsInfinite(frame) && ![self cgRectIsNaN:frame] && ![self cgRectIsInf:frame] && ![self cgRectIsUnreasonable:frame];
+}
+
++ (BOOL)cgRectIsNaN:(CGRect)rect {
+    return isnan(rect.origin.x) || isnan(rect.origin.y) || isnan(rect.size.width) || isnan(rect.size.height);
+}
+
++ (BOOL)cgRectIsInf:(CGRect)rect {
+    return isinf(rect.origin.x) || isinf(rect.origin.y) || isinf(rect.size.width) || isinf(rect.size.height);
+}
+
++ (BOOL)cgRectIsUnreasonable:(CGRect)rect {
+    return ABS(rect.origin.x) > 100000 || ABS(rect.origin.y) > 100000 || rect.size.width < 0 || rect.size.height < 0 || rect.size.width > 100000 || rect.size.height > 100000;
+}
+
+
 
 @end
