@@ -17,12 +17,12 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getInstanceMethod([self class], @selector(initWithFrame:));
-        Method newMethod = class_getInstanceMethod([self class], @selector(lks_initWithFrame:));
+        Method oriMethod = class_getInstanceMethod([UIView class], @selector(initWithFrame:));
+        Method newMethod = class_getInstanceMethod([UIView class], @selector(lks_initWithFrame:));
         method_exchangeImplementations(oriMethod, newMethod);
         
-        oriMethod = class_getInstanceMethod([self class], @selector(initWithCoder:));
-        newMethod = class_getInstanceMethod([self class], @selector(lks_initWithCoder:));
+        oriMethod = class_getInstanceMethod([UIView class], @selector(initWithCoder:));
+        newMethod = class_getInstanceMethod([UIView class], @selector(lks_initWithCoder:));
         method_exchangeImplementations(oriMethod, newMethod);
     });
 }
