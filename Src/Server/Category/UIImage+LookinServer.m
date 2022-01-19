@@ -15,21 +15,21 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getClassMethod([self class], @selector(imageNamed:));
-        Method newMethod = class_getClassMethod([self class], @selector(lks_imageNamed:));
+        Method oriMethod = class_getClassMethod([UIImage class], @selector(imageNamed:));
+        Method newMethod = class_getClassMethod([UIImage class], @selector(lks_imageNamed:));
         method_exchangeImplementations(oriMethod, newMethod);
         
-        oriMethod = class_getClassMethod([self class], @selector(imageWithContentsOfFile:));
-        newMethod = class_getClassMethod([self class], @selector(lks_imageWithContentsOfFile:));
+        oriMethod = class_getClassMethod([UIImage class], @selector(imageWithContentsOfFile:));
+        newMethod = class_getClassMethod([UIImage class], @selector(lks_imageWithContentsOfFile:));
         method_exchangeImplementations(oriMethod, newMethod);
         
-        oriMethod = class_getClassMethod([self class], @selector(imageNamed:inBundle:compatibleWithTraitCollection:));
-        newMethod = class_getClassMethod([self class], @selector(lks_imageNamed:inBundle:compatibleWithTraitCollection:));
+        oriMethod = class_getClassMethod([UIImage class], @selector(imageNamed:inBundle:compatibleWithTraitCollection:));
+        newMethod = class_getClassMethod([UIImage class], @selector(lks_imageNamed:inBundle:compatibleWithTraitCollection:));
         method_exchangeImplementations(oriMethod, newMethod);
         
         if (@available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)) {
-            oriMethod = class_getClassMethod([self class], @selector(imageNamed:inBundle:withConfiguration:));
-            newMethod = class_getClassMethod([self class], @selector(lks_imageNamed:inBundle:withConfiguration:));
+            oriMethod = class_getClassMethod([UIImage class], @selector(imageNamed:inBundle:withConfiguration:));
+            newMethod = class_getClassMethod([UIImage class], @selector(lks_imageNamed:inBundle:withConfiguration:));
             method_exchangeImplementations(oriMethod, newMethod);
         }
     });

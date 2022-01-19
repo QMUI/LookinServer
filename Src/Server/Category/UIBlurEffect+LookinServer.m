@@ -15,8 +15,8 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getClassMethod([self class], @selector(effectWithStyle:));
-        Method newMethod = class_getClassMethod([self class], @selector(lks_effectWithStyle:));
+        Method oriMethod = class_getClassMethod([UIBlurEffect class], @selector(effectWithStyle:));
+        Method newMethod = class_getClassMethod([UIBlurEffect class], @selector(lks_effectWithStyle:));
         method_exchangeImplementations(oriMethod, newMethod);
     });
 }

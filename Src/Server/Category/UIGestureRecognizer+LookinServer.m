@@ -20,16 +20,16 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getInstanceMethod([self class], @selector(initWithTarget:action:));
-        Method newMethod = class_getInstanceMethod([self class], @selector(lks_initWithTarget:action:));
+        Method oriMethod = class_getInstanceMethod([UIGestureRecognizer class], @selector(initWithTarget:action:));
+        Method newMethod = class_getInstanceMethod([UIGestureRecognizer class], @selector(lks_initWithTarget:action:));
         method_exchangeImplementations(oriMethod, newMethod);
         
-        oriMethod = class_getInstanceMethod([self class], @selector(addTarget:action:));
-        newMethod = class_getInstanceMethod([self class], @selector(lks_addTarget:action:));
+        oriMethod = class_getInstanceMethod([UIGestureRecognizer class], @selector(addTarget:action:));
+        newMethod = class_getInstanceMethod([UIGestureRecognizer class], @selector(lks_addTarget:action:));
         method_exchangeImplementations(oriMethod, newMethod);
         
-        oriMethod = class_getInstanceMethod([self class], @selector(removeTarget:action:));
-        newMethod = class_getInstanceMethod([self class], @selector(lks_removeTarget:action:));
+        oriMethod = class_getInstanceMethod([UIGestureRecognizer class], @selector(removeTarget:action:));
+        newMethod = class_getInstanceMethod([UIGestureRecognizer class], @selector(lks_removeTarget:action:));
         method_exchangeImplementations(oriMethod, newMethod);
     });
 }

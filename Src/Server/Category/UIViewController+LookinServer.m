@@ -15,8 +15,8 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getInstanceMethod([self class], @selector(viewDidLoad));
-        Method newMethod = class_getInstanceMethod([self class], @selector(lks_viewDidLoad));
+        Method oriMethod = class_getInstanceMethod([UIViewController class], @selector(viewDidLoad));
+        Method newMethod = class_getInstanceMethod([UIViewController class], @selector(lks_viewDidLoad));
         method_exchangeImplementations(oriMethod, newMethod);
     });
 }
