@@ -1,13 +1,13 @@
-#import "PTProtocol.h"
+#import "Lookin_PTProtocol.h"
 
 
 
-#import "PTPrivate.h"
+#import "Lookin_PTPrivate.h"
 #import <objc/runtime.h>
 
 static const uint32_t PTProtocolVersion1 = 1;
 
-NSString * const PTProtocolErrorDomain = @"PTProtocolError";
+NSString * const Lookin_PTProtocolErrorDomain = @"PTProtocolError";
 
 // This is what we send as the header for each frame.
 typedef struct _PTFrame {
@@ -29,7 +29,7 @@ typedef struct _PTFrame {
 } PTFrame;
 
 
-@interface PTProtocol () {
+@interface Lookin_PTProtocol () {
   uint32_t nextFrameTag_;
   @public
   dispatch_queue_t queue_;
@@ -40,32 +40,32 @@ typedef struct _PTFrame {
 
 static void _release_queue_local_protocol(void *objcobj) {
   if (objcobj) {
-    PTProtocol *protocol = (__bridge_transfer id)objcobj;
+    Lookin_PTProtocol *protocol = (__bridge_transfer id)objcobj;
     protocol->queue_ = NULL;
   }
 }
 
 
-@interface RQueueLocalIOFrameProtocol : PTProtocol
+@interface Lookin_RQueueLocalIOFrameProtocol : Lookin_PTProtocol
 @end
-@implementation RQueueLocalIOFrameProtocol
+@implementation Lookin_RQueueLocalIOFrameProtocol
 - (void)setQueue:(dispatch_queue_t)queue {
 }
 @end
 
 
-@implementation PTProtocol
+@implementation Lookin_PTProtocol
 
 
-+ (PTProtocol*)sharedProtocolForQueue:(dispatch_queue_t)queue {
++ (Lookin_PTProtocol*)sharedProtocolForQueue:(dispatch_queue_t)queue {
   static const char currentQueueFrameProtocolKey;
   //dispatch_queue_t queue = dispatch_get_current_queue();
-  PTProtocol *currentQueueFrameProtocol = (__bridge PTProtocol*)dispatch_queue_get_specific(queue, &currentQueueFrameProtocolKey);
+  Lookin_PTProtocol *currentQueueFrameProtocol = (__bridge Lookin_PTProtocol*)dispatch_queue_get_specific(queue, &currentQueueFrameProtocolKey);
   if (!currentQueueFrameProtocol) {
-    currentQueueFrameProtocol = [[RQueueLocalIOFrameProtocol alloc] initWithDispatchQueue:NULL];
+    currentQueueFrameProtocol = [[Lookin_RQueueLocalIOFrameProtocol alloc] initWithDispatchQueue:NULL];
     currentQueueFrameProtocol->queue_ = queue; // reference, no retain, since we would create cyclic references
     dispatch_queue_set_specific(queue, &currentQueueFrameProtocolKey, (__bridge_retained void*)currentQueueFrameProtocol, &_release_queue_local_protocol);
-    return (__bridge PTProtocol*)dispatch_queue_get_specific(queue, &currentQueueFrameProtocolKey); // to avoid race conds
+    return (__bridge Lookin_PTProtocol*)dispatch_queue_get_specific(queue, &currentQueueFrameProtocolKey); // to avoid race conds
   } else {
     return currentQueueFrameProtocol;
   }
@@ -209,7 +209,7 @@ static void _release_queue_local_protocol(void *objcobj) {
 #if PT_DISPATCH_RETAIN_RELEASE
         if (allData) dispatch_release(allData);
 #endif
-        callback([[NSError alloc] initWithDomain:PTProtocolErrorDomain code:0 userInfo:nil], 0, 0, 0);
+        callback([[NSError alloc] initWithDomain:Lookin_PTProtocolErrorDomain code:0 userInfo:nil], 0, 0, 0);
         return;
       }
       
@@ -227,7 +227,7 @@ static void _release_queue_local_protocol(void *objcobj) {
       
       frame->version = ntohl(frame->version);
       if (frame->version != PTProtocolVersion1) {
-        callback([[NSError alloc] initWithDomain:PTProtocolErrorDomain code:0 userInfo:nil], 0, 0, 0);
+        callback([[NSError alloc] initWithDomain:Lookin_PTProtocolErrorDomain code:0 userInfo:nil], 0, 0, 0);
       } else {
         frame->type = ntohl(frame->type);
         frame->tag = ntohl(frame->tag);
@@ -331,11 +331,11 @@ static void _release_queue_local_protocol(void *objcobj) {
 @end
 
 
-@interface _PTDispatchData : NSObject {
+@interface Lookin_PTDispatchData : NSObject {
   dispatch_data_t dispatchData_;
 }
 @end
-@implementation _PTDispatchData
+@implementation Lookin_PTDispatchData
 - (id)initWithDispatchData:(dispatch_data_t)dispatchData {
   if (!(self = [super init])) return nil;
   dispatchData_ = dispatchData;
@@ -351,7 +351,7 @@ static void _release_queue_local_protocol(void *objcobj) {
 }
 @end
 
-@implementation NSData (PTProtocol)
+@implementation NSData (Lookin_PTProtocol)
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-getter-return-value"
@@ -379,7 +379,7 @@ static void _release_queue_local_protocol(void *objcobj) {
     return nil;
   }
   
-  _PTDispatchData *dispatchDataRef = [[_PTDispatchData alloc] initWithDispatchData:contiguousData];
+  Lookin_PTDispatchData *dispatchDataRef = [[Lookin_PTDispatchData alloc] initWithDispatchData:contiguousData];
   NSData *newData = [NSData dataWithBytesNoCopy:(void*)buffer length:bufferSize freeWhenDone:NO];
 #if PT_DISPATCH_RETAIN_RELEASE
   dispatch_release(contiguousData);
@@ -393,7 +393,7 @@ static void _release_queue_local_protocol(void *objcobj) {
 @end
 
 
-@implementation NSDictionary (PTProtocol)
+@implementation NSDictionary (Lookin_PTProtocol)
 
 - (dispatch_data_t)createReferencingDispatchData {
   NSError *error = nil;

@@ -19,7 +19,7 @@
 
 /// 当前 LookinServer 的版本
 static const int LOOKIN_SERVER_VERSION = 7;
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.0.0";
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.0.5";
 
 /// 当前 LookinClient 的版本
 static const int LOOKIN_CLIENT_VERSION = 7;
@@ -34,7 +34,7 @@ static const int LOOKIN_SUPPORTED_SERVER_MIN = 7;
 static const int LOOKIN_SUPPORTED_SERVER_MAX = 7;
 
 /// 标记该 LookinServer 是通过什么方式安装的，0:未知，1:CocoaPods，2:手动，3:源代码，4:断点
-static const int LOOKIN_SERVER_SETUP_TYPE = 3;
+static const int LOOKIN_SERVER_SETUP_TYPE = 1;
 
 #pragma mark - Links
 

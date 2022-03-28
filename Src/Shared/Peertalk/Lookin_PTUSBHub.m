@@ -1,8 +1,8 @@
-#import "PTUSBHub.h"
+#import "Lookin_PTUSBHub.h"
 
 
 
-#import "PTPrivate.h"
+#import "Lookin_PTPrivate.h"
 
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -10,7 +10,7 @@
 #include <sys/un.h>
 #include <err.h>
 
-NSString * const PTUSBHubErrorDomain = @"PTUSBHubError";
+NSString * const Lookin_PTUSBHubErrorDomain = @"PTUSBHubError";
 
 typedef uint32_t USBMuxPacketType;
 enum {
@@ -109,21 +109,21 @@ static void usbmux_packet_free(usbmux_packet_t *upacket) {
 }
 
 
-NSString * const PTUSBDeviceDidAttachNotification = @"PTUSBDeviceDidAttachNotification";
-NSString * const PTUSBDeviceDidDetachNotification = @"PTUSBDeviceDidDetachNotification";
+NSString * const Lookin_PTUSBDeviceDidAttachNotification = @"Lookin_PTUSBDeviceDidAttachNotification";
+NSString * const Lookin_PTUSBDeviceDidDetachNotification = @"Lookin_PTUSBDeviceDidDetachNotification";
 
 static NSString *kPlistPacketTypeListen = @"Listen";
 static NSString *kPlistPacketTypeConnect = @"Connect";
 
 
 // Represents a channel of communication between the host process and a remote
-// (device) system. In practice, a PTUSBChannel is connected to a usbmuxd
+// (device) system. In practice, a Lookin_PTUSBChannel is connected to a usbmuxd
 // endpoint which is configured to either listen for device changes (the
 // PTUSBHub's channel is usually configured as a device notification listener) or
 // configured as a TCP bridge (e.g. channels returned from PTUSBHub's
 // connectToDevice:port:callback:). You should not create channels yourself, but
-// let PTUSBHub provide you with already configured channels.
-@interface PTUSBChannel : NSObject {
+// let Lookin_PTUSBHub provide you with already configured channels.
+@interface Lookin_PTUSBChannel : NSObject {
   dispatch_io_t channel_;
   dispatch_queue_t queue_;
   uint32_t nextPacketTag_;
@@ -133,8 +133,8 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 }
 
 // The underlying dispatch I/O channel. This is handy if you want to handle your
-// own I/O logic without PTUSBChannel. Remember to dispatch_retain() the channel
-// if you plan on using it as it might be released from the PTUSBChannel at any
+// own I/O logic without Lookin_PTUSBChannel. Remember to dispatch_retain() the channel
+// if you plan on using it as it might be released from the Lookin_PTUSBChannel at any
 // point in time.
 @property (readonly) dispatch_io_t dispatchChannel;
 
@@ -159,7 +159,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 @end
 
 
-@interface PTUSBChannel (Private)
+@interface Lookin_PTUSBChannel (Private)
 
 + (NSDictionary*)packetDictionaryWithPacketType:(NSString*)messageType payload:(NSDictionary*)payload;
 - (BOOL)openOnQueue:(dispatch_queue_t)queue error:(NSError**)error onEnd:(void(^)(NSError *error))onEnd;
@@ -175,24 +175,24 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 @end
 
 
-@interface PTUSBHub () {
-  PTUSBChannel *channel_;
+@interface Lookin_PTUSBHub () {
+  Lookin_PTUSBChannel *channel_;
 }
 - (void)handleBroadcastPacket:(NSDictionary*)packet;
 @end
 
 
-@implementation PTUSBHub
+@implementation Lookin_PTUSBHub
 
 
-+ (PTUSBHub*)sharedHub {
-  static PTUSBHub *gSharedHub;
++ (Lookin_PTUSBHub*)sharedHub {
+  static Lookin_PTUSBHub *gSharedHub;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    gSharedHub = [PTUSBHub new];
+    gSharedHub = [Lookin_PTUSBHub new];
     [gSharedHub listenOnQueue:dispatch_get_main_queue() onStart:^(NSError *error) {
       if (error) {
-        NSLog(@"PTUSBHub failed to initialize: %@", error);
+        NSLog(@"Lookin_PTUSBHub failed to initialize: %@", error);
       }
     } onEnd:nil];
   });
@@ -212,7 +212,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
     if (onStart) onStart(nil);
     return;
   }
-  channel_ = [PTUSBChannel new];
+  channel_ = [Lookin_PTUSBChannel new];
   NSError *error = nil;
   if ([channel_ openOnQueue:queue error:&error onEnd:onEnd]) {
     [channel_ listenWithBroadcastHandler:^(NSDictionary *packet) { [self handleBroadcastPacket:packet]; } callback:onStart];
@@ -223,7 +223,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 
 
 - (void)connectToDevice:(NSNumber*)deviceID port:(int)port onStart:(void(^)(NSError*, dispatch_io_t))onStart onEnd:(void(^)(NSError*))onEnd {
-  PTUSBChannel *channel = [PTUSBChannel new];
+  Lookin_PTUSBChannel *channel = [Lookin_PTUSBChannel new];
   NSError *error = nil;
   
   if (![channel openOnQueue:dispatch_get_main_queue() error:&error onEnd:onEnd]) {
@@ -233,7 +233,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
   
   port = ((port<<8) & 0xFF00) | (port>>8); // limit
   
-  NSDictionary *packet = [PTUSBChannel packetDictionaryWithPacketType:kPlistPacketTypeConnect
+  NSDictionary *packet = [Lookin_PTUSBChannel packetDictionaryWithPacketType:kPlistPacketTypeConnect
                                                              payload:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                       deviceID, @"DeviceID",
                                                                       [NSNumber numberWithInt:port], @"PortNumber",
@@ -251,9 +251,9 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
   NSString *messageType = [packet objectForKey:@"MessageType"];
   
   if ([@"Attached" isEqualToString:messageType]) {
-    [[NSNotificationCenter defaultCenter] postNotificationName:PTUSBDeviceDidAttachNotification object:self userInfo:packet];
+    [[NSNotificationCenter defaultCenter] postNotificationName:Lookin_PTUSBDeviceDidAttachNotification object:self userInfo:packet];
   } else if ([@"Detached" isEqualToString:messageType]) {
-    [[NSNotificationCenter defaultCenter] postNotificationName:PTUSBDeviceDidDetachNotification object:self userInfo:packet];
+    [[NSNotificationCenter defaultCenter] postNotificationName:Lookin_PTUSBDeviceDidDetachNotification object:self userInfo:packet];
   } else {
     NSLog(@"Warning: Unhandled broadcast message: %@", packet);
   }
@@ -264,7 +264,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 
 #pragma mark -
 
-@implementation PTUSBChannel
+@implementation Lookin_PTUSBChannel
 
 + (NSDictionary*)packetDictionaryWithPacketType:(NSString*)messageType payload:(NSDictionary*)payload {
   NSDictionary *packet = nil;
@@ -374,7 +374,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
   autoReadPackets_ = YES;
   [self scheduleReadPacketWithBroadcastHandler:broadcastHandler];
   
-  NSDictionary *packet = [PTUSBChannel packetDictionaryWithPacketType:kPlistPacketTypeListen payload:nil];
+  NSDictionary *packet = [Lookin_PTUSBChannel packetDictionaryWithPacketType:kPlistPacketTypeListen payload:nil];
   
   [self sendRequest:packet callback:^(NSError *error_, NSDictionary *responsePacket) {
     if (!callback)
@@ -393,7 +393,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
     NSNumber *n = [packet objectForKey:@"Number"];
     
     if (!n) {
-      *error = [NSError errorWithDomain:PTUSBHubErrorDomain code:(n ? n.integerValue : 0) userInfo:nil];
+      *error = [NSError errorWithDomain:Lookin_PTUSBHubErrorDomain code:(n ? n.integerValue : 0) userInfo:nil];
       return NO;
     }
     
@@ -407,7 +407,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
         case USBMuxReplyCodeBadVersion: errmessage = @"invalid version"; break;
         default: break;
       }
-      *error = [NSError errorWithDomain:PTUSBHubErrorDomain code:replyCode userInfo:[NSDictionary dictionaryWithObject:errmessage forKey:NSLocalizedDescriptionKey]];
+      *error = [NSError errorWithDomain:Lookin_PTUSBHubErrorDomain code:replyCode userInfo:[NSDictionary dictionaryWithObject:errmessage forKey:NSLocalizedDescriptionKey]];
       return NO;
     }
   }
@@ -525,7 +525,7 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 
       if (upacket_len > kUsbmuxPacketMaxPayloadSize) {
         callback(
-          [[NSError alloc] initWithDomain:PTUSBHubErrorDomain code:1 userInfo:@{
+          [[NSError alloc] initWithDomain:Lookin_PTUSBHubErrorDomain code:1 userInfo:@{
             NSLocalizedDescriptionKey:@"Received a packet that is too large"}],
           nil,
           0
@@ -546,14 +546,14 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
       
       // We only support plist protocol
       if (upacket->protocol != USBMuxPacketProtocolPlist) {
-        callback([[NSError alloc] initWithDomain:PTUSBHubErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:@"Unexpected package protocol" forKey:NSLocalizedDescriptionKey]], nil, upacket->tag);
+        callback([[NSError alloc] initWithDomain:Lookin_PTUSBHubErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:@"Unexpected package protocol" forKey:NSLocalizedDescriptionKey]], nil, upacket->tag);
         usbmux_packet_free(upacket);
         return;
       }
       
       // Only one type of packet in the plist protocol
       if (upacket->type != USBMuxPacketTypePlistPayload) {
-        callback([[NSError alloc] initWithDomain:PTUSBHubErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:@"Unexpected package type" forKey:NSLocalizedDescriptionKey]], nil, upacket->tag);
+        callback([[NSError alloc] initWithDomain:Lookin_PTUSBHubErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:@"Unexpected package type" forKey:NSLocalizedDescriptionKey]], nil, upacket->tag);
         usbmux_packet_free(upacket);
         return;
       }

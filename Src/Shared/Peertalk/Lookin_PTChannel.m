@@ -1,8 +1,8 @@
-#import "PTChannel.h"
+#import "Lookin_PTChannel.h"
 
 
 
-#import "PTPrivate.h"
+#import "Lookin_PTPrivate.h"
 
 #include <sys/ioctl.h>
 #include <sys/un.h>
@@ -34,46 +34,46 @@
 #pragma mark -
 // Note: We are careful about the size of this struct as each connected peer
 // implies one allocation of this struct.
-@interface PTChannel () {
+@interface Lookin_PTChannel () {
   dispatch_io_t dispatchObj_channel_;
   dispatch_source_t dispatchObj_source_;
   NSError *endError_;              // 64 bit
 @public  // here be hacks
-  id<PTChannelDelegate> delegate_; // 64 bit
+  id<Lookin_PTChannelDelegate> delegate_; // 64 bit
   uint8_t delegateFlags_;             // 8 bit
 @private
   uint8_t connState_;                 // 8 bit
   //char padding_[6];              // 48 bit -- only if allocation speed is important
 }
-- (id)initWithProtocol:(PTProtocol*)protocol delegate:(id<PTChannelDelegate>)delegate;
+- (id)initWithProtocol:(Lookin_PTProtocol*)protocol delegate:(id<Lookin_PTChannelDelegate>)delegate;
 - (BOOL)acceptIncomingConnection:(dispatch_fd_t)serverSocketFD;
 @end
 static const uint8_t kUserInfoKey;
 
 #pragma mark -
-@interface PTData ()
+@interface Lookin_PTData ()
 - (id)initWithMappedDispatchData:(dispatch_data_t)mappedContiguousData data:(void*)data length:(size_t)length;
 @end
 
 #pragma mark -
-@interface PTAddress () {
+@interface Lookin_PTAddress () {
   struct sockaddr_storage sockaddr_;
 }
 - (id)initWithSockaddr:(const struct sockaddr_storage*)addr;
 @end
 
 #pragma mark -
-@implementation PTChannel
+@implementation Lookin_PTChannel
 
 @synthesize protocol = protocol_;
 
 
-+ (PTChannel*)channelWithDelegate:(id<PTChannelDelegate>)delegate {
-  return [[PTChannel alloc] initWithProtocol:[PTProtocol sharedProtocolForQueue:dispatch_get_main_queue()] delegate:delegate];
++ (Lookin_PTChannel*)channelWithDelegate:(id<Lookin_PTChannelDelegate>)delegate {
+  return [[Lookin_PTChannel alloc] initWithProtocol:[Lookin_PTProtocol sharedProtocolForQueue:dispatch_get_main_queue()] delegate:delegate];
 }
 
 
-- (id)initWithProtocol:(PTProtocol*)protocol delegate:(id<PTChannelDelegate>)delegate {
+- (id)initWithProtocol:(Lookin_PTProtocol*)protocol delegate:(id<Lookin_PTChannelDelegate>)delegate {
   if (!(self = [super init])) return nil;
   protocol_ = protocol;
   self.delegate = delegate;
@@ -81,7 +81,7 @@ static const uint8_t kUserInfoKey;
 }
 
 
-- (id)initWithProtocol:(PTProtocol*)protocol {
+- (id)initWithProtocol:(Lookin_PTProtocol*)protocol {
   if (!(self = [super init])) return nil;
   protocol_ = protocol;
   return self;
@@ -89,7 +89,7 @@ static const uint8_t kUserInfoKey;
 
 
 - (id)init {
-  return [self initWithProtocol:[PTProtocol sharedProtocolForQueue:dispatch_get_main_queue()]];
+  return [self initWithProtocol:[Lookin_PTProtocol sharedProtocolForQueue:dispatch_get_main_queue()]];
 }
 
 
@@ -157,12 +157,12 @@ static const uint8_t kUserInfoKey;
 }
 
 
-- (id<PTChannelDelegate>)delegate {
+- (id<Lookin_PTChannelDelegate>)delegate {
   return delegate_;
 }
 
 
-- (void)setDelegate:(id<PTChannelDelegate>)delegate {
+- (void)setDelegate:(id<Lookin_PTChannelDelegate>)delegate {
   delegate_ = delegate;
   delegateFlags_ = 0;
   if (!delegate_) {
@@ -193,7 +193,7 @@ static const uint8_t kUserInfoKey;
 #pragma mark - Connecting
 
 
-- (void)connectToPort:(int)port overUSBHub:(PTUSBHub*)usbHub deviceID:(NSNumber*)deviceID callback:(void(^)(NSError *error))callback {
+- (void)connectToPort:(int)port overUSBHub:(Lookin_PTUSBHub*)usbHub deviceID:(NSNumber*)deviceID callback:(void(^)(NSError *error))callback {
   assert(protocol_ != NULL);
   if (connState_ != kConnStateNone) {
     if (callback) callback([NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil]);
@@ -217,7 +217,7 @@ static const uint8_t kUserInfoKey;
 }
 
 
-- (void)connectToPort:(in_port_t)port IPv4Address:(in_addr_t)address callback:(void(^)(NSError *error, PTAddress *address))callback {
+- (void)connectToPort:(in_port_t)port IPv4Address:(in_addr_t)address callback:(void(^)(NSError *error, Lookin_PTAddress *address))callback {
   assert(protocol_ != NULL);
   if (connState_ != kConnStateNone) {
     if (callback) callback([NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil], nil);
@@ -285,7 +285,7 @@ static const uint8_t kUserInfoKey;
   
   // Success
   NSError *err = nil;
-  PTAddress *ptAddr = [[PTAddress alloc] initWithSockaddr:(struct sockaddr_storage*)&addr];
+  Lookin_PTAddress *ptAddr = [[Lookin_PTAddress alloc] initWithSockaddr:(struct sockaddr_storage*)&addr];
   [self startReadingFromConnectedChannel:dispatchChannel error:&err];
   if (callback) callback(err, ptAddr);
 }
@@ -388,8 +388,8 @@ static const uint8_t kUserInfoKey;
   }
   
   if (delegateFlags_ & kDelegateFlagImplements_ioFrameChannel_didAcceptConnection_fromAddress) {
-    PTChannel *peerChannel = [[PTChannel alloc] initWithProtocol:protocol_ delegate:delegate_];
-    __block PTChannel *localChannelRef = self;
+    Lookin_PTChannel *peerChannel = [[Lookin_PTChannel alloc] initWithProtocol:protocol_ delegate:delegate_];
+    __block Lookin_PTChannel *localChannelRef = self;
     dispatch_io_t dispatchChannel = dispatch_io_create(DISPATCH_IO_STREAM, clientSocketFD, protocol_.queue, ^(int error) {
       // Important note: This block captures *self*, thus a reference is held to
       // *self* until the fd is truly closed.
@@ -408,7 +408,7 @@ static const uint8_t kUserInfoKey;
     [peerChannel setDispatchChannel:dispatchChannel];
     
     assert(((struct sockaddr_storage*)&addr)->ss_len == addrLen);
-    PTAddress *address = [[PTAddress alloc] initWithSockaddr:(struct sockaddr_storage*)&addr];
+    Lookin_PTAddress *address = [[Lookin_PTAddress alloc] initWithSockaddr:(struct sockaddr_storage*)&addr];
     [delegate_ ioFrameChannel:self didAcceptConnection:peerChannel fromAddress:address];
     
     NSError *err = nil;
@@ -508,7 +508,7 @@ static const uint8_t kUserInfoKey;
           }
           
               if (self->delegate_) {
-            PTData *payload = [[PTData alloc] initWithMappedDispatchData:contiguousData data:(void*)buffer length:bufferSize];
+            Lookin_PTData *payload = [[Lookin_PTData alloc] initWithMappedDispatchData:contiguousData data:(void*)buffer length:bufferSize];
                   [self->delegate_ ioFrameChannel:self didReceiveFrameOfType:type tag:tag payload:payload];
           }
           
@@ -536,7 +536,7 @@ static const uint8_t kUserInfoKey;
 
 - (NSString*)description {
   id userInfo = objc_getAssociatedObject(self, (void*)&kUserInfoKey);
-  return [NSString stringWithFormat:@"<PTChannel: %p (%@)%s%@>", self, (  connState_ == kConnStateConnecting ? @"connecting"
+  return [NSString stringWithFormat:@"<Lookin_PTChannel: %p (%@)%s%@>", self, (  connState_ == kConnStateConnecting ? @"connecting"
                                                                     : connState_ == kConnStateConnected  ? @"connected" 
                                                                     : connState_ == kConnStateListening  ? @"listening"
                                                                     :                                      @"closed"),
@@ -548,7 +548,7 @@ static const uint8_t kUserInfoKey;
 
 
 #pragma mark -
-@implementation PTAddress
+@implementation Lookin_PTAddress
 
 - (id)initWithSockaddr:(const struct sockaddr_storage*)addr {
   if (!(self = [super init])) return nil;
@@ -602,7 +602,7 @@ static const uint8_t kUserInfoKey;
 
 
 #pragma mark -
-@implementation PTData
+@implementation Lookin_PTData
 
 @synthesize dispatchData = dispatchData_;
 @synthesize data = data_;
@@ -630,7 +630,7 @@ static const uint8_t kUserInfoKey;
 #pragma mark - NSObject
 
 - (NSString*)description {
-  return [NSString stringWithFormat:@"<PTData: %p (%zu bytes)>", self, length_];
+  return [NSString stringWithFormat:@"<Lookin_PTData: %p (%zu bytes)>", self, length_];
 }
 
 @end

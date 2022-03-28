@@ -3,9 +3,9 @@
 #include <dispatch/dispatch.h>
 #import <Foundation/Foundation.h>
 
-// PTUSBDeviceDidAttachNotification
+// Lookin_PTUSBDeviceDidAttachNotification
 // Posted when a device has been attached. Also posted for each device that is
-// already attached when the PTUSBHub starts listening.
+// already attached when the Lookin_PTUSBHub starts listening.
 //
 //  .userInfo = {
 //    DeviceID = 3;
@@ -20,9 +20,9 @@
 //    };
 //  }
 //
-FOUNDATION_EXPORT NSString * const PTUSBDeviceDidAttachNotification;
+FOUNDATION_EXPORT NSString * const Lookin_PTUSBDeviceDidAttachNotification;
 
-// PTUSBDeviceDidDetachNotification
+// Lookin_PTUSBDeviceDidDetachNotification
 // Posted when a device has been detached.
 //
 //  .userInfo = {
@@ -30,21 +30,21 @@ FOUNDATION_EXPORT NSString * const PTUSBDeviceDidAttachNotification;
 //    MessageType = Detached;
 //  }
 //
-FOUNDATION_EXPORT NSString * const PTUSBDeviceDidDetachNotification;
+FOUNDATION_EXPORT NSString * const Lookin_PTUSBDeviceDidDetachNotification;
 
 // NSError domain
-FOUNDATION_EXPORT NSString * const PTUSBHubErrorDomain;
+FOUNDATION_EXPORT NSString * const Lookin_PTUSBHubErrorDomain;
 
-// Error codes returned with NSError.code for NSError domain PTUSBHubErrorDomain
+// Error codes returned with NSError.code for NSError domain Lookin_PTUSBHubErrorDomain
 typedef enum {
   PTUSBHubErrorBadDevice = 2,
   PTUSBHubErrorConnectionRefused = 3,
 } PTUSBHubError;
 
-@interface PTUSBHub : NSObject
+@interface Lookin_PTUSBHub : NSObject
 
 // Shared, implicitly opened hub.
-+ (PTUSBHub*)sharedHub;
++ (Lookin_PTUSBHub*)sharedHub;
 
 // Connect to a TCP *port* on a device, while the actual transport is over USB.
 // Upon success, *error* is nil and *channel* is a duplex I/O channel.

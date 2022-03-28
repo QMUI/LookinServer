@@ -25,16 +25,16 @@ static const uint32_t PTFrameNoTag = 0;
 static const uint32_t PTFrameTypeEndOfStream = 0;
 
 // NSError domain
-FOUNDATION_EXPORT NSString * const PTProtocolErrorDomain;
+FOUNDATION_EXPORT NSString * const Lookin_PTProtocolErrorDomain;
 
 
-@interface PTProtocol : NSObject
+@interface Lookin_PTProtocol : NSObject
 
 // Queue on which to run data processing blocks.
 @property dispatch_queue_t queue;
 
 // Get the shared protocol object for *queue*
-+ (PTProtocol*)sharedProtocolForQueue:(dispatch_queue_t)queue;
++ (Lookin_PTProtocol*)sharedProtocolForQueue:(dispatch_queue_t)queue;
 
 // Initialize a new protocol object to use a specific queue.
 - (id)initWithDispatchQueue:(dispatch_queue_t)queue;
@@ -100,7 +100,7 @@ FOUNDATION_EXPORT NSString * const PTProtocolErrorDomain;
 
 @end
 
-@interface NSData (PTProtocol)
+@interface NSData (Lookin_PTProtocol)
 // Creates a new dispatch_data_t object which references the receiver and uses
 // the receivers bytes as its backing data. The returned dispatch_data_t object
 // holds a reference to the recevier. It's the callers responsibility to call
@@ -109,8 +109,8 @@ FOUNDATION_EXPORT NSString * const PTProtocolErrorDomain;
 + (NSData *)dataWithContentsOfDispatchData:(dispatch_data_t)data;
 @end
 
-@interface NSDictionary (PTProtocol)
-// See description of -[NSData(PTProtocol) createReferencingDispatchData]
+@interface NSDictionary (Lookin_PTProtocol)
+// See description of -[NSData(Lookin_PTProtocol) createReferencingDispatchData]
 - (dispatch_data_t)createReferencingDispatchData;
 
 // Decode *data* as a peroperty list-encoded dictionary. Returns nil on failure.
