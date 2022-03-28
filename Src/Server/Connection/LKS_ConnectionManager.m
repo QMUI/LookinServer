@@ -7,7 +7,7 @@
 //
 
 #import "LKS_ConnectionManager.h"
-#import "PTChannel.h"
+#import "Lookin_PTChannel.h"
 #import "LKS_RequestHandler.h"
 #import "LookinConnectionResponseAttachment.h"
 #import "LKS_LocalInspectManager.h"
@@ -17,9 +17,9 @@
 
 NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNotificationName";
 
-@interface LKS_ConnectionManager () <PTChannelDelegate>
+@interface LKS_ConnectionManager () <Lookin_PTChannelDelegate>
 
-@property(nonatomic, weak) PTChannel *peerChannel_;
+@property(nonatomic, weak) Lookin_PTChannel *peerChannel_;
 
 @property(nonatomic, strong) LKS_RequestHandler *requestHandler;
 
@@ -94,7 +94,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 - (void)_tryToListenOnPortFrom:(int)fromPort to:(int)toPort current:(int)currentPort  {
-    PTChannel *channel = [PTChannel channelWithDelegate:self];
+    Lookin_PTChannel *channel = [Lookin_PTChannel channelWithDelegate:self];
     [channel listenOnPort:currentPort IPv4Address:INADDR_LOOPBACK callback:^(NSError *error) {
         if (error) {
             if (error.code == 48) {
@@ -154,9 +154,9 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     }
 }
 
-#pragma mark - PTChannelDelegate
+#pragma mark - Lookin_PTChannelDelegate
 
-- (BOOL)ioFrameChannel:(PTChannel*)channel shouldAcceptFrameOfType:(uint32_t)type tag:(uint32_t)tag payloadSize:(uint32_t)payloadSize {
+- (BOOL)ioFrameChannel:(Lookin_PTChannel*)channel shouldAcceptFrameOfType:(uint32_t)type tag:(uint32_t)tag payloadSize:(uint32_t)payloadSize {
     if (channel != self.peerChannel_) {
         return NO;
     } else if ([self.requestHandler canHandleRequestType:type]) {
@@ -167,7 +167,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     }
 }
 
-- (void)ioFrameChannel:(PTChannel*)channel didReceiveFrameOfType:(uint32_t)type tag:(uint32_t)tag payload:(PTData*)payload {
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didReceiveFrameOfType:(uint32_t)type tag:(uint32_t)tag payload:(Lookin_PTData*)payload {
     id object = nil;
     if (payload) {
         id unarchivedObject = [NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfDispatchData:payload.dispatchData]];
@@ -182,11 +182,11 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 /// 当连接过 Lookin 客户端，然后 Lookin 客户端又被关闭时，会走到这里
-- (void)ioFrameChannel:(PTChannel*)channel didEndWithError:(NSError*)error {
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didEndWithError:(NSError*)error {
     [[NSNotificationCenter defaultCenter] postNotificationName:LKS_ConnectionDidEndNotificationName object:self];
 }
 
-- (void)ioFrameChannel:(PTChannel*)channel didAcceptConnection:(PTChannel*)otherChannel fromAddress:(PTAddress*)address {
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didAcceptConnection:(Lookin_PTChannel*)otherChannel fromAddress:(Lookin_PTAddress*)address {
     if (self.peerChannel_) {
         [self.peerChannel_ cancel];
     }

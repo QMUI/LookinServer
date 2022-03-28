@@ -2,26 +2,26 @@
 
 //
 // Represents a communication channel between two endpoints talking the same
-// PTProtocol.
+// Lookin_PTProtocol.
 //
 #import <Foundation/Foundation.h>
 #import <dispatch/dispatch.h>
 #import <netinet/in.h>
 #import <sys/socket.h>
 
-#import "PTProtocol.h"
-#import "PTUSBHub.h"
+#import "Lookin_PTProtocol.h"
+#import "Lookin_PTUSBHub.h"
 
-@class PTData, PTAddress;
-@protocol PTChannelDelegate;
+@class Lookin_PTData, Lookin_PTAddress;
+@protocol Lookin_PTChannelDelegate;
 
-@interface PTChannel : NSObject
+@interface Lookin_PTChannel : NSObject
 
 // Delegate
-@property (strong) id<PTChannelDelegate> delegate;
+@property (strong) id<Lookin_PTChannelDelegate> delegate;
 
 // Communication protocol. Must not be nil.
-@property PTProtocol *protocol;
+@property Lookin_PTProtocol *protocol;
 
 // YES if this channel is a listening server
 @property (readonly) BOOL isListening;
@@ -33,32 +33,32 @@
 // 8 bytes (64 bits).
 @property (strong) id userInfo;
 
-// Create a new channel using the shared PTProtocol for the current dispatch
+// Create a new channel using the shared Lookin_PTProtocol for the current dispatch
 // queue, with *delegate*.
-+ (PTChannel*)channelWithDelegate:(id<PTChannelDelegate>)delegate;
++ (Lookin_PTChannel*)channelWithDelegate:(id<Lookin_PTChannelDelegate>)delegate;
 
 
 // Initialize a new frame channel, configuring it to use the calling queue's
-// protocol instance (as returned by [PTProtocol sharedProtocolForQueue:
+// protocol instance (as returned by [Lookin_PTProtocol sharedProtocolForQueue:
 //   dispatch_get_current_queue()])
 - (id)init;
 
 // Initialize a new frame channel with a specific protocol.
-- (id)initWithProtocol:(PTProtocol*)protocol;
+- (id)initWithProtocol:(Lookin_PTProtocol*)protocol;
 
 // Initialize a new frame channel with a specific protocol and delegate.
-- (id)initWithProtocol:(PTProtocol*)protocol delegate:(id<PTChannelDelegate>)delegate;
+- (id)initWithProtocol:(Lookin_PTProtocol*)protocol delegate:(id<Lookin_PTChannelDelegate>)delegate;
 
 
 // Connect to a TCP port on a device connected over USB
-- (void)connectToPort:(int)port overUSBHub:(PTUSBHub*)usbHub deviceID:(NSNumber*)deviceID callback:(void(^)(NSError *error))callback;
+- (void)connectToPort:(int)port overUSBHub:(Lookin_PTUSBHub*)usbHub deviceID:(NSNumber*)deviceID callback:(void(^)(NSError *error))callback;
 
 // Connect to a TCP port at IPv4 address. Provided port must NOT be in network
 // byte order. Provided in_addr_t must NOT be in network byte order. A value returned
 // from inet_aton() will be in network byte order. You can use a value of inet_aton()
 // as the address parameter here, but you must flip the byte order before passing the
 // in_addr_t to this function.
-- (void)connectToPort:(in_port_t)port IPv4Address:(in_addr_t)address callback:(void(^)(NSError *error, PTAddress *address))callback;
+- (void)connectToPort:(in_port_t)port IPv4Address:(in_addr_t)address callback:(void(^)(NSError *error, Lookin_PTAddress *address))callback;
 
 // Listen for connections on port and address, effectively starting a socket
 // server. Provided port must NOT be in network byte order. Provided in_addr_t
@@ -89,7 +89,7 @@
 // Wraps a mapped dispatch_data_t object. The memory pointed to by *data* is
 // valid until *dispatchData* is deallocated (normally when the receiver is
 // deallocated).
-@interface PTData : NSObject
+@interface Lookin_PTData : NSObject
 @property (readonly) dispatch_data_t dispatchData;
 @property (readonly) void *data;
 @property (readonly) size_t length;
@@ -97,7 +97,7 @@
 
 
 // Represents a peer's address
-@interface PTAddress : NSObject
+@interface Lookin_PTAddress : NSObject
 // For network addresses, this is the IP address in textual format
 @property (readonly) NSString *name;
 // For network addresses, this is the port number. Otherwise 0 (zero).
@@ -105,24 +105,24 @@
 @end
 
 
-// Protocol for PTChannel delegates
-@protocol PTChannelDelegate <NSObject>
+// Protocol for Lookin_PTChannel delegates
+@protocol Lookin_PTChannelDelegate <NSObject>
 
 @required
 // Invoked when a new frame has arrived on a channel.
-- (void)ioFrameChannel:(PTChannel*)channel didReceiveFrameOfType:(uint32_t)type tag:(uint32_t)tag payload:(PTData*)payload;
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didReceiveFrameOfType:(uint32_t)type tag:(uint32_t)tag payload:(Lookin_PTData*)payload;
 
 @optional
 // Invoked to accept an incoming frame on a channel. Reply NO ignore the
 // incoming frame. If not implemented by the delegate, all frames are accepted.
-- (BOOL)ioFrameChannel:(PTChannel*)channel shouldAcceptFrameOfType:(uint32_t)type tag:(uint32_t)tag payloadSize:(uint32_t)payloadSize;
+- (BOOL)ioFrameChannel:(Lookin_PTChannel*)channel shouldAcceptFrameOfType:(uint32_t)type tag:(uint32_t)tag payloadSize:(uint32_t)payloadSize;
 
 // Invoked when the channel closed. If it closed because of an error, *error* is
 // a non-nil NSError object.
-- (void)ioFrameChannel:(PTChannel*)channel didEndWithError:(NSError*)error;
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didEndWithError:(NSError*)error;
 
 // For listening channels, this method is invoked when a new connection has been
 // accepted.
-- (void)ioFrameChannel:(PTChannel*)channel didAcceptConnection:(PTChannel*)otherChannel fromAddress:(PTAddress*)address;
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didAcceptConnection:(Lookin_PTChannel*)otherChannel fromAddress:(Lookin_PTAddress*)address;
 
 @end
