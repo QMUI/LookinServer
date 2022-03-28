@@ -6,8 +6,8 @@
 //  https://lookin.work
 //
 
+#import <objc/runtime.h>
 #import "UIImage+LookinServer.h"
-#import "Objc/runtime.h"
 #import "LookinServerDefines.h"
 
 @implementation UIImage (LookinServer)
@@ -22,7 +22,31 @@
         oriMethod = class_getClassMethod([self class], @selector(imageWithContentsOfFile:));
         newMethod = class_getClassMethod([self class], @selector(lks_imageWithContentsOfFile:));
         method_exchangeImplementations(oriMethod, newMethod);
+        
+        oriMethod = class_getClassMethod([self class], @selector(imageNamed:inBundle:compatibleWithTraitCollection:));
+        newMethod = class_getClassMethod([self class], @selector(lks_imageNamed:inBundle:compatibleWithTraitCollection:));
+        method_exchangeImplementations(oriMethod, newMethod);
+        
+        if (@available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)) {
+            oriMethod = class_getClassMethod([self class], @selector(imageNamed:inBundle:withConfiguration:));
+            newMethod = class_getClassMethod([self class], @selector(lks_imageNamed:inBundle:withConfiguration:));
+            method_exchangeImplementations(oriMethod, newMethod);
+        }
     });
+}
+
++ (nullable UIImage *)lks_imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle withConfiguration:(nullable UIImageConfiguration *)configuration API_AVAILABLE(ios(13.0),tvos(13.0),watchos(6.0))
+{
+    UIImage *image = [self lks_imageNamed:name inBundle:bundle withConfiguration:configuration];
+    image.lks_imageSourceName = name;
+    return image;
+}
+
++ (nullable UIImage *)lks_imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle compatibleWithTraitCollection:(nullable UITraitCollection *)traitCollection API_AVAILABLE(ios(8.0))
+{
+    UIImage *image = [self lks_imageNamed:name inBundle:bundle compatibleWithTraitCollection:traitCollection];
+    image.lks_imageSourceName = name;
+    return image;
 }
 
 + (UIImage *)lks_imageNamed:(NSString *)name {

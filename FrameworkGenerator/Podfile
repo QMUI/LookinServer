@@ -1,0 +1,5 @@
+#use_frameworks!
+
+target 'LookinServer' do
+    pod 'LookinServer', :path => '../'
+end
