@@ -14,7 +14,7 @@
 #import "LookinAttribute.h"
 #import "LookinEventHandler.h"
 #import "LookinIvarTrace.h"
-
+#import "Color+Lookin.h"
 #import "NSArray+Lookin.h"
 #import "NSObject+Lookin.h"
 
@@ -22,9 +22,6 @@
 #import "UIColor+LookinServer.h"
 #import "UIImage+LookinServer.h"
 #elif TARGET_OS_MAC
-#ifdef DEBUG
-#import "LKEfficiencyMonitor.h"
-#endif
 #endif
 
 @interface LookinDisplayItem ()
@@ -93,7 +90,7 @@
 #elif TARGET_OS_MAC
     [aCoder encodeRect:self.frame forKey:@"frame"];
     [aCoder encodeRect:self.bounds forKey:@"bounds"];
-    [aCoder encodeObject:self.backgroundColor.lk_rgbaComponents forKey:@"backgroundColor"];
+    [aCoder encodeObject:self.backgroundColor.lookin_rgbaComponents forKey:@"backgroundColor"];
 #endif
 }
 
@@ -138,11 +135,7 @@
 #elif TARGET_OS_MAC
         self.frame = [aDecoder decodeRectForKey:@"frame"];
         self.bounds = [aDecoder decodeRectForKey:@"bounds"];
-        self.backgroundColor = [NSColor lk_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
-        
-#ifdef DEBUG
-        [[LKEfficiencyMonitor sharedInstance] displayItemDidInit];
-#endif
+        self.backgroundColor = [NSColor lookin_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
         
 #endif
         [self _updateDisplayingInHierarchyProperty];
@@ -158,13 +151,6 @@
     if (self = [super init]) {
         /// 在手机端，displayItem 被创建时会调用这个方法
         [self _updateDisplayingInHierarchyProperty];
-        
-#ifdef DEBUG
-#if TARGET_OS_IPHONE
-#elif TARGET_OS_MAC
-        [[LKEfficiencyMonitor sharedInstance] displayItemDidInit];
-#endif
-#endif
     }
     return self;
 }
@@ -572,15 +558,6 @@
         }
     }
     _subtitle = subtitle;
-}
-
-- (void)dealloc {
-#if TARGET_OS_IPHONE
-#elif TARGET_OS_MAC
-#ifdef DEBUG
-    [[LKEfficiencyMonitor sharedInstance] displayItemDidDealloc];
-#endif
-#endif
 }
 
 @end

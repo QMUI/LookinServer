@@ -6,9 +6,8 @@
 //  https://lookin.work
 //
 
-
-
 #import "LookinDisplayItemDetail.h"
+#import "Image+Lookin.h"
 
 #if TARGET_OS_IPHONE
 #import "UIImage+LookinServer.h"

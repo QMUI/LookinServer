@@ -14,7 +14,9 @@
 #import "NSArray+Lookin.h"
 #import "NSString+Lookin.h"
 
+#if TARGET_OS_IPHONE
 #import "NSObject+LookinServer.h"
+#endif
 
 @implementation LookinObject
 
