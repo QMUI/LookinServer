@@ -18,23 +18,23 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         Method oriMethod = class_getInstanceMethod([UIView class], @selector(initWithFrame:));
-        Method newMethod = class_getInstanceMethod([UIView class], @selector(lks_initWithFrame:));
+        Method newMethod = class_getInstanceMethod([UIView class], @selector(initWithFrame_lks:));
         method_exchangeImplementations(oriMethod, newMethod);
         
         oriMethod = class_getInstanceMethod([UIView class], @selector(initWithCoder:));
-        newMethod = class_getInstanceMethod([UIView class], @selector(lks_initWithCoder:));
+        newMethod = class_getInstanceMethod([UIView class], @selector(initWithCoder_lks:));
         method_exchangeImplementations(oriMethod, newMethod);
     });
 }
 
-- (instancetype)lks_initWithFrame:(CGRect)frame {
-    UIView *view = [self lks_initWithFrame:frame];
+- (instancetype)initWithFrame_lks:(CGRect)frame {
+    UIView *view = [self initWithFrame_lks:frame];
     view.layer.lks_hostView = view;
     return view;
 }
 
-- (instancetype)lks_initWithCoder:(NSCoder *)coder {
-    UIView *view = [self lks_initWithCoder:coder];
+- (instancetype)initWithCoder_lks:(NSCoder *)coder {
+    UIView *view = [self initWithCoder_lks:coder];
     view.layer.lks_hostView = view;
     return view;
 }
