@@ -20,7 +20,7 @@
 /// 当前 LookinServer 的版本
 static const int LOOKIN_SERVER_VERSION = 7;
 
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.0.5";
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.0.6";
 
 /// 当前 LookinClient 的版本
 static const int LOOKIN_CLIENT_VERSION = 7;
