@@ -1,9 +1,5 @@
 #import "Lookin_PTChannel.h"
-
-
-
 #import "Lookin_PTPrivate.h"
-
 #include <sys/ioctl.h>
 #include <sys/un.h>
 #include <err.h>

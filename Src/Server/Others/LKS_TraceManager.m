@@ -7,10 +7,7 @@
 //
 
 #import "LKS_TraceManager.h"
-
-
-
-#import <Objc/runtime.h>
+#import <objc/runtime.h>
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
 #import "LKS_LocalInspectManager.h"
