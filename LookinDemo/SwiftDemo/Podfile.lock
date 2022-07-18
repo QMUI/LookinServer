@@ -1,0 +1,16 @@
+PODS:
+  - LookinServer (1.0.6)
+
+DEPENDENCIES:
+  - LookinServer (from `../../`)
+
+EXTERNAL SOURCES:
+  LookinServer:
+    :path: "../../"
+
+SPEC CHECKSUMS:
+  LookinServer: 18155b1e4a08213c236a1dd6b7ca52328a70a1e3
+
+PODFILE CHECKSUM: 454b450bb07b9c8c15d5bb701f7195d356eac09d
+
+COCOAPODS: 1.11.3
