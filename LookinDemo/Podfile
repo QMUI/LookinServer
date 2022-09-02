@@ -1,0 +1,7 @@
+use_frameworks!
+
+inhibit_all_warnings!
+
+target 'LookinDemo' do
+    pod 'LookinServer', :path=>'../'
+end
