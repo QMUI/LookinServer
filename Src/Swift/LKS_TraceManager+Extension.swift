@@ -8,9 +8,7 @@
 import Foundation
 
 public extension LKS_TraceManager {
-    
-    @objc
-    func _markIVars(ofObject hostObject: AnyObject) {
+    @objc func _swiftMarkIVars(ofObject hostObject: AnyObject) {
         var mirror: Mirror? = Mirror(reflecting: hostObject)
         var inClass: AnyClass? = type(of: hostObject)
         while let m = mirror, let childClass = inClass {

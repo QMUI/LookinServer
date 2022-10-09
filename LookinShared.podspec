@@ -13,5 +13,5 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "1.0.7"}
   #spec.framework  = "UIKit"
   spec.requires_arc = true
-  spec.source_files = 'Src/Shared/**/*'
+  spec.source_files = 'Src/Core/Shared/**/*'
 end

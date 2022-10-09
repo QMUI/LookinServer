@@ -11,7 +11,10 @@
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
 #import "LKS_LocalInspectManager.h"
+
+#ifdef LOOKIN_SERVER_SWIFT_ENABLED
 #import "LookinServer/LookinServer-Swift.h"
+#endif
 
 @implementation LKS_TraceManager
 
@@ -131,7 +134,9 @@
 
 - (void)_markIVarsInAllClassLevelsOfObject:(NSObject *)object {
     [self _markIVarsOfObject:object class:object.class];
-    [self _markIVarsOfObject:object];
+#ifdef LOOKIN_SERVER_SWIFT_ENABLED
+    [self _swiftMarkIVarsOfObject:object];
+#endif
 }
 
 - (void)_markIVarsOfObject:(NSObject *)hostObject class:(Class)targetClass {
