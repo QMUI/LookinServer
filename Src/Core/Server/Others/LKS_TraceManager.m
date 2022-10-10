@@ -13,7 +13,9 @@
 #import "LKS_LocalInspectManager.h"
 
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
-#import "LookinServer/LookinServer-Swift.h"
+#import <LookinServer/LookinServer-Swift.h>
+#elifdef LOOKIN_SERVER_TESTFLIGHT_SWIFT_ENABLED
+#import <LookinServerTestflight/LookinServerTestflight-Swift.h>
 #endif
 
 @implementation LKS_TraceManager
@@ -37,7 +39,7 @@
     
     [[[UIApplication sharedApplication].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
         [self _addTraceForLayersRootedByLayer:window.layer];
-    }];  
+    }];
 }
 
 - (void)_addTraceForLayersRootedByLayer:(CALayer *)layer {
@@ -134,7 +136,7 @@
 
 - (void)_markIVarsInAllClassLevelsOfObject:(NSObject *)object {
     [self _markIVarsOfObject:object class:object.class];
-#ifdef LOOKIN_SERVER_SWIFT_ENABLED
+#if defined(LOOKIN_SERVER_SWIFT_ENABLED) || defined(LOOKIN_SERVER_TESTFLIGHT_SWIFT_ENABLED)
     [self _swiftMarkIVarsOfObject:object];
 #endif
 }
