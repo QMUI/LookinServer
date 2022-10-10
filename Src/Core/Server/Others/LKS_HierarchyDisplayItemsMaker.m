@@ -7,14 +7,12 @@
 //
 
 #import "LKS_HierarchyDisplayItemsMaker.h"
-
-
-
 #import "LookinDisplayItem.h"
 #import "LKS_TraceManager.h"
 #import "LKS_AttrGroupsMaker.h"
 #import "LKS_EventHandlerMaker.h"
 #import "LookinServerDefines.h"
+#import "UIColor+LookinServer.h"
 
 @implementation LKS_HierarchyDisplayItemsMaker
 
@@ -78,7 +76,7 @@
             item.hostViewControllerObject = [LookinObject instanceWithObject:view.lks_hostViewController];
         }
     } else {
-        item.backgroundColor = [UIColor colorWithCGColor:layer.backgroundColor];
+        item.backgroundColor = [UIColor lks_colorWithCGColor:layer.backgroundColor];
     }
     
     if (layer.sublayers.count) {

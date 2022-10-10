@@ -166,5 +166,14 @@
     return letter;
 }
 
++ (UIColor *)lks_colorWithCGColor:(CGColorRef)cgColor {
+    if (!cgColor) {
+        return nil;
+    }
+    if (CFGetTypeID(cgColor) != CGColorGetTypeID()) {
+        return nil;
+    }
+    return [UIColor colorWithCGColor:cgColor];
+}
 
 @end

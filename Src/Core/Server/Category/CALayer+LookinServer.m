@@ -14,6 +14,7 @@
 #import "LKS_ConnectionManager.h"
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
+#import "UIColor+LookinServer.h"
 
 @implementation CALayer (LookinServer)
 
@@ -205,21 +206,21 @@
 }
 
 - (UIColor *)lks_backgroundColor {
-    return [UIColor colorWithCGColor:self.backgroundColor];
+    return [UIColor lks_colorWithCGColor:self.backgroundColor];
 }
 - (void)setLks_backgroundColor:(UIColor *)lks_backgroundColor {
     self.backgroundColor = lks_backgroundColor.CGColor;
 }
 
 - (UIColor *)lks_borderColor {
-    return [UIColor colorWithCGColor:self.borderColor];
+    return [UIColor lks_colorWithCGColor:self.borderColor];
 }
 - (void)setLks_borderColor:(UIColor *)lks_borderColor {
     self.borderColor = lks_borderColor.CGColor;
 }
 
 - (UIColor *)lks_shadowColor {
-    return [UIColor colorWithCGColor:self.shadowColor];
+    return [UIColor lks_colorWithCGColor:self.shadowColor];
 }
 - (void)setLks_shadowColor:(UIColor *)lks_shadowColor {
     self.shadowColor = lks_shadowColor.CGColor;

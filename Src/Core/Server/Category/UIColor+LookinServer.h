@@ -16,4 +16,7 @@
 - (NSString *)lks_rgbaString;
 - (NSString *)lks_hexString;
 
+/// will check if the argument is a real CGColor
++ (UIColor *)lks_colorWithCGColor:(CGColorRef)cgColor;
+
 @end

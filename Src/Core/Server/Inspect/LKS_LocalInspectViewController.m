@@ -12,6 +12,7 @@
 #import "LookinHierarchyInfo.h"
 #import "UIImage+LookinServer.h"
 #import "LookinServerDefines.h"
+#import "UIColor+LookinServer.h"
 
 static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 
@@ -658,7 +659,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     [resultArray addObject:@[@"Frame", [NSString lookin_stringFromRect:layer.frame]]];
     
     if (layer.backgroundColor) {
-        [resultArray addObject:@[@"BackgroundColor", [NSString lookin_rgbaStringFromColor:[UIColor colorWithCGColor:layer.backgroundColor]]]];
+        [resultArray addObject:@[@"BackgroundColor", [NSString lookin_rgbaStringFromColor:[UIColor lks_colorWithCGColor:layer.backgroundColor]]]];
     }
     if ([layer.lks_hostView isKindOfClass:[UIImageView class]]) {
         UIImage *image = ((UIImageView *)layer.lks_hostView).image;
@@ -714,7 +715,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     }
     
     if (layer.borderColor && layer.borderWidth > 0) {
-        [resultArray addObject:@[@"BorderColor", [NSString lookin_rgbaStringFromColor:[UIColor colorWithCGColor:layer.borderColor]]]];
+        [resultArray addObject:@[@"BorderColor", [NSString lookin_rgbaStringFromColor:[UIColor lks_colorWithCGColor:layer.borderColor]]]];
         [resultArray addObject:@[@"BorderWidth", [NSString lookin_stringFromDouble:layer.borderWidth decimal:2]]];
     }
     
@@ -727,7 +728,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     }
     
     if (layer.shadowColor && layer.shadowOpacity > 0) {
-        [resultArray addObject:@[@"ShadowColor", [NSString lookin_rgbaStringFromColor:[UIColor colorWithCGColor:layer.shadowColor]]]];
+        [resultArray addObject:@[@"ShadowColor", [NSString lookin_rgbaStringFromColor:[UIColor lks_colorWithCGColor:layer.shadowColor]]]];
         [resultArray addObject:@[@"ShadowOpacity", [NSString lookin_stringFromDouble:layer.shadowOpacity decimal:2]]];
         [resultArray addObject:@[@"ShadowOffset", [NSString lookin_stringFromSize:layer.shadowOffset]]];
         [resultArray addObject:@[@"ShadowRadius", [NSString lookin_stringFromDouble:layer.shadowRadius decimal:2]]];
