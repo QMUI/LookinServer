@@ -184,11 +184,15 @@
     
     NSArray<LookinAutoLayoutConstraint *> *lookinConstraints = [self.lks_involvedRawConstraints lookin_map:^id(NSUInteger idx, __kindof NSLayoutConstraint *constraint) {
         BOOL isEffective = [effectiveConstraints containsObject:constraint];
-        LookinConstraintItemType firstItemType = [self _lks_constraintItemTypeForItem:constraint.firstItem];
-        LookinConstraintItemType secondItemType = [self _lks_constraintItemTypeForItem:constraint.secondItem];
-        
-        LookinAutoLayoutConstraint *lookinConstraint = [LookinAutoLayoutConstraint instanceFromNSConstraint:constraint isEffective:isEffective firstItemType:firstItemType secondItemType:secondItemType];
-        return lookinConstraint;
+        if ([constraint isActive]) {
+            // trying to get firstItem or secondItem of an inactive constraint may cause dangling-pointer crash
+            // https://github.com/QMUI/LookinServer/issues/86
+            LookinConstraintItemType firstItemType = [self _lks_constraintItemTypeForItem:constraint.firstItem];
+            LookinConstraintItemType secondItemType = [self _lks_constraintItemTypeForItem:constraint.secondItem];
+            LookinAutoLayoutConstraint *lookinConstraint = [LookinAutoLayoutConstraint instanceFromNSConstraint:constraint isEffective:isEffective firstItemType:firstItemType secondItemType:secondItemType];
+            return lookinConstraint;
+        }
+        return nil;
     }];
     return lookinConstraints.count ? lookinConstraints : nil;
 }
