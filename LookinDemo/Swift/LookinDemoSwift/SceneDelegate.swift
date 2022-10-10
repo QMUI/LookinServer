@@ -1,8 +1,8 @@
 //
 //  SceneDelegate.swift
-//  LookinDemo
+//  LookinDemoSwift
 //
-//  Created by 李凯 on 2022/10/10.
+//  Created by likai.123 on 2022/10/10.
 //
 
 import UIKit

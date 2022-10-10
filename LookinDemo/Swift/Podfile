@@ -1,5 +1,5 @@
 use_frameworks!
 
-target 'LookinDemo' do
+target 'LookinDemoSwift' do
     pod 'LookinServer', :path=>'../../', :subspecs => ['Swift']
 end

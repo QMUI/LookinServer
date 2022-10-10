@@ -75,7 +75,7 @@ Packages
 .build/
 xcuserdata
 DerivedData/
-*.xcodeproj
+#*.xcodeproj
 
 
 ### Xcode ###
@@ -113,4 +113,5 @@ build/
 
 # End of https://www.toptal.com/developers/gitignore/api/carthage,cocoapods,fastlane,macos,swiftpackagemanager,xcode 
 .swiftpm
-LookinDemo/LookinDemo.xcworkspace
+LookinDemo/OC/LookinDemoOC.xcodeproj/project.xcworkspace/xcshareddata
+LookinDemo/Swift/LookinDemoSwift.xcodeproj/project.xcworkspace/xcshareddata
