@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinConnectionAttachment.m
 //  Lookin
@@ -46,3 +48,5 @@ static NSString * const Key_DataType = @"1";
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

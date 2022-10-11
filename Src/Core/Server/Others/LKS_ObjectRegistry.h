@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_ObjectRegistry.h
 //  LookinServer
@@ -17,3 +19,5 @@
 - (NSObject *)objectWithOid:(unsigned long)oid;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

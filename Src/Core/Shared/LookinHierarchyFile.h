@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinHierarchyFile.h
 //  Lookin
@@ -26,3 +28,5 @@
 + (NSError *)verifyHierarchyFile:(LookinHierarchyFile *)file;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

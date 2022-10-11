@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveHierarchyView.h
 //  LookinServer
@@ -18,3 +20,5 @@
 @property(nonatomic, assign) BOOL isHorizontalLayout;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

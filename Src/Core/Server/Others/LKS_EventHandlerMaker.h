@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_EventHandlerMaker.h
 //  LookinServer
@@ -15,3 +17,5 @@
 + (NSArray<LookinEventHandler *> *)makeForView:(UIView *)view;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

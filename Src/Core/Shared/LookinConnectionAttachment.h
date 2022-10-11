@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinConnectionAttachment.h
 //  Lookin
@@ -18,3 +20,5 @@
 @property(nonatomic, strong) id data;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

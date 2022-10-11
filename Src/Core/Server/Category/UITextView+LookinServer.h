@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UITextView+LookinServer.h
 //  LookinServer
@@ -15,3 +17,5 @@
 - (NSString *)lks_fontName;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

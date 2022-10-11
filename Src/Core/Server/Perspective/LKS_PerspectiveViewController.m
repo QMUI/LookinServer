@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveViewController.m
 //  LookinServer
@@ -458,3 +460,5 @@ typedef NS_ENUM(NSUInteger, LKS_PerspectiveLayout) {
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

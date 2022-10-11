@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinMessageProtocol.h
 //  Lookin
@@ -185,3 +187,5 @@ typedef NS_OPTIONS(NSUInteger, LookinPreviewBitMask) {
     LookinPreviewBitMask_HasLight = 1 << 3,
     LookinPreviewBitMask_NoLight = 1 << 4
 };
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

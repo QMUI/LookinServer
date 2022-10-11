@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 
 
 //
@@ -116,3 +118,5 @@ FOUNDATION_EXPORT NSString * const Lookin_PTProtocolErrorDomain;
 // Decode *data* as a peroperty list-encoded dictionary. Returns nil on failure.
 + (NSDictionary*)dictionaryWithContentsOfDispatchData:(dispatch_data_t)data;
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

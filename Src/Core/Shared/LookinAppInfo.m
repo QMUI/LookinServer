@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAppInfo.m
 //  qmuidemo
@@ -219,3 +221,5 @@ static NSString * const CodingKey_DeviceType = @"8";
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

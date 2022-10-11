@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_MethodTraceManager.m
 //  LookinServer
@@ -459,3 +461,5 @@ static void Lookin_PleaseRemoveMethodTraceInLookinAppIfCrashHere(Class targetCla
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

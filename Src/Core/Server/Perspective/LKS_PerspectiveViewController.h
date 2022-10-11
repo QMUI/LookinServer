@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveViewController.h
 //  LookinServer
@@ -19,3 +21,5 @@
 @property(nonatomic, strong, readonly) LKS_PerspectiveToolbarCloseButton *closeButton;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

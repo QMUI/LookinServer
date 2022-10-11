@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAttrIdentifiers.h
 //  Lookin
@@ -41,3 +43,5 @@ typedef NS_ENUM(NSInteger, LookinAttrType) {
     /// 业务需要根据具体的 AttrIdentifier 来解析
     LookinAttrTypeCustomObj,
 };
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

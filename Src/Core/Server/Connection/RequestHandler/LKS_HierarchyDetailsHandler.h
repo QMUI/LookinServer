@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_HierarchyDetailsHandler.h
 //  LookinServer
@@ -25,3 +27,5 @@ typedef void (^LKS_HierarchyDetailsHandler_Block)(NSArray<LookinDisplayItemDetai
 - (void)cancel;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

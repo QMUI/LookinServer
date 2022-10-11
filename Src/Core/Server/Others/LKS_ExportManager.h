@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_ExportManager.h
 //  LookinServer
@@ -15,3 +17,5 @@
 - (void)exportAndShare;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

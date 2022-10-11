@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinEventHandler.h
 //  Lookin
@@ -37,3 +39,5 @@ typedef NS_ENUM(NSInteger, LookinEventHandlerType) {
 @property(nonatomic, assign) unsigned long long recognizerOid;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

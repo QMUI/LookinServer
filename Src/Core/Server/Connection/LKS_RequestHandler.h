@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_RequestHandler.h
 //  LookinServer
@@ -15,3 +17,5 @@
 - (void)handleRequestType:(uint32_t)requestType tag:(uint32_t)tag object:(id)object;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

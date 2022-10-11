@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAttrIdentifiers.m
 //  Lookin
@@ -231,3 +233,5 @@ LookinAttrIdentifier const LookinAttr_UITextField_ClearButtonMode_Mode = @"tf_cb
 
 LookinAttrIdentifier const LookinAttr_UIVisualEffectView_Style_Style = @"ve_s_s";
 LookinAttrIdentifier const LookinAttr_UIVisualEffectView_QMUIForegroundColor_Color = @"ve_f_c";
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

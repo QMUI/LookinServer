@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveItemLayer.h
 //  LookinServer
@@ -18,3 +20,5 @@
 - (void)reRender;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

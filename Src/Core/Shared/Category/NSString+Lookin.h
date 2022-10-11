@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  NSString+Lookin.h
 //  Lookin
@@ -36,3 +38,5 @@
 - (NSString *)lookin_shortClassNameString;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

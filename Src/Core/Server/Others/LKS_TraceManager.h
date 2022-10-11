@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_TraceManager.h
 //  LookinServer
@@ -19,3 +21,5 @@
 - (void)reload;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

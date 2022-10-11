@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_LocalInspectViewController.h
 //  LookinServer
@@ -27,3 +29,5 @@
 @property(nonatomic, weak) UIWindow *prevKeyWindow;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

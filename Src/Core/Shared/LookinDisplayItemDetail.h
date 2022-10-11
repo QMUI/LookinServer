@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinDisplayItemDetail.h
 //  Lookin
@@ -31,3 +33,5 @@
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *attributesGroupList;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

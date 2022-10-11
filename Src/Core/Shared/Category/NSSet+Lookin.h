@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  NSSet+Lookin.h
 //  Lookin
@@ -33,3 +35,5 @@
 - (BOOL)lookin_any:(BOOL (^)(ValueType obj))block;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

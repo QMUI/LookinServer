@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinConnectionResponse.h
 //  Lookin
@@ -31,3 +33,5 @@
 @property(nonatomic, assign) NSUInteger currentDataCount;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

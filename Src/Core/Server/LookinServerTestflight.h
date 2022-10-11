@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinServerTestflight.h
 //  LookinServer
@@ -11,3 +13,5 @@
 
 
 #endif /* LookinServerTestflight_h */
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIGestureRecognizer+LookinServer.h
 //  LookinServer
@@ -16,3 +18,5 @@
 @property(nonatomic, strong) NSMutableArray<LookinTwoTuple *> *lks_targetActions;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

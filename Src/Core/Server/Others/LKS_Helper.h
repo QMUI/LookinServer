@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_Helper.h
 //  LookinServer
@@ -23,3 +25,5 @@
 + (NSBundle *)bundle;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

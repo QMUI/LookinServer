@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAutoLayoutConstraint.h
 //  Lookin
@@ -48,3 +50,5 @@ typedef NS_ENUM(NSInteger, LookinConstraintItemType) {
 + (NSString *)descriptionWithRelation:(NSLayoutRelation)relation;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

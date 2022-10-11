@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  NSObject+Lookin.m
 //  Lookin
@@ -232,3 +234,5 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

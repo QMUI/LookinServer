@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKImageFetchManager.h
 //  Lookin_macOS
@@ -29,3 +31,5 @@
 - (void)fetchAndUpdateScreenshotsForItems:(NSArray<LookinDisplayItem *> *)items;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

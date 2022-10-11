@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAttributeModification.h
 //  Lookin
@@ -22,3 +24,5 @@
 @property(nonatomic, strong) id value;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

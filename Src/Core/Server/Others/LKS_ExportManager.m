@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_ExportManager.m
 //  LookinServer
@@ -188,3 +190,5 @@
 #endif
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

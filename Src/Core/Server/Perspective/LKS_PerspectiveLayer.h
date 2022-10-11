@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveLayer.h
 //  LookinServer
@@ -28,3 +30,5 @@ typedef NS_ENUM (NSUInteger, LKS_PerspectiveDimension) {
 - (void)setRotation:(CGFloat)rotation animated:(BOOL)animated completion:(void (^)(void))completionBlock;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

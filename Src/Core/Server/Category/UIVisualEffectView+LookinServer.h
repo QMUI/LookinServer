@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIVisualEffectView+LookinServer.h
 //  LookinServer
@@ -15,3 +17,5 @@
 - (NSNumber *)lks_blurEffectStyleNumber;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

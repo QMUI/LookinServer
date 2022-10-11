@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 #import "Lookin_PTChannel.h"
 #import "Lookin_PTPrivate.h"
 #include <sys/ioctl.h>
@@ -630,3 +632,5 @@ static const uint8_t kUserInfoKey;
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

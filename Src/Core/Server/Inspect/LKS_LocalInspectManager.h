@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_LocalInspectManager.h
 //  LookinServer
@@ -19,3 +21,5 @@
 - (void)startLocalInspectWithIncludedWindows:(NSArray<UIWindow *> *)includedWindows excludedWindows:(NSArray<UIWindow *> *)excludedWindows;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

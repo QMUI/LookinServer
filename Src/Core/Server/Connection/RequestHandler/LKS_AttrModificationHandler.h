@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_AttrModificationHandler.h
 //  LookinServer
@@ -17,3 +19,5 @@
 + (void)handlePatchWithTasks:(NSArray<LookinStaticAsyncUpdateTask *> *)tasks block:(void (^)(LookinDisplayItemDetail *data))block;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

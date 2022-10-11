@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveDataSource.h
 //  LookinServer
@@ -61,3 +63,5 @@
 @property(nonatomic, strong, readonly) LookinHierarchyInfo *rawHierarchyInfo;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

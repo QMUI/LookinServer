@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinStaticAsyncUpdateTask.h
 //  Lookin
@@ -34,3 +36,5 @@ typedef NS_ENUM(NSInteger, LookinStaticAsyncUpdateTaskType) {
 @property(nonatomic, copy) NSArray<LookinStaticAsyncUpdateTask *> *tasks;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  NSArray+Lookin.h
 //  Lookin
@@ -66,3 +68,5 @@
 - (void)lookin_removeObjectsPassingTest:(BOOL (^)(NSUInteger idx, ValueType obj))block;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

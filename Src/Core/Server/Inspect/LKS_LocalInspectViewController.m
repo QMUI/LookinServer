@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_LocalInspectViewController.m
 //  LookinServer
@@ -738,3 +740,5 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

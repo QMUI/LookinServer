@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  Color+Lookin.h
 //  LookinShared
@@ -21,3 +23,5 @@
 
 #endif
 
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

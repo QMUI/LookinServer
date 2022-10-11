@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAttribute.h
 //  qmuidemo
@@ -30,3 +32,5 @@
 @property(nonatomic, weak) LookinDisplayItem *targetDisplayItem;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */
