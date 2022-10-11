@@ -23,7 +23,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "LookinServer",
-            path: "Src",
+            path: "Src/Core/",
             // 不公开头文件，默认是xxx/include(因为文件不存在默认会有警告)
             publicHeadersPath: "",
             // -I$SRCROOT/SourceCode/**
