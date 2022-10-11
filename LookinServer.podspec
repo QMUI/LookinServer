@@ -12,16 +12,21 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "1.0.7"}
   spec.framework  = "UIKit"
   spec.requires_arc = true
-  
+    
   spec.subspec 'Core' do |ss|
     ss.source_files = 'Src/Core/**/*'
+    ss.pod_target_xcconfig = {
+       'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) SHOULD_COMPILE_LOOKIN_SERVER=1',
+       'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) SHOULD_COMPILE_LOOKIN_SERVER'
+    }
   end
 
   spec.subspec 'Swift' do |ss|
     ss.dependency 'LookinServer/Core'
     ss.source_files = 'Src/Swift/**/*'
     ss.pod_target_xcconfig = {
-       'GCC_PREPROCESSOR_DEFINITIONS' => 'LOOKIN_SERVER_SWIFT_ENABLED=1',
+       'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED=1',
+       'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED'
     }
  end
 end
