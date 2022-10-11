@@ -28,8 +28,8 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("**")
             ],
-            swiftSettings: [
-                .define("SHOULD_COMPILE_LOOKIN_SERVER", .when(configuration: .debug))
+            cxxSettings: [
+                .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug))
             ]
         )
     ]
