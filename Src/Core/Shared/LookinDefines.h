@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinMessageProtocol.h
 //  Lookin
@@ -20,7 +22,7 @@
 /// 当前 LookinServer 的版本
 static const int LOOKIN_SERVER_VERSION = 7;
 
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.0.7";
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.0.8";
 
 /// 当前 LookinClient 的版本
 static const int LOOKIN_CLIENT_VERSION = 7;
@@ -185,3 +187,5 @@ typedef NS_OPTIONS(NSUInteger, LookinPreviewBitMask) {
     LookinPreviewBitMask_HasLight = 1 << 3,
     LookinPreviewBitMask_NoLight = 1 << 4
 };
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

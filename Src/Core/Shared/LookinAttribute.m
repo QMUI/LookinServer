@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAttribute.m
 //  qmuidemo
@@ -45,3 +47,5 @@
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

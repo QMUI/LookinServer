@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_MethodTraceManager.h
 //  LookinServer
@@ -30,3 +32,5 @@
 - (NSArray<NSString *> *)allClassesListInApp;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

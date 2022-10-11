@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveToolbarButtons.h
 //  qmuidemo
@@ -31,3 +33,5 @@
 @interface LKS_PerspectiveToolbarPropertyButton : UIButton
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

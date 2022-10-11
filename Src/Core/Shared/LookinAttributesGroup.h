@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAttributesGroup.h
 //  Lookin
@@ -25,3 +27,5 @@
 @property(nonatomic, copy) NSArray<LookinAttributesSection *> *attrSections;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIView+LookinServer.m
 //  LookinServer
@@ -228,3 +230,5 @@
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinDisplayItem.h
 //  qmuidemo
@@ -181,3 +183,5 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 @property(nonatomic, copy) NSString *highlightedSearchString;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

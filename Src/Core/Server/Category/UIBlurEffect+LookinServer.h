@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIBlurEffect+LookinServer.h
 //  LookinServer
@@ -14,3 +16,5 @@
 @property(nonatomic, strong) NSNumber *lks_effectStyleNumber;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_LocalInspectPanelLabelView.h
 //  LookinServer
@@ -19,3 +21,5 @@
 - (void)addBottomBorderLayer;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

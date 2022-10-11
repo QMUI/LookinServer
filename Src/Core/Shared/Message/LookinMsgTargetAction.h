@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinMsgTargetAction.h
 //  Lookin
@@ -20,3 +22,5 @@
 @property(nonatomic, weak) id relatedObject;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinDashboardBlueprint.h
 //  Lookin
@@ -71,3 +73,5 @@
 + (NSInteger)minAvailableOSVersionWithAttrID:(LookinAttrIdentifier)attrID;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

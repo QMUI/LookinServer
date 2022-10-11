@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 
 
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && (!defined(__IPHONE_6_0) || __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)) || \
@@ -14,3 +16,5 @@
 #define PT_PRECISE_LIFETIME __attribute__((objc_precise_lifetime))
 #define PT_PRECISE_LIFETIME_UNUSED __attribute__((objc_precise_lifetime, unused))
 #endif
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

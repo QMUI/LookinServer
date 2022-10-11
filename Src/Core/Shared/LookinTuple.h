@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinTuples.h
 //  Lookin
@@ -25,3 +27,5 @@
 @property(nonatomic, copy) NSString *second;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_AttrGroupsMaker.h
 //  LookinServer
@@ -15,3 +17,5 @@
 + (NSArray<LookinAttributesGroup *> *)attrGroupsForLayer:(CALayer *)layer;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

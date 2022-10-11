@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  NSObject+LookinServer.h
 //  LookinServer
@@ -41,3 +43,5 @@
 - (NSString *)lks_shortClassName;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

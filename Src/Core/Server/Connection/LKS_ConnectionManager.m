@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinServer.m
 //  LookinServer
@@ -284,3 +286,5 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 @implementation Lookin
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  Image+Lookin.h
 //  LookinShared
@@ -19,3 +21,5 @@
 
 #endif
 
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

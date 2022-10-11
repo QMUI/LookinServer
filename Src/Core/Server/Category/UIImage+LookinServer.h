@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIImage+LookinServer.h
 //  LookinServer
@@ -15,3 +17,5 @@
 - (NSData *)lookin_data;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  NSObject+Lookin.h
 //  Lookin
@@ -102,3 +104,5 @@
 - (id)lookin_decodedObjectWithType:(LookinCodingValueType)type;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

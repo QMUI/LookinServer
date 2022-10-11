@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIView+LookinServer.h
 //  LookinServer
@@ -37,3 +39,5 @@
 - (NSArray<NSDictionary<NSString *, id> *> *)lks_constraints;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

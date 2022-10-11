@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinObject.m
 //  Lookin
@@ -87,3 +89,5 @@
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

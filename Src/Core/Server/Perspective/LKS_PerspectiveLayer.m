@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveLayer.m
 //  LookinServer
@@ -259,3 +261,5 @@
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

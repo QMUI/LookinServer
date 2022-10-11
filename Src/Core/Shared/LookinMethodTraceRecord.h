@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinMethodTraceRecord.h
 //  Lookin
@@ -48,3 +50,5 @@
 - (NSArray<LookinMethodTraceRecordStackItem *> *)completeFormattedCallStacks;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

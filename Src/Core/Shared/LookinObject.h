@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinObject.h
 //  Lookin
@@ -38,3 +40,5 @@
 @property(nonatomic, copy, readonly) NSString *shortSelfClassName;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

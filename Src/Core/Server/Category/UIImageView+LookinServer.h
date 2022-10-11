@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIImageView+LookinServer.h
 //  LookinServer
@@ -14,3 +16,5 @@
 - (NSNumber *)lks_imageViewOidIfHasImage;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#if SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_TraceManager+Extension.swift
 //  LookinServer
@@ -51,3 +53,5 @@ public extension LKS_TraceManager {
         }
     }
 }
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

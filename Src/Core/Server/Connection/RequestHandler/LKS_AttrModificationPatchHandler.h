@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_AttrModificationPatchHandler.h
 //  LookinServer
@@ -20,3 +22,5 @@
 + (void)handleLayerOids:(NSArray<NSNumber *> *)oids lowImageQuality:(BOOL)lowImageQuality block:(void (^)(LookinDisplayItemDetail *detail, NSUInteger tasksTotalCount, NSError *error))block;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_TraceManager.m
 //  LookinServer
@@ -252,3 +254,5 @@ static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces() {
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

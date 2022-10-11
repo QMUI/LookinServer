@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 #import "Lookin_PTUSBHub.h"
 
 
@@ -668,3 +670,5 @@ static NSString *kPlistPacketTypeConnect = @"Connect";
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

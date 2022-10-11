@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAttrIdentifiers.h
 //  Lookin
@@ -234,3 +236,5 @@ extern LookinAttrIdentifier const LookinAttr_UITextField_ClearButtonMode_Mode;
 
 extern LookinAttrIdentifier const LookinAttr_UIVisualEffectView_Style_Style;
 extern LookinAttrIdentifier const LookinAttr_UIVisualEffectView_QMUIForegroundColor_Color;
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

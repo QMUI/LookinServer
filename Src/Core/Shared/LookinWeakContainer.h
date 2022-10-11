@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinWeakContainer.h
 //  Lookin
@@ -17,3 +19,5 @@
 @property (nonatomic, weak) id object;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

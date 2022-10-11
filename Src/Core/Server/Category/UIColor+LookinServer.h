@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIColor+LookinServer.h
 //  LookinServer
@@ -20,3 +22,5 @@
 + (UIColor *)lks_colorWithCGColor:(CGColorRef)cgColor;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

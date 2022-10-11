@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinCodingValueType.h
 //  Lookin
@@ -24,3 +26,5 @@ typedef NS_ENUM(NSInteger, LookinCodingValueType) {
 //    LookinCodingValueTypeRange,
     LookinCodingValueTypeImage
 };
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

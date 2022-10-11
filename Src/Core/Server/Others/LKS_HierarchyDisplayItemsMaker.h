@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_HierarchyDisplayItemsMaker.h
 //  LookinServer
@@ -22,3 +24,5 @@
 + (NSArray<LookinDisplayItem *> *)itemsWithScreenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality includedWindows:(NSArray<UIWindow *> *)includedWindows excludedWindows:(NSArray<UIWindow *> *)excludedWindows;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

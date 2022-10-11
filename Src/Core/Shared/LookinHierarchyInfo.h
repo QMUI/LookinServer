@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinDisplayInfo.h
 //  WeRead
@@ -47,3 +49,5 @@
 @property(nonatomic, assign) int serverSetupType;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

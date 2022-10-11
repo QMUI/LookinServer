@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UITableView+LookinServer.h
 //  LookinServer
@@ -13,3 +15,5 @@
 - (NSArray<NSNumber *> *)lks_numberOfRows;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

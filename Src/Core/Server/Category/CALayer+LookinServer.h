@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIView+LookinMobile.h
 //  WeRead
@@ -39,3 +41,5 @@
 @property(nonatomic, assign) CGFloat lks_shadowOffsetHeight;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

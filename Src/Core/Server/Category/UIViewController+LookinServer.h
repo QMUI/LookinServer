@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  UIViewController+LookinServer.h
 //  LookinServer
@@ -13,3 +15,5 @@
 + (UIViewController *)lks_visibleViewController;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

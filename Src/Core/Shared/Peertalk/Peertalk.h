@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  Peertalk.h
 //  Peertalk
@@ -22,3 +24,5 @@ FOUNDATION_EXPORT const unsigned char PeertalkVersionString[];
 #import "Lookin_PTChannel.h"
 #import "Lookin_PTProtocol.h"
 #import "Lookin_PTUSBHub.h"
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

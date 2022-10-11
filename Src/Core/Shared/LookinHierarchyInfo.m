@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinDisplayInfo.m
 //  WeRead
@@ -201,3 +203,5 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

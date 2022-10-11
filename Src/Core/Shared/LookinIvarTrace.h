@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinIvarTrace.h
 //  Lookin
@@ -30,3 +32,5 @@ extern NSString *const LookinIvarTraceRelationValue_Self;
 #endif
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

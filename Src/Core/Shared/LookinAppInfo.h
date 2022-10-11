@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinAppInfo.h
 //  qmuidemo
@@ -60,3 +62,5 @@ typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
 #endif
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  CALayer+Lookin.h
 //  Lookin
@@ -17,3 +19,5 @@
 - (void)lookin_removeImplicitAnimations;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

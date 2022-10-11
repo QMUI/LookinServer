@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  Lookin.h
 //  Lookin
@@ -25,3 +27,5 @@ extern NSString *const LKS_ConnectionDidEndNotificationName;
 - (void)pushData:(NSObject *)data type:(uint32_t)type;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinMsgAttribute.h
 //  Lookin
@@ -77,3 +79,5 @@
 - (void)setBOOLValue:(BOOL)BOOLValue ignoreSubscriber:(id)ignoreSubscriber;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

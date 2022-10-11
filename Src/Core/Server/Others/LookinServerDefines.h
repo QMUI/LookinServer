@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinServer_PrefixHeader.pch
 //  LookinServer
@@ -17,3 +19,5 @@
 #import "CALayer+LookinServer.h"
 #import "NSObject+Lookin.h"
 #import "NSString+Lookin.h"
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

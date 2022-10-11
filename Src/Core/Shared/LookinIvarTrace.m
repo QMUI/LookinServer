@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LookinIvarTrace.m
 //  Lookin
@@ -66,3 +68,5 @@ NSString *const LookinIvarTraceRelationValue_Self = @"self";
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

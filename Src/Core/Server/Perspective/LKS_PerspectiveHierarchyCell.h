@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveHierarchyCell.h
 //  LookinServer
@@ -21,3 +23,5 @@
 @property(nonatomic, strong, readonly) UIButton *indicatorButton;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

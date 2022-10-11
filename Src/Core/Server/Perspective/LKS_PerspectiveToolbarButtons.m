@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 //
 //  LKS_PerspectiveToolbarButtons.m
 //  qmuidemo
@@ -241,3 +243,5 @@ static CGFloat const kConerRadius = 6;
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

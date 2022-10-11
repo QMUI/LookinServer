@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+
 
 
 //
@@ -126,3 +128,5 @@
 - (void)ioFrameChannel:(Lookin_PTChannel*)channel didAcceptConnection:(Lookin_PTChannel*)otherChannel fromAddress:(Lookin_PTAddress*)address;
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */
