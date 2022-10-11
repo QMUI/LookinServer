@@ -139,7 +139,7 @@
 - (void)_markIVarsInAllClassLevelsOfObject:(NSObject *)object {
     [self _markIVarsOfObject:object class:object.class];
 #if defined(LOOKIN_SERVER_SWIFT_ENABLED) || defined(LOOKIN_SERVER_TESTFLIGHT_SWIFT_ENABLED)
-    [self _swiftMarkIVarsOfObject:object];
+    [LKS_SwiftTraceManager swiftMarkIVarsOfObject:object];
 #endif
 }
 

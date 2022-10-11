@@ -1,4 +1,4 @@
-#if SHOULD_COMPILE_LOOKIN_SERVER 
+#if SHOULD_COMPILE_LOOKIN_SERVER
 
 //
 //  LKS_TraceManager+Extension.swift
@@ -9,8 +9,8 @@
 
 import Foundation
 
-public extension LKS_TraceManager {
-    @objc func _swiftMarkIVars(ofObject hostObject: AnyObject) {
+public class LKS_SwiftTraceManager: NSObject {
+    @objc public static func swiftMarkIVars(ofObject hostObject: AnyObject) {
         var mirror: Mirror? = Mirror(reflecting: hostObject)
         var inClass: AnyClass? = type(of: hostObject)
         while let m = mirror, let childClass = inClass {
