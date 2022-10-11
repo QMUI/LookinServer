@@ -24,11 +24,13 @@ let package = Package(
         .target(
             name: "LookinServer",
             path: "Src/Core/",
-            // 不公开头文件，默认是xxx/include(因为文件不存在默认会有警告)
             publicHeadersPath: "",
-            // -I$SRCROOT/SourceCode/**
             cSettings: [
                 .headerSearchPath("**")
-            ]),
+            ],
+            swiftSettings: [
+                .define("SHOULD_COMPILE_LOOKIN_SERVER", .when(configuration: .debug))
+            ]
+        )
     ]
 )
