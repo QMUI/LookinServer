@@ -15,17 +15,25 @@
 #import "LKS_LocalInspectManager.h"
 
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
+
 #if __has_include(<LookinServer/LookinServer-Swift.h>)
-#import <LookinServer/LookinServer-Swift.h>
-#else
-#import "LookinServer-Swift.h"
+    #import <LookinServer/LookinServer-Swift.h>
+    #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
+#elif __has_include("LookinServer-Swift.h")
+    #import "LookinServer-Swift.h"
+    #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
 #endif
+
 #elifdef LOOKIN_SERVER_TESTFLIGHT_SWIFT_ENABLED
+
 #if __has_include(<LookinServerTestflight/LookinServerTestflight-Swift.h>)
-#import <LookinServerTestflight/LookinServerTestflight-Swift.h>
-#else
-#import "LookinServerTestflight-Swift.h"
+    #import <LookinServerTestflight/LookinServerTestflight-Swift.h>
+    #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
+#elif __has_include("LookinServerTestflight-Swift.h")
+    #import "LookinServerTestflight-Swift.h"
+    #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
 #endif
+
 #endif
 
 @implementation LKS_TraceManager
@@ -146,7 +154,7 @@
 
 - (void)_markIVarsInAllClassLevelsOfObject:(NSObject *)object {
     [self _markIVarsOfObject:object class:object.class];
-#if defined(LOOKIN_SERVER_SWIFT_ENABLED) || defined(LOOKIN_SERVER_TESTFLIGHT_SWIFT_ENABLED)
+#ifdef LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
     [LKS_SwiftTraceManager swiftMarkIVarsOfObject:object];
 #endif
 }

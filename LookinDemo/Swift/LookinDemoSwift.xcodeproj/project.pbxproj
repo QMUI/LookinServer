@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8024A91F51F7DF0BDD08A452 /* Pods_LookinDemoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD51F62B186179888A8863F /* Pods_LookinDemoSwift.framework */; };
+		4ED3EA35646FF4F6646F5840 /* Pods_LookinDemoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9754E916493534EEB0561027 /* Pods_LookinDemoSwift.framework */; };
 		A76A15B728F43C9300086B38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15B628F43C9300086B38 /* AppDelegate.swift */; };
 		A76A15B928F43C9300086B38 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15B828F43C9300086B38 /* SceneDelegate.swift */; };
 		A76A15BB28F43C9300086B38 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15BA28F43C9300086B38 /* ViewController.swift */; };
@@ -18,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		782E111DF8F9A902295B9C48 /* Pods-LookinDemoSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinDemoSwift.release.xcconfig"; path = "Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift.release.xcconfig"; sourceTree = "<group>"; };
+		9754E916493534EEB0561027 /* Pods_LookinDemoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LookinDemoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76A15B328F43C9300086B38 /* LookinDemoSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LookinDemoSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76A15B628F43C9300086B38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A76A15B828F43C9300086B38 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -27,7 +28,6 @@
 		A76A15C228F43C9300086B38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A76A15C428F43C9300086B38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACC054E6A3DB76AE03B231EB /* Pods-LookinDemoSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinDemoSwift.debug.xcconfig"; path = "Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift.debug.xcconfig"; sourceTree = "<group>"; };
-		CAD51F62B186179888A8863F /* Pods_LookinDemoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LookinDemoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8024A91F51F7DF0BDD08A452 /* Pods_LookinDemoSwift.framework in Frameworks */,
+				4ED3EA35646FF4F6646F5840 /* Pods_LookinDemoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,7 +45,7 @@
 		08A8B9E550422BEC018D74A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CAD51F62B186179888A8863F /* Pods_LookinDemoSwift.framework */,
+				9754E916493534EEB0561027 /* Pods_LookinDemoSwift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -103,7 +103,7 @@
 				A76A15AF28F43C9300086B38 /* Sources */,
 				A76A15B028F43C9300086B38 /* Frameworks */,
 				A76A15B128F43C9300086B38 /* Resources */,
-				397145949399EE193D2728B1 /* [CP] Embed Pods Frameworks */,
+				5EF89600BEA34EFB73AF3D8E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -161,23 +161,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		397145949399EE193D2728B1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		44820B44B9FD56476B3A0EBD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -198,6 +181,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5EF89600BEA34EFB73AF3D8E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
