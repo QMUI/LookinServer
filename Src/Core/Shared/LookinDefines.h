@@ -19,28 +19,24 @@
 
 #pragma mark - Version
 
-/// 当前 LookinServer 的版本
+/// current connection protocol version of LookinServer
 static const int LOOKIN_SERVER_VERSION = 7;
 
+/// current release version of LookinServer
 static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.1.0";
 
-/// 当前 LookinClient 的版本
+/// current connection protocol version of LookinClient
 static const int LOOKIN_CLIENT_VERSION = 7;
 
-/// 当前 LookinServer 和 LookinClient 是否是内部实验版本
-static BOOL LOOKIN_SERVER_IS_EXPERIMENTAL = NO;
-static BOOL LOOKIN_CLIENT_IS_EXPERIMENTAL = NO;
-
-/// 当前 Lookin 客户端所支持的 LookinServer 的最低版本
+/// the minimum connection protocol version supported by current LookinClient
 static const int LOOKIN_SUPPORTED_SERVER_MIN = 7;
-/// 当前 Lookin 客户端所支持的 LookinServer 的最高版本
+/// the maximum connection protocol version supported by current LookinClient
 static const int LOOKIN_SUPPORTED_SERVER_MAX = 7;
 
-/// 标记该 LookinServer 是通过什么方式安装的，0:未知，1:CocoaPods，2:手动，3:源代码，4:断点
+/// Legacy code. No effect actually.
+static BOOL LOOKIN_SERVER_IS_EXPERIMENTAL = NO;
+static BOOL LOOKIN_CLIENT_IS_EXPERIMENTAL = NO;
 static const int LOOKIN_SERVER_SETUP_TYPE = 1;
-
-#pragma mark - Links
-
 static NSString * const LOOKIN_SERVER_FRAMEWORK_URL = @"https://lookin.work/download/framework/LookinServer-1-0-0.zip";
 
 #pragma mark - Connection
@@ -176,6 +172,7 @@ enum {
 #pragma mark - Preview
 
 /// SCNNode 所允许的图片的最大的长和宽，单位是 px，这个值是 Scenekit 自身指定的
+/// Max pixel size of a SCNNode object. It is designated by SceneKit.
 static const double LookinNodeImageMaxLengthInPx = 16384;
 
 typedef NS_OPTIONS(NSUInteger, LookinPreviewBitMask) {
