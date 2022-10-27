@@ -15,9 +15,17 @@
 #import "LKS_LocalInspectManager.h"
 
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
+#if __has_include(<LookinServer/LookinServer-Swift.h>)
 #import <LookinServer/LookinServer-Swift.h>
+#else
+#import "LookinServer-Swift.h"
+#endif
 #elifdef LOOKIN_SERVER_TESTFLIGHT_SWIFT_ENABLED
+#if __has_include(<LookinServerTestflight/LookinServerTestflight-Swift.h>)
 #import <LookinServerTestflight/LookinServerTestflight-Swift.h>
+#else
+#import "LookinServerTestflight-Swift.h"
+#endif
 #endif
 
 @implementation LKS_TraceManager
