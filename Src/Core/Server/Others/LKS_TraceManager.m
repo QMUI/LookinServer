@@ -36,6 +36,11 @@
 
 #endif
 
+#ifdef SPM_LOOKIN_SERVER_SWIFT_ENABLED
+@import LookinServerSwift;
+#define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
+#endif
+
 @implementation LKS_TraceManager
 
 + (instancetype)sharedInstance {
