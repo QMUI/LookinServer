@@ -8,8 +8,6 @@
 //  https://lookin.work
 //
 
-
-
 #import <Foundation/Foundation.h>
 
 extern NSString *const LookinIvarTraceRelationValue_Self;
@@ -33,10 +31,10 @@ extern NSString *const LookinIvarTraceRelationValue_Self;
 
 @end
 
-#ifdef SPM_LOOKIN_SERVER_SWIFT_ENABLED
 @interface NSObject (LookinServer)
+
 @property(nonatomic, copy) NSArray<LookinIvarTrace *> *lks_ivarTraces;
+
 @end
-#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

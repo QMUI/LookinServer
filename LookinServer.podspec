@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
     
   spec.subspec 'Core' do |ss|
-    ss.source_files = 'Src/Core/**/*'
+    ss.source_files = ['Src/Main/**/*', 'Src/Base/**/*']
     ss.pod_target_xcconfig = {
        'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) SHOULD_COMPILE_LOOKIN_SERVER=1',
        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) SHOULD_COMPILE_LOOKIN_SERVER'

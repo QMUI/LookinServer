@@ -24,34 +24,33 @@ let package = Package(
         .target(
             name: "LookinServer",
             dependencies: [.target(name: "LookinServerSwift")],
-            path: "Src/Core",
-            sources: ["Server","Shared"],
+            path: "Src/Main",
             publicHeadersPath: "",
             cSettings: [
                 .headerSearchPath("**")
             ],
             cxxSettings: [
                 .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug)),
-                .define("SPM_LOOKIN_SERVER_SWIFT_ENABLED", to: "1", .when(configuration: .debug))
+                .define("SPM_LOOKIN_SERVER_ENABLED", to: "1", .when(configuration: .debug))
             ]
         ),
         .target(
             name: "LookinServerSwift",
-            dependencies: [.target(name: "LookinServerCommon")],
+            dependencies: [.target(name: "LookinServerBase")],
             path: "Src/Swift",
             cxxSettings: [
                 .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug)),
-                .define("SPM_LOOKIN_SERVER_SWIFT_ENABLED", to: "1", .when(configuration: .debug))
+                .define("SPM_LOOKIN_SERVER_ENABLED", to: "1", .when(configuration: .debug))
             ],
             swiftSettings: [
                 .define("SHOULD_COMPILE_LOOKIN_SERVER", .when(configuration: .debug)),
-                .define("SPM_LOOKIN_SERVER_SWIFT_ENABLED", .when(configuration: .debug))
+                .define("SPM_LOOKIN_SERVER_ENABLED", .when(configuration: .debug))
             ]
         ),
         .target(
-            name: "LookinServerCommon",
+            name: "LookinServerBase",
             dependencies: [],
-            path: "Src/Core/Common",
+            path: "Src/Base",
             publicHeadersPath: "",
             cxxSettings: [
                 .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug))

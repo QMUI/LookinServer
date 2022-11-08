@@ -9,8 +9,8 @@
 
 import Foundation
 import UIKit
-#if SPM_LOOKIN_SERVER_SWIFT_ENABLED
-import LookinServerCommon
+#if SPM_LOOKIN_SERVER_ENABLED
+import LookinServerBase
 #endif
 
 public class LKS_SwiftTraceManager: NSObject {

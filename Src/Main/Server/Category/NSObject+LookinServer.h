@@ -27,11 +27,6 @@
 
 #pragma mark - trace
 
-#ifndef SPM_LOOKIN_SERVER_SWIFT_ENABLED
-// 使用SPM管理时, 定义移动到 LookinIvarTrace, 减少SPM引入时，Swift文件对OC的依赖
-@property(nonatomic, copy) NSArray<LookinIvarTrace *> *lks_ivarTraces;
-#endif
-
 @property(nonatomic, copy) NSString *lks_specialTrace;
 
 + (void)lks_clearAllObjectsTraces;

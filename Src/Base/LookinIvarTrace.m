@@ -8,8 +8,6 @@
 //  https://lookin.work
 //
 
-
-
 #import "LookinIvarTrace.h"
 
 NSString *const LookinIvarTraceRelationValue_Self = @"self";

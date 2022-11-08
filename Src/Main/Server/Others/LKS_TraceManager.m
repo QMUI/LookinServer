@@ -36,7 +36,7 @@
 
 #endif
 
-#ifdef SPM_LOOKIN_SERVER_SWIFT_ENABLED
+#ifdef SPM_LOOKIN_SERVER_ENABLED
 @import LookinServerSwift;
 #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
 #endif
