@@ -24,16 +24,6 @@
     #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
 #endif
 
-#elifdef LOOKIN_SERVER_TESTFLIGHT_SWIFT_ENABLED
-
-#if __has_include(<LookinServerTestflight/LookinServerTestflight-Swift.h>)
-    #import <LookinServerTestflight/LookinServerTestflight-Swift.h>
-    #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
-#elif __has_include("LookinServerTestflight-Swift.h")
-    #import "LookinServerTestflight-Swift.h"
-    #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
-#endif
-
 #endif
 
 #ifdef SPM_LOOKIN_SERVER_ENABLED
