@@ -8,6 +8,10 @@
 //
 
 import Foundation
+import UIKit
+#if SPM_LOOKIN_SERVER_SWIFT_ENABLED
+import LookinServerCommon
+#endif
 
 public class LKS_SwiftTraceManager: NSObject {
     @objc public static func swiftMarkIVars(ofObject hostObject: AnyObject) {

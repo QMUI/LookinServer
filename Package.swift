@@ -23,11 +23,36 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "LookinServer",
-            path: "Src/Core/",
+            dependencies: [.target(name: "LookinServerSwift")],
+            path: "Src/Core",
+            sources: ["Server","Shared"],
             publicHeadersPath: "",
             cSettings: [
                 .headerSearchPath("**")
             ],
+            cxxSettings: [
+                .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug)),
+                .define("SPM_LOOKIN_SERVER_SWIFT_ENABLED", to: "1", .when(configuration: .debug))
+            ]
+        ),
+        .target(
+            name: "LookinServerSwift",
+            dependencies: [.target(name: "LookinServerCommon")],
+            path: "Src/Swift",
+            cxxSettings: [
+                .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug)),
+                .define("SPM_LOOKIN_SERVER_SWIFT_ENABLED", to: "1", .when(configuration: .debug))
+            ],
+            swiftSettings: [
+                .define("SHOULD_COMPILE_LOOKIN_SERVER", .when(configuration: .debug)),
+                .define("SPM_LOOKIN_SERVER_SWIFT_ENABLED", .when(configuration: .debug))
+            ]
+        ),
+        .target(
+            name: "LookinServerCommon",
+            dependencies: [],
+            path: "Src/Core/Common",
+            publicHeadersPath: "",
             cxxSettings: [
                 .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug))
             ]
