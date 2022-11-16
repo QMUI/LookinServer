@@ -12,9 +12,6 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "1.1.1"}
   spec.framework  = "UIKit"
   spec.requires_arc = true
-  spec.user_target_xcconfig = {
-    'GENERATE_INFOPLIST_FILE' => 'YES'
-  }
     
   spec.subspec 'Core' do |ss|
     ss.source_files = ['Src/Main/**/*', 'Src/Base/**/*']
