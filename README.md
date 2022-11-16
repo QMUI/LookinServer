@@ -19,9 +19,6 @@ Never integrate LookinServer in Release building configuration.
 ## via Swift Package Manager:
 `https://github.com/QMUI/LookinServer/`
 
-> **Warning**
-Lookin will not display property name of a Swift class via SPM. Because the implementation of the feature needs to mix Objective-C and Swift files which is not supported by SPM. If you know how to deal with it, please contact me or create pull request. 
-
 # Repository
 LookinServer: https://github.com/QMUI/LookinServer
 
@@ -51,8 +48,6 @@ Lookin 可以查看与修改 iOS App 里的 UI 对象，类似于 Xcode 自带�
 
 ## 通过 Swift Package Manager:
 `https://github.com/QMUI/LookinServer/`
-> **Warning**
-通过 SPM 方式集成时，Lookin 将无法显示 Swift 成员属性的变量名。因为实现这个 Feature 需要在 LookinServer 中引入 Swift 文件，但 SPM 似乎不支持 OC 和 Swift 文件混在一起（如果你知道如何解决，可以联系我，或者直接提 Pull Request）。
 
 # 源代码仓库
 
