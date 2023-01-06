@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LKS_WeakObjContainer<ObjectType> : NSObject
+@interface LKS_WeakObjContainer<__covariant ObjectType> : NSObject
 
 @property (nonatomic, weak) ObjectType weakObj;
  
