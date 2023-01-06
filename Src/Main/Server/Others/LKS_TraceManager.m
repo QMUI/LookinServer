@@ -13,6 +13,7 @@
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
 #import "LKS_LocalInspectManager.h"
+#import "LKS_WindowDiscovery.h"
 
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
 
@@ -50,7 +51,7 @@
     // 把旧的先都清理掉
     [NSObject lks_clearAllObjectsTraces];
     
-    [[[UIApplication sharedApplication].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[[LKS_WindowDiscovery sharedInstance].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
         [self _addTraceForLayersRootedByLayer:window.layer];
     }];
 }
