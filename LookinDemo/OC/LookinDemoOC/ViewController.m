@@ -14,7 +14,7 @@
 @implementation TestView
 
 - (BOOL)lookin_shouldCaptureImage {
-    return NO;
+    return YES;
 }
 
 @end
@@ -58,36 +58,41 @@
 
 @end
 
-@interface NSObject (Lookin)
+@interface NSObject (LookinConfig)
 
 @end
 
-@implementation NSObject (Lookin)
+@implementation NSObject (LookinConfig)
 
-- (NSArray<NSString *> *)lookin_collapsedClassList {
++ (NSArray<NSString *> *)lookin_collapsedClassList {
     return @[@"UIDropShadowView"];
 }
 
-- (NSDictionary<NSString *, UIColor *> *)lookin_colorAlias {
++ (NSDictionary<NSString *, UIColor *> *)lookin_colorAlias {
     return @{
         @"TitleColor": [UIColor colorWithRed:0.38 green:0.85 blue:0.22 alpha:1],
         @"MyWhite": [UIColor colorWithRed:1 green:1 blue:1 alpha:1],
         @"MyBlack": [UIColor colorWithRed:0 green:0 blue:0 alpha:1]
     };
 }
-
-- (BOOL)lookin_shouldCaptureImageOfView:(UIView *)view {
-//    if (view.tag == 1111) {
-//        return NO;
-//    }
-    return YES;
-}
-
-- (BOOL)lookin_shouldCaptureImageOfLayer:(CALayer *)layer {
-    if ([layer isKindOfClass:[TestLayer class]]) {
++ (BOOL)lookin_shouldCaptureImageOfView:(UIView *)view {
+    if (view.tag == 1234) {
+        // Lookin will not show image of the view
+        return NO;
+    } else {
         return YES;
     }
-    return YES;
+}
+
++ (BOOL)lookin_shouldCaptureImageOfLayer:(CALayer *)layer {
+//    if (...) {
+//        // Lookin will not show image of the layer
+//        return NO;
+//    } else {
+        return YES;
+//    }
 }
 
 @end
+
+

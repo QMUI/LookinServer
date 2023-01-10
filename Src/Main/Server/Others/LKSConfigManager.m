@@ -124,63 +124,68 @@
         return YES;
     }
     SEL selector = NSSelectorFromString(@"lookin_shouldCaptureImageOfLayer:");
-    if (![NSObject respondsToSelector:selector]) {
-        return YES;
+    if ([NSObject respondsToSelector:selector]) {
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSObject methodSignatureForSelector:selector]];
+        [invocation setTarget:[NSObject class]];
+        [invocation setSelector:selector];
+        [invocation setArgument:&layer atIndex:2];
+        [invocation invoke];
+        BOOL resultValue = YES;
+        [invocation getReturnValue:&resultValue];
+        if (!resultValue) {
+            return NO;
+        }
     }
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSObject methodSignatureForSelector:selector]];
-    [invocation setTarget:[NSObject class]];
-    [invocation setSelector:selector];
-    [invocation setArgument:&layer atIndex:2];
-    [invocation invoke];
-    BOOL resultValue = YES;
-    [invocation getReturnValue:&resultValue];
-    if (!resultValue) {
-        return NO;
-    }
-    
+
     SEL selector2 = NSSelectorFromString(@"lookin_shouldCaptureImage");
-    if (![layer respondsToSelector:selector2]) {
-        return YES;
+    if ([layer respondsToSelector:selector2]) {
+        NSInvocation *invocation2 = [NSInvocation invocationWithMethodSignature:[layer methodSignatureForSelector:selector2]];
+        [invocation2 setTarget:layer];
+        [invocation2 setSelector:selector2];
+        [invocation2 invoke];
+        BOOL resultValue2 = YES;
+        [invocation2 getReturnValue:&resultValue2];
+        if (!resultValue2) {
+            return NO;
+        }
     }
-    NSInvocation *invocation2 = [NSInvocation invocationWithMethodSignature:[layer methodSignatureForSelector:selector2]];
-    [invocation2 setTarget:layer];
-    [invocation2 setSelector:selector2];
-    [invocation2 invoke];
-    BOOL resultValue2 = YES;
-    [invocation2 getReturnValue:&resultValue2];
-    return resultValue2;
+
+    return YES;
 }
 
 + (BOOL)shouldCaptureImageOfView:(UIView *)view {
     if (!view) {
         return YES;
     }
+    
     SEL selector = NSSelectorFromString(@"lookin_shouldCaptureImageOfView:");
-    if (![NSObject respondsToSelector:selector]) {
-        return YES;
-    }
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSObject methodSignatureForSelector:selector]];
-    [invocation setTarget:[NSObject class]];
-    [invocation setSelector:selector];
-    [invocation setArgument:&view atIndex:2];
-    [invocation invoke];
-    BOOL resultValue = YES;
-    [invocation getReturnValue:&resultValue];
-    if (!resultValue) {
-        return NO;
+    if ([NSObject respondsToSelector:selector]) {
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSObject methodSignatureForSelector:selector]];
+        [invocation setTarget:[NSObject class]];
+        [invocation setSelector:selector];
+        [invocation setArgument:&view atIndex:2];
+        [invocation invoke];
+        BOOL resultValue = YES;
+        [invocation getReturnValue:&resultValue];
+        if (!resultValue) {
+            return NO;
+        }
     }
     
     SEL selector2 = NSSelectorFromString(@"lookin_shouldCaptureImage");
-    if (![view respondsToSelector:selector2]) {
-        return YES;
+    if ([view respondsToSelector:selector2]) {
+        NSInvocation *invocation2 = [NSInvocation invocationWithMethodSignature:[view methodSignatureForSelector:selector2]];
+        [invocation2 setTarget:view];
+        [invocation2 setSelector:selector2];
+        [invocation2 invoke];
+        BOOL resultValue2 = YES;
+        [invocation2 getReturnValue:&resultValue2];
+        if (!resultValue2) {
+            return NO;
+        }
     }
-    NSInvocation *invocation2 = [NSInvocation invocationWithMethodSignature:[view methodSignatureForSelector:selector2]];
-    [invocation2 setTarget:view];
-    [invocation2 setSelector:selector2];
-    [invocation2 invoke];
-    BOOL resultValue2 = YES;
-    [invocation2 getReturnValue:&resultValue2];
-    return resultValue2;
+
+    return YES;
 }
 
 @end
