@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary<NSString *, UIColor *> *)colorAlias;
 
++ (BOOL)shouldCaptureScreenshotOfLayer:(CALayer *)layer;
+
 @end
 
 NS_ASSUME_NONNULL_END

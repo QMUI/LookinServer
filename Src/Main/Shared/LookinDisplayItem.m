@@ -61,6 +61,7 @@
     newDisplayItem.eventHandlers = [self.eventHandlers lookin_map:^id(NSUInteger idx, LookinEventHandler *value) {
         return value.copy;
     }];
+    newDisplayItem.shouldCaptureImage = self.shouldCaptureImage;
     newDisplayItem.representedAsKeyWindow = self.representedAsKeyWindow;
     [newDisplayItem _updateDisplayingInHierarchyProperty];
     return newDisplayItem;
@@ -77,6 +78,7 @@
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
     [aCoder encodeBool:self.representedAsKeyWindow forKey:@"representedAsKeyWindow"];
     [aCoder encodeObject:self.eventHandlers forKey:@"eventHandlers"];
+    [aCoder encodeBool:self.shouldCaptureImage forKey:@"shouldCaptureImage"];
     if (self.screenshotEncodeType == LookinDisplayItemImageEncodeTypeNSData) {
         [aCoder encodeObject:[self.soloScreenshot lookin_encodedObjectWithType:LookinCodingValueTypeImage] forKey:@"soloScreenshot"];
         [aCoder encodeObject:[self.groupScreenshot lookin_encodedObjectWithType:LookinCodingValueTypeImage] forKey:@"groupScreenshot"];
@@ -130,6 +132,8 @@
         }
         
         self.eventHandlers = [aDecoder decodeObjectForKey:@"eventHandlers"];
+        /// this property was added in LookinServer 1.1.3
+        self.shouldCaptureImage = [aDecoder containsValueForKey:@"shouldCaptureImage"] ? [aDecoder decodeBoolForKey:@"shouldCaptureImage"] : YES;
 #if TARGET_OS_IPHONE
         self.frame = [aDecoder decodeCGRectForKey:@"frame"];
         self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
@@ -264,11 +268,11 @@
     [self _notifyDelegatesWith:LookinDisplayItemProperty_IsSelected];
 }
 
-- (void)setAvoidSyncScreenshot:(BOOL)avoidSyncScreenshot {
-    if (_avoidSyncScreenshot == avoidSyncScreenshot) {
+- (void)setDoNotFetchScreenshotReason:(LookinDoNotFetchScreenshotReason)doNotFetchScreenshotReason {
+    if (_doNotFetchScreenshotReason == doNotFetchScreenshotReason) {
         return;
     }
-    _avoidSyncScreenshot = avoidSyncScreenshot;
+    _doNotFetchScreenshotReason = doNotFetchScreenshotReason;
     [self _notifyDelegatesWith:LookinDisplayItemProperty_AvoidSyncScreenshot];
 }
 

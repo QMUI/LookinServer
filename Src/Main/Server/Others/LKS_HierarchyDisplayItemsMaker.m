@@ -15,6 +15,7 @@
 #import "LKS_EventHandlerMaker.h"
 #import "LookinServerDefines.h"
 #import "UIColor+LookinServer.h"
+#import "LKSConfigManager.h"
 
 @implementation LKS_HierarchyDisplayItemsMaker
 
@@ -67,6 +68,7 @@
     item.isHidden = layer.isHidden;
     item.alpha = layer.opacity;
     item.layerObject = [LookinObject instanceWithObject:layer];
+    item.shouldCaptureImage = [LKSConfigManager shouldCaptureScreenshotOfLayer:layer];
     
     if (layer.lks_hostView) {
         UIView *view = layer.lks_hostView;
@@ -111,8 +113,6 @@
 + (BOOL)cgRectIsUnreasonable:(CGRect)rect {
     return ABS(rect.origin.x) > 100000 || ABS(rect.origin.y) > 100000 || rect.size.width < 0 || rect.size.height < 0 || rect.size.width > 100000 || rect.size.height > 100000;
 }
-
-
 
 @end
 

@@ -27,6 +27,16 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemImageEncodeType) {
     LookinDisplayItemImageEncodeTypeImage   // 使用 NSImage / UIImage 自身的 encode 方法
 };
 
+typedef NS_ENUM(NSUInteger, LookinDoNotFetchScreenshotReason) {
+    // can sync screenshot
+    LookinFetchScreenshotPermitted,
+    // layer is too large
+    LookinDoNotFetchScreenshotForTooLarge,
+    // refused by user config in LookinServer
+    LookinDoNotFetchScreenshotForUserConfig
+};
+
+
 typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
     // 当初次设置 delegate 对象时，会立即以该值触发一次 displayItem:propertyDidChange:
     LookinDisplayItemProperty_None,
@@ -87,6 +97,9 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 注意有一个缺点是，理论上应该像 screenshot 一样拆成 soloBackgroundColor 和 groupBackgroundColor，这里的 backgroundColor 实际上是 soloBackgroundColor，因此某些场景的显示会有瑕疵
 @property(nonatomic, strong) LookinColor *backgroundColor;
 
+/// Set as NO to avoid capture image of view to lift reload speed. Default to YES.
+@property(nonatomic, assign) BOOL shouldCaptureImage;
+
 #pragma mark - No Encode/Decode
 
 /// 父节点
@@ -130,8 +143,8 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @property(nonatomic, assign) LookinDisplayItemImageEncodeType screenshotEncodeType;
 
-/// 如果该属性为 YES 则不会自动同步该 item 的图像（比如该 item 尺寸过大）
-@property(nonatomic, assign) BOOL avoidSyncScreenshot;
+/// Whether to fetch screenshot and why. Default to LookinFetchScreenshotPermitted.
+@property(nonatomic, assign) LookinDoNotFetchScreenshotReason doNotFetchScreenshotReason;
 
 @property(nonatomic, weak) LookinPreviewItemLayer *previewLayer;
 
