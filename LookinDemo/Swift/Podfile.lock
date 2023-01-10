@@ -1,6 +1,6 @@
 PODS:
-  - LookinServer/Core (1.1.1)
-  - LookinServer/Swift (1.1.1):
+  - LookinServer/Core (1.1.2)
+  - LookinServer/Swift (1.1.2):
     - LookinServer/Core
 
 DEPENDENCIES:
@@ -11,8 +11,8 @@ EXTERNAL SOURCES:
     :path: "../../"
 
 SPEC CHECKSUMS:
-  LookinServer: 42948a86978fcf9f7e6ecd9794fbddcdd2c94024
+  LookinServer: bb667a77f1ee594a8e91226e729dbe49f3401f5c
 
 PODFILE CHECKSUM: 7148110113ca7542c2775432943ec6dccaa0e95b
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.11.3

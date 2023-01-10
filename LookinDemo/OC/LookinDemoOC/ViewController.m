@@ -85,7 +85,7 @@
 
 - (BOOL)lookin_shouldCaptureImageOfLayer:(CALayer *)layer {
     if ([layer isKindOfClass:[TestLayer class]]) {
-        return NO;
+        return YES;
     }
     return YES;
 }
