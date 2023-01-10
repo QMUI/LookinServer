@@ -97,7 +97,6 @@
 				3B49E0C73BA853265940365C /* Pods-LookinDemoOC.debug.xcconfig */,
 				FD8E7F541A46626F2CA92333 /* Pods-LookinDemoOC.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

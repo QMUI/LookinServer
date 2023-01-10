@@ -15,6 +15,7 @@
 #import "UIImage+LookinServer.h"
 #import "LookinServerDefines.h"
 #import "UIColor+LookinServer.h"
+#import "LKSConfigManager.h"
 
 static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 
@@ -609,7 +610,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 #else
         NSMutableArray<Class> *array = @[[UILabel class], [UIProgressView class], [UIActivityIndicatorView class], [UITextView class], [UITextField class], [UISlider class], [UISwitch class], [UIVisualEffectView class]].mutableCopy;
 #endif
-        NSArray<NSString *> *custom = [LookinHierarchyInfo collapsedClassList];
+        NSArray<NSString *> *custom = [LKSConfigManager collapsedClassList];
         if (custom.count) {
             NSArray<Class> *customClasses = [custom lookin_map:^id(NSUInteger idx, NSString *value) {
                 return NSClassFromString(value);
