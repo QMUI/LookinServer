@@ -1,3 +1,5 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER
+
 //
 //  LKSConfigManager.h
 //  LookinServer
@@ -20,3 +22,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */
