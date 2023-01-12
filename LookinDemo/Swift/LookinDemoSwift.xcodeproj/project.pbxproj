@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14155EB60F3B8FC84E0F10E4 /* Pods_LookinDemoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638F85BC46103F15DE552A4C /* Pods_LookinDemoSwift.framework */; };
 		A76A15B728F43C9300086B38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15B628F43C9300086B38 /* AppDelegate.swift */; };
 		A76A15B928F43C9300086B38 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15B828F43C9300086B38 /* SceneDelegate.swift */; };
 		A76A15BB28F43C9300086B38 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15BA28F43C9300086B38 /* ViewController.swift */; };
 		A76A15BE28F43C9300086B38 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A76A15BC28F43C9300086B38 /* Main.storyboard */; };
 		A76A15C028F43C9300086B38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A76A15BF28F43C9300086B38 /* Assets.xcassets */; };
 		A76A15C328F43C9300086B38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A76A15C128F43C9300086B38 /* LaunchScreen.storyboard */; };
-		A7C3892E296FEF9E00A3EF53 /* LookinServer in Frameworks */ = {isa = PBXBuildFile; productRef = A7C3892D296FEF9E00A3EF53 /* LookinServer */; };
-		FB3D04C00CD1CAE62926DBA6 /* Pods_LookinDemoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7087545AFFAA70A09036012D /* Pods_LookinDemoSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7087545AFFAA70A09036012D /* Pods_LookinDemoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LookinDemoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7E385FCA0A966081A7926AB6 /* Pods-LookinDemoSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinDemoSwift.release.xcconfig"; path = "Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift.release.xcconfig"; sourceTree = "<group>"; };
+		467BE8220D741775D32B5CBC /* Pods-LookinDemoSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinDemoSwift.release.xcconfig"; path = "Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift.release.xcconfig"; sourceTree = "<group>"; };
+		638F85BC46103F15DE552A4C /* Pods_LookinDemoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LookinDemoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DCADF6229D29589BF4D9E76 /* Pods-LookinDemoSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinDemoSwift.debug.xcconfig"; path = "Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift.debug.xcconfig"; sourceTree = "<group>"; };
 		A76A15B328F43C9300086B38 /* LookinDemoSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LookinDemoSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76A15B628F43C9300086B38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A76A15B828F43C9300086B38 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -28,7 +28,6 @@
 		A76A15BF28F43C9300086B38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A76A15C228F43C9300086B38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A76A15C428F43C9300086B38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AF01A13E18EFE28DEC25BF23 /* Pods-LookinDemoSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinDemoSwift.debug.xcconfig"; path = "Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,22 +35,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7C3892E296FEF9E00A3EF53 /* LookinServer in Frameworks */,
-				FB3D04C00CD1CAE62926DBA6 /* Pods_LookinDemoSwift.framework in Frameworks */,
+				14155EB60F3B8FC84E0F10E4 /* Pods_LookinDemoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		40E1E7BB7DF8C24334A9D100 /* Pods */ = {
+		4915B52967954C78B9E448D0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AF01A13E18EFE28DEC25BF23 /* Pods-LookinDemoSwift.debug.xcconfig */,
-				7E385FCA0A966081A7926AB6 /* Pods-LookinDemoSwift.release.xcconfig */,
+				9DCADF6229D29589BF4D9E76 /* Pods-LookinDemoSwift.debug.xcconfig */,
+				467BE8220D741775D32B5CBC /* Pods-LookinDemoSwift.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		509EB601F77043FA0D642F26 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				638F85BC46103F15DE552A4C /* Pods_LookinDemoSwift.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		A76A15AA28F43C9300086B38 = {
@@ -59,8 +64,8 @@
 			children = (
 				A76A15B528F43C9300086B38 /* LookinDemoSwift */,
 				A76A15B428F43C9300086B38 /* Products */,
-				40E1E7BB7DF8C24334A9D100 /* Pods */,
-				B7C5474497C4DD2FF6A1BE72 /* Frameworks */,
+				4915B52967954C78B9E448D0 /* Pods */,
+				509EB601F77043FA0D642F26 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,14 +91,6 @@
 			path = LookinDemoSwift;
 			sourceTree = "<group>";
 		};
-		B7C5474497C4DD2FF6A1BE72 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				7087545AFFAA70A09036012D /* Pods_LookinDemoSwift.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -101,11 +98,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A76A15C728F43C9300086B38 /* Build configuration list for PBXNativeTarget "LookinDemoSwift" */;
 			buildPhases = (
-				9D1323B9EB5A88F5E57E3F0E /* [CP] Check Pods Manifest.lock */,
+				B170D8F53D3D36DC699C3C48 /* [CP] Check Pods Manifest.lock */,
 				A76A15AF28F43C9300086B38 /* Sources */,
 				A76A15B028F43C9300086B38 /* Frameworks */,
 				A76A15B128F43C9300086B38 /* Resources */,
-				091E420BBD81326B430DB233 /* [CP] Embed Pods Frameworks */,
+				83EB438536D18ED0BB502D3A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -113,7 +110,6 @@
 			);
 			name = LookinDemoSwift;
 			packageProductDependencies = (
-				A7C3892D296FEF9E00A3EF53 /* LookinServer */,
 			);
 			productName = LookinDemoSwift;
 			productReference = A76A15B328F43C9300086B38 /* LookinDemoSwift.app */;
@@ -144,7 +140,6 @@
 			);
 			mainGroup = A76A15AA28F43C9300086B38;
 			packageReferences = (
-				A7C3892C296FEF9E00A3EF53 /* XCRemoteSwiftPackageReference "LookinServer" */,
 			);
 			productRefGroup = A76A15B428F43C9300086B38 /* Products */;
 			projectDirPath = "";
@@ -169,7 +164,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		091E420BBD81326B430DB233 /* [CP] Embed Pods Frameworks */ = {
+		83EB438536D18ED0BB502D3A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -186,7 +181,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LookinDemoSwift/Pods-LookinDemoSwift-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9D1323B9EB5A88F5E57E3F0E /* [CP] Check Pods Manifest.lock */ = {
+		B170D8F53D3D36DC699C3C48 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -359,7 +354,7 @@
 		};
 		A76A15C828F43C9300086B38 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF01A13E18EFE28DEC25BF23 /* Pods-LookinDemoSwift.debug.xcconfig */;
+			baseConfigurationReference = 9DCADF6229D29589BF4D9E76 /* Pods-LookinDemoSwift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -387,7 +382,7 @@
 		};
 		A76A15C928F43C9300086B38 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7E385FCA0A966081A7926AB6 /* Pods-LookinDemoSwift.release.xcconfig */;
+			baseConfigurationReference = 467BE8220D741775D32B5CBC /* Pods-LookinDemoSwift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -435,25 +430,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		A7C3892C296FEF9E00A3EF53 /* XCRemoteSwiftPackageReference "LookinServer" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/QMUI/LookinServer";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		A7C3892D296FEF9E00A3EF53 /* LookinServer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A7C3892C296FEF9E00A3EF53 /* XCRemoteSwiftPackageReference "LookinServer" */;
-			productName = LookinServer;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A76A15AB28F43C9300086B38 /* Project object */;
 }
