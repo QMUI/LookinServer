@@ -30,8 +30,6 @@
 
 + (instancetype)perspectiveInfoWithIncludedWindows:(NSArray<UIWindow *> *)includedWindows excludedWindows:(NSArray<UIWindow *> *)excludedWindows;
 
-+ (NSArray<NSString *> *)collapsedClassList;
-
 #endif
 
 /// 这里其实就是顶端的那几个 UIWindow

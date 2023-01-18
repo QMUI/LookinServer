@@ -24,6 +24,9 @@ LookinServer: https://github.com/QMUI/LookinServer
 
 macOS app: https://github.com/hughkli/Lookin/
 
+# Tips
+You can create configs in your iOS project to reduce reload time or optimize your user experience of Lookin: https://lookin.work/faq/config-file/
+
 # Development
 It's hard for me to spend much time on this free open-source side project. The feature developlment or bugfix may be really slow.
 
@@ -54,6 +57,9 @@ Lookin 可以查看与修改 iOS App 里的 UI 对象，类似于 Xcode 自带�
 iOS 端 LookinServer：https://github.com/QMUI/LookinServer
 
 macOS 端软件：https://github.com/hughkli/Lookin/
+
+# 技巧
+你可以在你的 iOS 项目中实现一些 Delegate 方法，从而优化 Lookin 的刷新速度或使用体验: https://lookin.work/faq/config-file/
 
 # 开发节奏
 由于在公司里的正职实在是太忙了，导致我很难在这个开源免费项目上花费太多时间和精力，所以新功能开发和 Bugfix 可能都比较慢，请见谅。
