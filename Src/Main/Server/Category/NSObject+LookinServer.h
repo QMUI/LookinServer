@@ -27,6 +27,8 @@
 
 #pragma mark - trace
 
+@property(nonatomic, copy) NSArray<LookinIvarTrace *> *lks_ivarTraces;
+
 @property(nonatomic, copy) NSString *lks_specialTrace;
 
 + (void)lks_clearAllObjectsTraces;
