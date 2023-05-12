@@ -45,7 +45,6 @@ class ViewController: UIViewController {
         view.addSubview(textView)
         
         myButton.tag = 1234
-        myButton.setTitle("abc", for: .normal)
         myButton.frame = CGRect(x: 20, y: 20, width: 50, height: 50)
         view.addSubview(myButton)
     }
