@@ -31,7 +31,7 @@ extern NSString *const LookinIvarTraceRelationValue_Self;
 
 @end
 
-@interface NSObject (LookinServer)
+@interface NSObject (LookinServerTrace)
 
 @property(nonatomic, copy) NSArray<LookinIvarTrace *> *lks_ivarTraces;
 
