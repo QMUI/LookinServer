@@ -48,7 +48,12 @@
     }
     
     LookinDisplayItem *item = [LookinDisplayItem new];
-    if ([self validateFrame:layer.frame]) {
+    CGRect layerFrame = layer.frame;
+    UIView *hostView = layer.lks_hostView;
+    if (hostView && hostView.superview) {
+        layerFrame = [hostView.superview convertRect:layerFrame toView:nil];
+    }
+    if ([self validateFrame:layerFrame]) {
         item.frame = layer.frame;
     } else {
         NSLog(@"LookinServer - 该 layer 的 frame(%@) 不太寻常，可能导致 Lookin 客户端中图像渲染错误，因此这里暂时将其视为 CGRectZero", NSStringFromCGRect(layer.frame));
