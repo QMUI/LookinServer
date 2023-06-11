@@ -500,10 +500,17 @@
         NSAssert(NO, @"");
         return NO;
     }
-    if ([self.title.lowercaseString containsString:string.lowercaseString]) {
+    NSString *searchString = string.lowercaseString;
+    if ([self.title.lowercaseString containsString:searchString]) {
         return YES;
     }
-    if ([self.subtitle.lowercaseString containsString:string.lowercaseString]) {
+    if ([self.subtitle.lowercaseString containsString:searchString]) {
+        return YES;
+    }
+    if ([self.viewObject.memoryAddress containsString:searchString]) {
+        return YES;
+    }
+    if ([self.layerObject.memoryAddress containsString:searchString]) {
         return YES;
     }
     return NO;
