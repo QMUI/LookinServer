@@ -56,7 +56,7 @@
     if ([self validateFrame:layerFrame]) {
         item.frame = layer.frame;
     } else {
-        NSLog(@"LookinServer - 该 layer 的 frame(%@) 不太寻常，可能导致 Lookin 客户端中图像渲染错误，因此这里暂时将其视为 CGRectZero", NSStringFromCGRect(layer.frame));
+        NSLog(@"LookinServer - The layer frame(%@) seems really weird. Lookin will ignore it to avoid potential render error in Lookin.", NSStringFromCGRect(layer.frame));
         item.frame = CGRectZero;
     }
     item.bounds = layer.bounds;
