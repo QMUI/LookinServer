@@ -1,7 +1,7 @@
 PODS:
-  - LookinServer (1.1.5):
-    - LookinServer/Core (= 1.1.5)
-  - LookinServer/Core (1.1.5)
+  - LookinServer (1.1.7):
+    - LookinServer/Core (= 1.1.7)
+  - LookinServer/Core (1.1.7)
 
 DEPENDENCIES:
   - LookinServer (from `../../`)
@@ -11,7 +11,7 @@ EXTERNAL SOURCES:
     :path: "../../"
 
 SPEC CHECKSUMS:
-  LookinServer: 2893f2bae53cbf3fd49bbe1a8ea1745582ef1317
+  LookinServer: 4ce0469b066871525611d009d8d16a7a50c23491
 
 PODFILE CHECKSUM: c1b5f203c9e81bcbf3888ba95a03c31e2435a4f7
 

@@ -35,6 +35,8 @@
 
 @property(nonatomic, strong) TestView *myView;
 @property(nonatomic, strong) TestLayer *myLayer;
+@property(nonatomic, strong) UIScrollView *scrollView;
+@property(nonatomic, strong) UIView *scrollInnerView;
 
 @end
 
@@ -54,6 +56,16 @@
     self.myLayer.backgroundColor = UIColor.blueColor.CGColor;
     [self.view.layer addSublayer:self.myLayer];
     self.myLayer.frame = CGRectMake(20, 200, 100, 100);
+    
+    self.scrollView = [UIScrollView new];
+    self.scrollView.frame = CGRectMake(0, 0, 400, 800);
+    self.scrollView.contentSize = CGSizeMake(400, 1000000);
+    [self.view addSubview:self.scrollView];
+    
+    self.scrollInnerView = [UIView new];
+    [self.scrollView addSubview:self.scrollInnerView];
+    self.scrollInnerView.backgroundColor = UIColor.redColor;
+    self.scrollInnerView.frame = CGRectMake(0, 800000, 100, 100);
 }
 
 @end
