@@ -62,4 +62,7 @@ macOS 端软件：https://github.com/hughkli/Lookin/
 你可以在你的 iOS 项目中实现一些 Delegate 方法，从而优化 Lookin 的刷新速度或使用体验: https://lookin.work/faq/config-file/
 
 # 开发节奏
-由于在公司里的正职实在是太忙了，导致我很难在这个开源免费项目上花费太多时间和精力，所以新功能开发和 Bugfix 可能都比较慢，请见谅。
+由于 Lookin 仅是我正职工作之外的业余项目，因此其 Bugfix 和功能迭代可能会非常慢。
+
+# 工作机会
+如果你也是 iOS/Android 客户端开发，并且有换工作的意向，那么诚挚邀请你加入我的部门：https://bytedance.feishu.cn/docx/SAcgdoQuAouyXAxAqy8cmrT2n4b
