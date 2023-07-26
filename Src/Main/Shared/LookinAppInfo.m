@@ -11,6 +11,9 @@
 
 
 #import "LookinAppInfo.h"
+#if TARGET_OS_IPHONE
+#import "LKS_ConnectionManager.h"
+#endif
 
 static NSString * const CodingKey_AppIcon = @"1";
 static NSString * const CodingKey_Screenshot = @"2";
@@ -35,6 +38,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     newAppInfo.screenHeight = self.screenHeight;
     newAppInfo.screenScale = self.screenScale;
     newAppInfo.appInfoIdentifier = self.appInfoIdentifier;
+	newAppInfo.isWireless = self.isWireless;
     return newAppInfo;
 }
 
@@ -60,6 +64,7 @@ static NSString * const CodingKey_DeviceType = @"8";
         self.screenScale = [aDecoder decodeDoubleForKey:@"screenScale"];
         self.appInfoIdentifier = [aDecoder decodeIntegerForKey:@"appInfoIdentifier"];
         self.shouldUseCache = [aDecoder decodeBoolForKey:@"shouldUseCache"];
+		self.isWireless = [aDecoder decodeBoolForKey:@"isWireless"];
     }
     return self;
 }
@@ -92,6 +97,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     [aCoder encodeDouble:self.screenScale forKey:@"screenScale"];
     [aCoder encodeInteger:self.appInfoIdentifier forKey:@"appInfoIdentifier"];
     [aCoder encodeBool:self.shouldUseCache forKey:@"shouldUseCache"];
+	[aCoder encodeBool:self.isWireless forKey:@"isWireless"];
 }
 
 + (BOOL)supportsSecureCoding {
@@ -165,6 +171,10 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (hasIcon) {
         info.appIcon = [self appIcon];
     }
+	info.isWireless = LKS_ConnectionManager.sharedInstance.isWirelessConnnect;
+	if (info.isWireless) {
+		info.deviceDescription = [NSString stringWithFormat:@"ᯤ %@", info.deviceDescription];
+	}
     
     return info;
 }

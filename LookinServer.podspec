@@ -12,7 +12,9 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "1.1.7"}
   spec.framework  = "UIKit"
   spec.requires_arc = true
-    
+
+  spec.dependency 'CocoaAsyncSocket'
+
   spec.subspec 'Core' do |ss|
     ss.source_files = ['Src/Main/**/*', 'Src/Base/**/*']
     ss.pod_target_xcconfig = {
