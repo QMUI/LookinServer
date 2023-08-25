@@ -81,7 +81,18 @@
 }
 
 - (UIView *)lks_hostView {
-    return [self lookin_getBindObjectForKey:@"lks_hostView"];
+    UIView *hostView = [self lookin_getBindObjectForKey:@"lks_hostView"];
+    /*
+     * 如果LookinServer 不是跟随app启动时注入, 就会导致一开始创建的view 没有执行 initWithFrame_lks: 的逻辑
+     * 从而导致这里获取不到对应的 lks_hostView
+     *
+     * 具体复现流程为: 先运行目标app，然后通过其他手段将 LookinServer 注入到目标app中. 例如越狱设备上通过 Frida 进行注入
+     * 在 Mac Lookin 上看到的就全是 CALayer
+     */
+    if (hostView == nil && self.delegate && [self.delegate isKindOfClass:UIView.class]) {
+        hostView = (UIView *)self.delegate;
+    }
+    return hostView;
 }
 
 #pragma mark - Screenshot
