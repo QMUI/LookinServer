@@ -12,10 +12,10 @@
 #import "LookinTuple.h"
 #import "LookinEventHandler.h"
 #import "LookinObject.h"
-#import "UIGestureRecognizer+LookinServer.h"
 #import "LookinWeakContainer.h"
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
+#import "LKS_GestureTargetActionsSearcher.h"
 
 @implementation LKS_EventHandlerMaker
 
@@ -55,7 +55,9 @@
         LookinEventHandler *handler = [LookinEventHandler new];
         handler.handlerType = LookinEventHandlerTypeGesture;
         handler.eventName = [recognizer lks_shortClassName];
-        handler.targetActions = [[recognizer lks_targetActions] lookin_map:^id(NSUInteger idx, LookinTwoTuple *rawTuple) {
+        
+        NSArray<LookinTwoTuple *> *targetActionInfos = [LKS_GestureTargetActionsSearcher getTargetActionsFromRecognizer:recognizer];
+        handler.targetActions = [targetActionInfos lookin_map:^id(NSUInteger idx, LookinTwoTuple *rawTuple) {
             NSObject *target = ((LookinWeakContainer *)rawTuple.first).object;
             if (!target) {
                 // 该 target 已被释放
