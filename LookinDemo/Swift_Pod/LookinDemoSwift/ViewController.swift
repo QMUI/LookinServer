@@ -32,9 +32,11 @@ class MyView: UIView {
 }
 
 class ViewController: UIViewController {
-    private let myButton = MyView()
+    private let myCustomView = MyView()
     
     private let textView = UITextView()
+    
+    private let imageView = UIImageView(image: UIImage(named: "test_image"))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,9 +46,13 @@ class ViewController: UIViewController {
         textView.frame = CGRect(x: 20, y: 100, width: 200, height: 200)
         view.addSubview(textView)
         
-        myButton.tag = 1234
-        myButton.frame = CGRect(x: 20, y: 20, width: 50, height: 50)
-        view.addSubview(myButton)
+        myCustomView.tag = 1234
+        myCustomView.frame = CGRect(x: 20, y: 20, width: 50, height: 50)
+        myCustomView.backgroundColor = UIColor.blue
+        view.addSubview(myCustomView)
+        
+        view.addSubview(imageView)
+        imageView.frame = CGRect(x: 20, y: 220, width: 50, height: 50)
     }
 
 
