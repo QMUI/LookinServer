@@ -14,7 +14,8 @@
 
 @interface CALayer (LookinServer)
 
-@property(nonatomic, weak) UIView *lks_hostView;
+/// 如果 myView.layer == myLayer，则 myLayer.lks_hostView 会返回 myView
+@property(nonatomic, readonly, weak) UIView *lks_hostView;
 
 - (UIWindow *)lks_window;
 

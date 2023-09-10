@@ -31,31 +31,6 @@
     return viewController;
 }
 
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getInstanceMethod([UIView class], @selector(initWithFrame:));
-        Method newMethod = class_getInstanceMethod([UIView class], @selector(initWithFrame_lks:));
-        method_exchangeImplementations(oriMethod, newMethod);
-        
-        oriMethod = class_getInstanceMethod([UIView class], @selector(initWithCoder:));
-        newMethod = class_getInstanceMethod([UIView class], @selector(initWithCoder_lks:));
-        method_exchangeImplementations(oriMethod, newMethod);
-    });
-}
-
-- (instancetype)initWithFrame_lks:(CGRect)frame {
-    UIView *view = [self initWithFrame_lks:frame];
-    view.layer.lks_hostView = view;
-    return view;
-}
-
-- (instancetype)initWithCoder_lks:(NSCoder *)coder {
-    UIView *view = [self initWithCoder_lks:coder];
-    view.layer.lks_hostView = view;
-    return view;
-}
-
 - (UIView *)lks_subviewAtPoint:(CGPoint)point preferredClasses:(NSArray<Class> *)preferredClasses {
     BOOL isPreferredClassForSelf = [preferredClasses lookin_any:^BOOL(Class obj) {
         return [self isKindOfClass:obj];
