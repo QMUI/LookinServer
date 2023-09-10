@@ -164,7 +164,6 @@ extern LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Color;
 extern LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Mode;
 extern LookinAttrIdentifier const LookinAttr_ViewLayer_Tag_Tag;
 
-extern LookinAttrIdentifier const LookinAttr_UIImageView_Name_Name;
 extern LookinAttrIdentifier const LookinAttr_UIImageView_Open_Open;
 
 extern LookinAttrIdentifier const LookinAttr_UILabel_Text_Text;

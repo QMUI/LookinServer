@@ -12,7 +12,6 @@
 
 @interface UIImageView (LookinServer)
 
-- (NSString *)lks_imageSourceName;
 - (NSNumber *)lks_imageViewOidIfHasImage;
 
 @end

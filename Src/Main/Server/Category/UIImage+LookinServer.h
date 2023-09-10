@@ -12,8 +12,6 @@
 
 @interface UIImage (LookinServer)
 
-@property(nonatomic, copy) NSString *lks_imageSourceName;
-
 - (NSData *)lookin_data;
 
 @end

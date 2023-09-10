@@ -161,7 +161,6 @@ LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Color = @"vl_t_c";
 LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Mode = @"vl_t_m";
 LookinAttrIdentifier const LookinAttr_ViewLayer_Tag_Tag = @"vl_t_t";
 
-LookinAttrIdentifier const LookinAttr_UIImageView_Name_Name = @"iv_n_n";
 LookinAttrIdentifier const LookinAttr_UIImageView_Open_Open = @"iv_o_o";
 
 LookinAttrIdentifier const LookinAttr_UILabel_Text_Text = @"lb_t_t";

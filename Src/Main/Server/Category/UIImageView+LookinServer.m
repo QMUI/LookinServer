@@ -14,10 +14,6 @@
 
 @implementation UIImageView (LookinServer)
 
-- (NSString *)lks_imageSourceName {
-    return self.image.lks_imageSourceName;
-}
-
 - (NSNumber *)lks_imageViewOidIfHasImage {
     if (!self.image) {
         return nil;

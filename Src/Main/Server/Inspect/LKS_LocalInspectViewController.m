@@ -664,26 +664,13 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     if (layer.backgroundColor) {
         [resultArray addObject:@[@"BackgroundColor", [NSString lookin_rgbaStringFromColor:[UIColor lks_colorWithCGColor:layer.backgroundColor]]]];
     }
-    if ([layer.lks_hostView isKindOfClass:[UIImageView class]]) {
-        UIImage *image = ((UIImageView *)layer.lks_hostView).image;
-        if (image.lks_imageSourceName.length) {
-            [resultArray addObject:@[@"ImageName", [NSString stringWithFormat:@"\"%@\"", image.lks_imageSourceName]]];
-        }
-        
-    } else if ([layer.lks_hostView isKindOfClass:[UIButton class]]) {
+    if ([layer.lks_hostView isKindOfClass:[UIButton class]]) {
         UIButton *button = (UIButton *)layer.lks_hostView;
         // 不要直接访问 button.titleLabel。因为如果 title 不存在的话，访问 button.titleLabel 会触发初始化 titleLabel 进而触发 dynamic hierarhy push
         if ([button titleForState:UIControlStateNormal].length) {
             [resultArray addObject:@[@"FontSize", [NSString lookin_stringFromDouble:button.titleLabel.font.pointSize decimal:2]]];
             [resultArray addObject:@[@"FontName", button.titleLabel.font.fontName]];
             [resultArray addObject:@[@"TextColor", [NSString lookin_rgbaStringFromColor:button.titleLabel.textColor]]];
-        }
-        // 不要直接访问 button.imageView。因为如果 image 不存在的话，访问 button.image 会触发初始化 imageView 进而触发 dynamic hierarhy push
-        if ([button imageForState:UIControlStateNormal]) {
-            NSString *imageSourceName = button.imageView.image.lks_imageSourceName;
-            if (imageSourceName.length) {
-                [resultArray addObject:@[@"ImageName", [NSString stringWithFormat:@"\"%@\"", imageSourceName]]];
-            }
         }
         
     } else if ([layer.lks_hostView isKindOfClass:[UILabel class]]) {
