@@ -189,6 +189,8 @@
                  
                  LookinAttrSec_UIVisualEffectView_QMUIForegroundColor: @[LookinAttr_UIVisualEffectView_QMUIForegroundColor_Color],
                  
+                 LookinAttrSec_UIImageView_Name: @[LookinAttr_UIImageView_Name_Name],
+                 
                  LookinAttrSec_UIImageView_Open: @[LookinAttr_UIImageView_Open_Open],
                  
                  LookinAttrSec_UILabel_Font: @[LookinAttr_UILabel_Font_Name,
@@ -665,6 +667,14 @@
                          @"patch": @(YES),
                  },
                  
+                 LookinAttr_UIImageView_Name_Name: @{
+                         @"className": @"UIImageView",
+                         @"fullTitle": @"ImageName",
+                         @"setterString": @"",
+                         @"getterString": @"lks_imageSourceName",
+                         @"typeIfObj": @(LookinAttrTypeNSString),
+                         @"hideIfNil": @(YES)
+                 },
                  LookinAttr_UIImageView_Open_Open: @{
                          @"className": @"UIImageView",
                          @"setterString": @"",
