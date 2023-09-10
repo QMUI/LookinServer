@@ -53,6 +53,13 @@ class ViewController: UIViewController {
         
         view.addSubview(imageView)
         imageView.frame = CGRect(x: 20, y: 220, width: 50, height: 50)
+        
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
+        visualEffectView.frame = CGRect(x: 0, y: 240, width: 50, height: 50)
+        view.addSubview(visualEffectView)
+        
+//        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+//        let style = blurEffect.style
     }
 
 
