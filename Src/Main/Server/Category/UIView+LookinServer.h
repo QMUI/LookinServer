@@ -13,7 +13,8 @@
 
 @interface UIView (LookinServer)
 
-@property(nonatomic, weak) UIViewController *lks_hostViewController;
+/// 如果 myViewController.view = myView，则可以通过 myView 的 lks_findHostViewController 方法找到 myViewController
+- (UIViewController *)lks_findHostViewController;
 
 /// 是否是 UITabBar 的 childrenView，如果是的话，则截图时需要强制使用 renderInContext: 的方式而非 drawViewHierarchyInRect:afterScreenUpdates: 否则在 iOS 13 上获取到的图像是空的不知道为什么
 @property(nonatomic, assign) BOOL lks_isChildrenViewOfTabBar;

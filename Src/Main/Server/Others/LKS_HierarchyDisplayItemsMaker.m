@@ -20,6 +20,7 @@
 @implementation LKS_HierarchyDisplayItemsMaker
 
 + (NSArray<LookinDisplayItem *> *)itemsWithScreenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality includedWindows:(NSArray<UIWindow *> *)includedWindows excludedWindows:(NSArray<UIWindow *> *)excludedWindows {
+    
     [[LKS_TraceManager sharedInstance] reload];
     
     NSArray<UIWindow *> *windows = [[UIApplication sharedApplication].windows copy];
@@ -81,8 +82,9 @@
         item.eventHandlers = [LKS_EventHandlerMaker makeForView:view];
         item.backgroundColor = view.backgroundColor;
         
-        if (view.lks_hostViewController) {
-            item.hostViewControllerObject = [LookinObject instanceWithObject:view.lks_hostViewController];
+        UIViewController* vc = [view lks_findHostViewController];
+        if (vc) {
+            item.hostViewControllerObject = [LookinObject instanceWithObject:vc];
         }
     } else {
         item.backgroundColor = [UIColor lks_colorWithCGColor:layer.backgroundColor];

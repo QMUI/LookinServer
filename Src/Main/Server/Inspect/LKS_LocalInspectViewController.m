@@ -641,8 +641,9 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
     NSString *traceString = nil;
     
     NSObject *targetObject = layer.lks_hostView ? : layer;
-    if (layer.lks_hostView.lks_hostViewController) {
-        traceString = [NSString stringWithFormat:@"%@.view", NSStringFromClass([layer.lks_hostView.lks_hostViewController class])];
+    UIViewController *vc = [layer.lks_hostView lks_findHostViewController];
+    if (vc) {
+        traceString = [NSString stringWithFormat:@"%@.view", NSStringFromClass([vc class])];
     } else {
         if (targetObject.lks_specialTrace.length) {
             traceString = targetObject.lks_specialTrace;

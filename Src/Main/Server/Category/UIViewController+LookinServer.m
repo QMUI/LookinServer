@@ -14,20 +14,6 @@
 
 @implementation UIViewController (LookinServer)
 
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getInstanceMethod([self class], @selector(viewDidLoad));
-        Method newMethod = class_getInstanceMethod([self class], @selector(lks_viewDidLoad));
-        method_exchangeImplementations(oriMethod, newMethod);
-    });
-}
-
-- (void)lks_viewDidLoad {
-    [self lks_viewDidLoad];
-    self.view.lks_hostViewController = self;
-}
-
 + (nullable UIViewController *)lks_visibleViewController {
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     UIViewController *visibleViewController = [rootViewController lks_visibleViewControllerIfExist];

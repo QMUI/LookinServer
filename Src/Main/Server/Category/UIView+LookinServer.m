@@ -16,6 +16,21 @@
 
 @implementation UIView (LookinServer)
 
+- (UIViewController *)lks_findHostViewController {
+    UIResponder *responder = [self nextResponder];
+    if (!responder) {
+        return nil;
+    }
+    if (![responder isKindOfClass:[UIViewController class]]) {
+        return nil;
+    }
+    UIViewController *viewController = (UIViewController *)responder;
+    if (viewController.view != self) {
+        return nil;
+    }
+    return viewController;
+}
+
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -39,14 +54,6 @@
     UIView *view = [self initWithCoder_lks:coder];
     view.layer.lks_hostView = view;
     return view;
-}
-
-- (void)setLks_hostViewController:(UIViewController *)lks_hostViewController {
-    [self lookin_bindObjectWeakly:lks_hostViewController forKey:@"lks_hostViewController"];
-}
-
-- (UIViewController *)lks_hostViewController {
-    return [self lookin_getBindObjectForKey:@"lks_hostViewController"];
 }
 
 - (UIView *)lks_subviewAtPoint:(CGPoint)point preferredClasses:(NSArray<Class> *)preferredClasses {
