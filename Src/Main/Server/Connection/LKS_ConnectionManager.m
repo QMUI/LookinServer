@@ -83,12 +83,9 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 #if TARGET_OS_SIMULATOR
     return YES;
 #endif
-
-#ifdef IOS14_SDK_ALLOWED
     if (@available(iOS 14.0, *)) {
         return [NSProcessInfo processInfo].isiOSAppOnMac || [NSProcessInfo processInfo].isMacCatalystApp;
     }
-#endif
     if (@available(iOS 13.0, tvOS 13.0, *)) {
         return [NSProcessInfo processInfo].isMacCatalystApp;
     }
