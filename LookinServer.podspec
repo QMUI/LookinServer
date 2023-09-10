@@ -28,5 +28,13 @@ Pod::Spec.new do |spec|
        'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED=1',
        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED'
     }
- end
+  end
+
+  spec.subspec 'NoHook' do |ss|
+    ss.dependency 'LookinServer/Core'
+    ss.pod_target_xcconfig = {
+       'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_DISABLE_HOOK=1',
+    }
+  end
+
 end
