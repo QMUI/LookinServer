@@ -102,15 +102,13 @@
 				A76A15AF28F43C9300086B38 /* Sources */,
 				A76A15B028F43C9300086B38 /* Frameworks */,
 				A76A15B128F43C9300086B38 /* Resources */,
-				83EB438536D18ED0BB502D3A /* [CP] Embed Pods Frameworks */,
+				2F522320EF12A19C05C32C14 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = LookinDemoSwift;
-			packageProductDependencies = (
-			);
 			productName = LookinDemoSwift;
 			productReference = A76A15B328F43C9300086B38 /* LookinDemoSwift.app */;
 			productType = "com.apple.product-type.application";
@@ -139,8 +137,6 @@
 				Base,
 			);
 			mainGroup = A76A15AA28F43C9300086B38;
-			packageReferences = (
-			);
 			productRefGroup = A76A15B428F43C9300086B38 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -164,7 +160,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		83EB438536D18ED0BB502D3A /* [CP] Embed Pods Frameworks */ = {
+		2F522320EF12A19C05C32C14 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
