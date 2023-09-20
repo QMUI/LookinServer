@@ -244,7 +244,7 @@ static SEL LKS_AltSelectorFromSelector(SEL originalSelector) {
     return NSSelectorFromString([@"lks_alt_" stringByAppendingString:selectorName]);
 }
 
-static NSMutableDictionary<NSString *, NSMutableSet<NSString *> *> *LKS_HookedDict() {
+static NSMutableDictionary<NSString *, NSMutableSet<NSString *> *> *LKS_HookedDict(void) {
     static NSMutableDictionary *dict;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -253,7 +253,7 @@ static NSMutableDictionary<NSString *, NSMutableSet<NSString *> *> *LKS_HookedDi
     return dict;
 }
 
-static NSMutableArray<NSDictionary<NSString *, id> *> *LKS_ActiveList() {
+static NSMutableArray<NSDictionary<NSString *, id> *> *LKS_ActiveList(void) {
     static NSMutableArray *list;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

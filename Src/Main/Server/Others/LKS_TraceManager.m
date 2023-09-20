@@ -231,7 +231,7 @@
     [self _markIVarsOfObject:hostObject class:superClass];
 }
 
-static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces() {
+static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces(void) {
     static NSSet *list;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
