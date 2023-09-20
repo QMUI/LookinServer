@@ -194,7 +194,14 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (!window) {
         return nil;
     }
-    UIGraphicsBeginImageContextWithOptions(window.bounds.size, YES, 0.4);
+    CGSize size = window.bounds.size;
+    if (size.width <= 0 || size.height <= 0) {
+        // *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UIGraphicsBeginImageContext() failed to allocate CGBitampContext: size={0, 0}, scale=3.000000, bitmapInfo=0x2002. Use UIGraphicsImageRenderer to avoid this assert.'
+
+        // https://github.com/hughkli/Lookin/issues/21
+        return nil;
+    }
+    UIGraphicsBeginImageContextWithOptions(size, YES, 0.4);
     [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
