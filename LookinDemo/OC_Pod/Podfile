@@ -1,5 +1,5 @@
 use_frameworks!
 
 target 'LookinDemoOC' do
-    pod 'LookinServer', :path=>'../../'
+    pod 'LookinServer', subspecs=>'[', :path=>'../../'
 end
