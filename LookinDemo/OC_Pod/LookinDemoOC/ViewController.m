@@ -51,6 +51,7 @@
     self.myView.tag = 1234;
     [self.view addSubview:self.myView];
     self.myView.frame = CGRectMake(20, 20, 100, 100);
+    self.myView.transform = CGAffineTransformMakeScale(0, 0);
     
     self.myLayer = [TestLayer new];
     self.myLayer.backgroundColor = UIColor.blueColor.CGColor;
@@ -87,14 +88,14 @@
         @"MyBlack": [UIColor colorWithRed:0 green:0 blue:0 alpha:1]
     };
 }
-+ (BOOL)lookin_shouldCaptureImageOfView:(UIView *)view {
-    if (view.tag == 1234) {
-        // Lookin will not show image of the view
-        return NO;
-    } else {
-        return YES;
-    }
-}
+//+ (BOOL)lookin_shouldCaptureImageOfView:(UIView *)view {
+//    if (view.tag == 1234) {
+//        // Lookin will not show image of the view
+//        return NO;
+//    } else {
+//        return YES;
+//    }
+//}
 
 + (BOOL)lookin_shouldCaptureImageOfLayer:(CALayer *)layer {
 //    if (...) {
