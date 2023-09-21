@@ -91,8 +91,8 @@
 - (UIImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
     
     CGFloat screenScale = [UIScreen mainScreen].scale;
-    CGFloat pixelWidth = self.bounds.size.width * screenScale;
-    CGFloat pixelHeight = self.bounds.size.height * screenScale;
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
     if (pixelWidth <= 0 || pixelHeight <= 0) {
         return nil;
     }
@@ -125,8 +125,8 @@
     }
     
     CGFloat screenScale = [UIScreen mainScreen].scale;
-    CGFloat pixelWidth = self.bounds.size.width * screenScale;
-    CGFloat pixelHeight = self.bounds.size.height * screenScale;
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
     if (pixelWidth <= 0 || pixelHeight <= 0) {
         return nil;
     }
