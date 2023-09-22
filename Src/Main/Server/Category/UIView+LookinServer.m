@@ -13,6 +13,7 @@
 #import "LookinObject.h"
 #import "LookinAutoLayoutConstraint.h"
 #import "LookinServerDefines.h"
+#import "LKS_WindowDiscovery.h"
 
 @implementation UIView (LookinServer)
 
@@ -107,10 +108,10 @@
 }
 
 + (void)lks_rebuildGlobalInvolvedRawConstraints {
-    [[[UIApplication sharedApplication].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[[LKS_WindowDiscovery sharedInstance].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
         [self lks_removeInvolvedRawConstraintsForViewsRootedByView:window];
     }];
-    [[[UIApplication sharedApplication].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[[LKS_WindowDiscovery sharedInstance].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
         [self lks_addInvolvedRawConstraintsForViewsRootedByView:window];
     }];
 }

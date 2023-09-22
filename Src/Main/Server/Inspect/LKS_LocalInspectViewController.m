@@ -15,6 +15,7 @@
 #import "UIImage+LookinServer.h"
 #import "LookinServerDefines.h"
 #import "UIColor+LookinServer.h"
+#import "LKS_WindowDiscovery.h"
 #import "LKSConfigManager.h"
 
 static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
@@ -558,7 +559,7 @@ static CGRect const kInvalidRect = (CGRect){-2, -2, 0, 0};
 - (UIView *)_targetViewAtPoint:(CGPoint)point {
     __block UIView *targetView = nil;
     
-    [[UIApplication sharedApplication].windows enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[LKS_WindowDiscovery sharedInstance].windows enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
         if (targetView) {
             *stop = YES;
             return;
