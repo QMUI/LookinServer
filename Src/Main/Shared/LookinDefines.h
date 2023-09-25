@@ -49,6 +49,7 @@ static const int LookinUSBDeviceIPv4PortNumberEnd = 47179;
 static const int LookinSimulatorIPv4PortNumberStart = 47164;
 static const int LookinSimulatorIPv4PortNumberEnd = 47169;
 
+#if LOOKIN_SERVER_WIRELESS
 static const int LookinClientSockeListenPortNumber = 47180;
 static const int LookinSocketAcceptPortNumber = 47181;
 static const int LookinNetServicePortNumber = LookinSocketAcceptPortNumber;
@@ -57,6 +58,7 @@ static NSString *const LookinNetServiceDomain      = @"";
 static NSString *const LookinNetServiceType        = @"_Lookin._tcp";
 static NSString *const LookinNetServiceName        = @"";
 static NSTimeInterval const LookinNetServiceResolveAddressTimeout = 30;
+#endif
 
 enum {
     /// 确认两端是否可以响应通讯

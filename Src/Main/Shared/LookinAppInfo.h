@@ -48,8 +48,10 @@ typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
 @property(nonatomic, assign) double screenHeight;
 /// 是几倍的屏幕
 @property(nonatomic, assign) double screenScale;
+#if LOOKIN_SERVER_WIRELESS
 /// 是否为无线连接
 @property(nonatomic, assign) BOOL isWireless;
+#endif
 
 - (BOOL)isEqualToAppInfo:(LookinAppInfo *)info;
 

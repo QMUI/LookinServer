@@ -38,7 +38,9 @@ static NSString * const CodingKey_DeviceType = @"8";
     newAppInfo.screenHeight = self.screenHeight;
     newAppInfo.screenScale = self.screenScale;
     newAppInfo.appInfoIdentifier = self.appInfoIdentifier;
+#if LOOKIN_SERVER_WIRELESS
 	newAppInfo.isWireless = self.isWireless;
+#endif
     return newAppInfo;
 }
 
@@ -64,7 +66,9 @@ static NSString * const CodingKey_DeviceType = @"8";
         self.screenScale = [aDecoder decodeDoubleForKey:@"screenScale"];
         self.appInfoIdentifier = [aDecoder decodeIntegerForKey:@"appInfoIdentifier"];
         self.shouldUseCache = [aDecoder decodeBoolForKey:@"shouldUseCache"];
+#if LOOKIN_SERVER_WIRELESS
 		self.isWireless = [aDecoder decodeBoolForKey:@"isWireless"];
+#endif
     }
     return self;
 }
@@ -97,7 +101,9 @@ static NSString * const CodingKey_DeviceType = @"8";
     [aCoder encodeDouble:self.screenScale forKey:@"screenScale"];
     [aCoder encodeInteger:self.appInfoIdentifier forKey:@"appInfoIdentifier"];
     [aCoder encodeBool:self.shouldUseCache forKey:@"shouldUseCache"];
+#if LOOKIN_SERVER_WIRELESS
 	[aCoder encodeBool:self.isWireless forKey:@"isWireless"];
+#endif
 }
 
 + (BOOL)supportsSecureCoding {
@@ -171,10 +177,12 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (hasIcon) {
         info.appIcon = [self appIcon];
     }
+#if LOOKIN_SERVER_WIRELESS
 	info.isWireless = LKS_ConnectionManager.sharedInstance.isWirelessConnnect;
 	if (info.isWireless) {
 		info.deviceDescription = [NSString stringWithFormat:@"ᯤ %@", info.deviceDescription];
 	}
+#endif
     
     return info;
 }

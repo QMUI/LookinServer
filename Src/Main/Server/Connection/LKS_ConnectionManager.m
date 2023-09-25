@@ -18,7 +18,9 @@
 #import "LookinServerDefines.h"
 #import "ECOChannelManager.h"
 
+#if LOOKIN_SERVER_WIRELESS
 @import CocoaAsyncSocket;
+#endif
 
 NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNotificationName";
 
@@ -60,8 +62,10 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspectIn2D:) name:@"Lookin_2D" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspectIn3D:) name:@"Lookin_3D" object:nil];
+#if LOOKIN_SERVER_WIRELESS
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startWirelessConnection) name:@"Lookin_startWirelessConnection" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endWirelessConnection) name:@"Lookin_endWirelessConnection" object:nil];
+#endif
         [[NSNotificationCenter defaultCenter] addObserverForName:@"Lookin_Export" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
             [[LKS_ExportManager sharedInstance] exportAndShare];
         }];
@@ -71,6 +75,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     return self;
 }
 
+#if LOOKIN_SERVER_WIRELESS
 - (void)startWirelessConnection {
 	self.hasStartWirelessConnnection = YES;
 	if (!self.wirelessChannel) {
@@ -148,6 +153,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 	}
 	self.wirelessChannel = nil;
 }
+#endif
 
 - (void)_handleWillResignActiveNotification {
     self.applicationIsActive = NO;
@@ -218,12 +224,18 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 - (BOOL)isConnected {
+#if LOOKIN_SERVER_WIRELESS
     return self.isWirelessConnnect || (self.peerChannel_ && self.peerChannel_.isConnected);
+#else
+	return self.peerChannel_ && self.peerChannel_.isConnected;
+#endif
 }
 
+#if LOOKIN_SERVER_WIRELESS
 - (BOOL)isWirelessConnnect {
 	return self.wirelessChannel.isConnected;
 }
+#endif
 
 - (void)respond:(LookinConnectionResponseAttachment *)data requestType:(uint32_t)requestType tag:(uint32_t)tag {
     [self _sendData:data frameOfType:requestType tag:tag];

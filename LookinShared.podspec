@@ -16,10 +16,18 @@ Pod::Spec.new do |spec|
       'Src/Main/Shared/**/*',
       'Src/Base/**/*'
   ]
-
-  spec.dependency 'CocoaAsyncSocket'
+  spec.exclude_files = 'Src/Main/Shared/Channel/**/*'
+  spec.default_subspec = :none
 
   spec.pod_target_xcconfig = {
      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) SHOULD_COMPILE_LOOKIN_SERVER=1'
   }
+
+  spec.subspec 'Wireless' do |ss|
+    ss.source_files = 'Src/Main/Shared/Channel/**/*'
+    ss.dependency 'CocoaAsyncSocket'
+    ss.pod_target_xcconfig = {
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_WIRELESS=1'
+    }
+  end
 end
