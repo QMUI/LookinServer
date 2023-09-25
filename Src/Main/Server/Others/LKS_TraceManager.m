@@ -66,8 +66,9 @@
     
     if (view) {
         [self _markIVarsInAllClassLevelsOfObject:view];
-        if (view.lks_hostViewController) {
-            [self _markIVarsInAllClassLevelsOfObject:view.lks_hostViewController];
+        UIViewController* vc = [view lks_findHostViewController];
+        if (vc) {
+            [self _markIVarsInAllClassLevelsOfObject:vc];
         }
         
         [self _buildSpecialTraceForView:view];
@@ -81,8 +82,9 @@
 }
 
 - (void)_buildSpecialTraceForView:(UIView *)view {
-    if (view.lks_hostViewController) {
-        view.lks_specialTrace = [NSString stringWithFormat:@"%@.view", NSStringFromClass(view.lks_hostViewController.class)];
+    UIViewController* vc = [view lks_findHostViewController];
+    if (vc) {
+        view.lks_specialTrace = [NSString stringWithFormat:@"%@.view", NSStringFromClass(vc.class)];
         
     } else if ([view isKindOfClass:[UIWindow class]]) {
         CGFloat currentWindowLevel = ((UIWindow *)view).windowLevel;
@@ -229,7 +231,7 @@
     [self _markIVarsOfObject:hostObject class:superClass];
 }
 
-static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces() {
+static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces(void) {
     static NSSet *list;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

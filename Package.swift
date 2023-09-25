@@ -27,7 +27,18 @@ let package = Package(
             path: "Src/Main",
             publicHeadersPath: "",
             cSettings: [
-                .headerSearchPath("**")
+                .headerSearchPath("**"),
+                .headerSearchPath("Server"),
+                .headerSearchPath("Server/Category"),
+                .headerSearchPath("Server/Connection"),
+                .headerSearchPath("Server/Connection/RequestHandler"),
+                .headerSearchPath("Server/Inspect"),
+                .headerSearchPath("Server/Others"),
+                .headerSearchPath("Server/Perspective"),
+                .headerSearchPath("Shared"),
+                .headerSearchPath("Shared/Category"),
+                .headerSearchPath("Shared/Message"),
+                .headerSearchPath("Shared/Peertalk"),
             ],
             cxxSettings: [
                 .define("SHOULD_COMPILE_LOOKIN_SERVER", to: "1", .when(configuration: .debug)),

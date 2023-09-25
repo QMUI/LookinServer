@@ -16,37 +16,19 @@
 
 @implementation UIView (LookinServer)
 
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        Method oriMethod = class_getInstanceMethod([UIView class], @selector(initWithFrame:));
-        Method newMethod = class_getInstanceMethod([UIView class], @selector(initWithFrame_lks:));
-        method_exchangeImplementations(oriMethod, newMethod);
-        
-        oriMethod = class_getInstanceMethod([UIView class], @selector(initWithCoder:));
-        newMethod = class_getInstanceMethod([UIView class], @selector(initWithCoder_lks:));
-        method_exchangeImplementations(oriMethod, newMethod);
-    });
-}
-
-- (instancetype)initWithFrame_lks:(CGRect)frame {
-    UIView *view = [self initWithFrame_lks:frame];
-    view.layer.lks_hostView = view;
-    return view;
-}
-
-- (instancetype)initWithCoder_lks:(NSCoder *)coder {
-    UIView *view = [self initWithCoder_lks:coder];
-    view.layer.lks_hostView = view;
-    return view;
-}
-
-- (void)setLks_hostViewController:(UIViewController *)lks_hostViewController {
-    [self lookin_bindObjectWeakly:lks_hostViewController forKey:@"lks_hostViewController"];
-}
-
-- (UIViewController *)lks_hostViewController {
-    return [self lookin_getBindObjectForKey:@"lks_hostViewController"];
+- (UIViewController *)lks_findHostViewController {
+    UIResponder *responder = [self nextResponder];
+    if (!responder) {
+        return nil;
+    }
+    if (![responder isKindOfClass:[UIViewController class]]) {
+        return nil;
+    }
+    UIViewController *viewController = (UIViewController *)responder;
+    if (viewController.view != self) {
+        return nil;
+    }
+    return viewController;
 }
 
 - (UIView *)lks_subviewAtPoint:(CGPoint)point preferredClasses:(NSArray<Class> *)preferredClasses {
