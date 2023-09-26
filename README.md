@@ -16,6 +16,21 @@ Never integrate LookinServer in Release building configuration.
 `pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']`
 ### Objective-C Project
 `pod 'LookinServer', :configurations => ['Debug']`
+
+### [Optianal] Wireless Connection
+`pod 'LookinServer/Wireless', :configurations => ['Debug']`
+
+And you need to add follow content to Info.plist. The name of `NSBonjourServices` **MUST** be `_Lookin._tcp`.
+
+```plist
+<key>NSLocalNetworkUsageDescription</key>
+<string>Local Network Usage Description</string>
+<key>NSBonjourServices</key>
+<array>
+	<string>_Lookin._tcp</string>
+</array>
+```
+
 ## via Swift Package Manager:
 `https://github.com/QMUI/LookinServer/`
 
