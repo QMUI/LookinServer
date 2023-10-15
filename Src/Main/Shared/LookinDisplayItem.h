@@ -8,8 +8,6 @@
 //  Copyright © 2018 QMUI Team. All rights reserved.
 //
 
-
-
 #import "TargetConditionals.h"
 #import "LookinObject.h"
 #import "LookinDefines.h"
