@@ -1,15 +1,15 @@
 //
-//  DogView.h
+//  CatView.h
 //  LookinDemoOC
 //
-//  Created by likai.123 on 2023/10/15.
+//  Created by likai.123 on 2023/10/16.
 //
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DogView : NSObject
+@interface CatView : NSObject
 
 - (NSDictionary<NSString *, id> *)lookin_customDebugInfos;
     
