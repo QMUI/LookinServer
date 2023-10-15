@@ -16,12 +16,19 @@
 @class LookinAttributesSection;
 
 /**
- 在 Lookin 中，一个 LookinAttributesGroup 会被对应渲染为一张卡片
+ In Lookin, a LookinAttributesGroup instance will be rendered as a property card.
  
- 如果两个 attrGroup 有相同的 LookinAttrGroupIdentifier，则 isEqual: 返回 YES
+ When isUserCustom is false: two LookinAttributesGroup instances will be regard as equal when they has the same LookinAttrGroupIdentifier.
+ When isUserCustom is true: two LookinAttributesGroup instances will be regard as equal when they has the same title.
+ 当 isUserCustom 为 false 时：若两个 attrGroup 有相同的 LookinAttrGroupIdentifier，则 isEqual: 返回 YES
  */
 @interface LookinAttributesGroup : NSObject <NSSecureCoding, NSCopying>
 
+@property(nonatomic, assign) BOOL isUserCustom;
+/// Has value when isUserCustom is true
+@property(nonatomic, copy) NSString *userCustomTitle;
+
+/// When isUserCustom is YES, the identifier will be LookinAttrGroup_None.
 @property(nonatomic, copy) LookinAttrGroupIdentifier identifier;
 
 @property(nonatomic, copy) NSArray<LookinAttributesSection *> *attrSections;

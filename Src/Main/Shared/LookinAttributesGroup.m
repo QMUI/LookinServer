@@ -22,6 +22,8 @@
 
 - (id)copyWithZone:(NSZone *)zone {
     LookinAttributesGroup *newGroup = [[LookinAttributesGroup allocWithZone:zone] init];
+    newGroup.isUserCustom = self.isUserCustom;
+    newGroup.userCustomTitle = self.userCustomTitle;
     newGroup.identifier = self.identifier;
     newGroup.attrSections = [self.attrSections lookin_map:^id(NSUInteger idx, LookinAttributesSection *value) {
         return value.copy;
@@ -32,12 +34,16 @@
 #pragma mark - <NSCoding>
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeBool:self.isUserCustom forKey:@"isUserCustom"];
+    [aCoder encodeObject:self.userCustomTitle forKey:@"userCustomTitle"];
     [aCoder encodeObject:self.identifier forKey:@"identifier"];
     [aCoder encodeObject:self.attrSections forKey:@"attrSections"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
+        self.isUserCustom = [aDecoder decodeBoolForKey:@"isUserCustom"];
+        self.userCustomTitle = [aDecoder decodeObjectForKey:@"userCustomTitle"];
         self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
         self.attrSections = [aDecoder decodeObjectForKey:@"attrSections"];
     }
@@ -45,7 +51,11 @@
 }
 
 - (NSUInteger)hash {
-    return self.identifier.hash;
+    if (self.isUserCustom) {
+        return self.userCustomTitle.hash;
+    } else {
+        return self.identifier.hash;
+    }
 }
 
 - (BOOL)isEqual:(id)object {
@@ -55,10 +65,18 @@
     if (![object isKindOfClass:[LookinAttributesGroup class]]) {
         return NO;
     }
-    if (self.identifier == ((LookinAttributesGroup *)object).identifier) {
-        return YES;
+    LookinAttributesGroup *targetObject = object;
+    
+    if (self.isUserCustom != targetObject.isUserCustom) {
+        return false;
     }
-    return NO;
+    if (self.isUserCustom) {
+        BOOL ret = [self.userCustomTitle isEqualToString:targetObject.userCustomTitle];
+        return ret;
+    } else {
+        BOOL ret = (self.identifier == targetObject.identifier);
+        return ret;
+    }
 }
 
 + (BOOL)supportsSecureCoding {
