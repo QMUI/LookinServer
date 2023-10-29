@@ -28,8 +28,6 @@
 
 + (instancetype)exportedInfo;
 
-+ (instancetype)perspectiveInfoWithIncludedWindows:(NSArray<UIWindow *> *)includedWindows excludedWindows:(NSArray<UIWindow *> *)excludedWindows;
-
 #endif
 
 /// 这里其实就是顶端的那几个 UIWindow
