@@ -260,12 +260,12 @@
     [self _notifyDelegatesWith:LookinDisplayItemProperty_SoloScreenshot];
 }
 
-- (void)setIsSelected:(BOOL)isSelected {
-    if (_isSelected == isSelected) {
-        return;
-    }
-    _isSelected = isSelected;
+- (void)notifySelectionChangeToDelegates {
     [self _notifyDelegatesWith:LookinDisplayItemProperty_IsSelected];
+}
+
+- (void)notifyHoverChangeToDelegates {
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsHovered];
 }
 
 - (void)setDoNotFetchScreenshotReason:(LookinDoNotFetchScreenshotReason)doNotFetchScreenshotReason {
@@ -274,14 +274,6 @@
     }
     _doNotFetchScreenshotReason = doNotFetchScreenshotReason;
     [self _notifyDelegatesWith:LookinDisplayItemProperty_AvoidSyncScreenshot];
-}
-
-- (void)setIsHovered:(BOOL)isHovered {
-    if (_isHovered == isHovered) {
-        return;
-    }
-    _isHovered = isHovered;
-    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsHovered];
 }
 
 - (void)setGroupScreenshot:(LookinImage *)groupScreenshot {
