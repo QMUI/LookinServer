@@ -196,11 +196,27 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 #pragma mark - Handler
 
 - (void)_handleLocalInspectIn2D:(NSNotification *)note {
-    NSLog(@"LookinServer - The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
+    UIAlertController  *alertController = [UIAlertController  alertControllerWithTitle:@"Lookin" message:@"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality."  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okAction];
+    UIApplication *app = [UIApplication  sharedApplication];
+    UIWindow *keyWindow = [app keyWindow];
+    UIViewController *rootViewController = [keyWindow rootViewController];
+    [rootViewController presentViewController:alertController animated:YES completion:nil];
+    
+    NSLog(@"LookinServer - Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
 }
 
 - (void)_handleLocalInspectIn3D:(NSNotification *)note {
-    NSLog(@"LookinServer - The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
+    UIAlertController  *alertController = [UIAlertController  alertControllerWithTitle:@"Lookin" message:@"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality."  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okAction];
+    UIApplication *app = [UIApplication  sharedApplication];
+    UIWindow *keyWindow = [app keyWindow];
+    UIViewController *rootViewController = [keyWindow rootViewController];
+    [rootViewController presentViewController:alertController animated:YES completion:nil];
+    
+    NSLog(@"LookinServer - Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
 }
 
 @end
