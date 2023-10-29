@@ -77,23 +77,12 @@ enum {
     /// 请求 attribute group list
     LookinRequestTypeAllAttrGroups = 210,
     
-    /// 请求 iOS App 里所有的 class 名字列表和监听中的方法列表
-    LookinRequestTypeClassesAndMethodTraceLit = 212,
-    
     /// 请求 iOS App 里某个 class 的所有 selector 名字列表（包括 superclass）
     LookinRequestTypeAllSelectorNames = 213,
-    
-    // 增加 methodTrace
-    LookinRequestTypeAddMethodTrace = 214,
-    // 删除 methodTrace
-    LookinRequestTypeDeleteMethodTrace = 215,
 
     LookinPush_BringForwardScreenshotTask = 303,
     // 用户在 Lookin 客户端取消了之前 HierarchyDetails 的拉取
     LookinPush_CanceHierarchyDetails = 304,
-    
-    /// iOS 端推送 method trace 信息
-    LookinPush_MethodTraceRecord = 403
 };
 
 static NSString * const LookinParam_ViewLayerTag = @"tag";
