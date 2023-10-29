@@ -33,10 +33,6 @@ static const int LOOKIN_SUPPORTED_SERVER_MIN = 7;
 /// the maximum connection protocol version supported by current LookinClient
 static const int LOOKIN_SUPPORTED_SERVER_MAX = 7;
 
-/// Legacy code. No effect actually.
-static BOOL LOOKIN_SERVER_IS_EXPERIMENTAL = NO;
-static BOOL LOOKIN_CLIENT_IS_EXPERIMENTAL = NO;
-
 static NSString * const LOOKIN_SERVER_FRAMEWORK_URL = @"https://lookin.work/download/framework/LookinServer-1-0-0.zip";
 
 #pragma mark - Connection
