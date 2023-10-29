@@ -21,11 +21,6 @@
 
 - (CGRect)lks_frameInWindow:(UIWindow *)window;
 
-@property(nonatomic, assign) BOOL lks_isLookinPrivateLayer;
-
-/// 如果该属性为 YES，则该 layer 及所有下级 layers 均不会被转为 LookinDisplayItem
-@property(nonatomic, assign) BOOL lks_avoidCapturing;
-
 - (UIImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality;
 /// 当没有 sublayers 时，该方法返回 nil
 - (UIImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality;

@@ -11,7 +11,6 @@
 #import "CALayer+LookinServer.h"
 #import "LKS_HierarchyDisplayItemsMaker.h"
 #import "LookinDisplayItem.h"
-#import "LKS_LocalInspectManager.h"
 #import <objc/runtime.h>
 #import "LKS_ConnectionManager.h"
 #import "LookinIvarTrace.h"
@@ -19,14 +18,6 @@
 #import "UIColor+LookinServer.h"
 
 @implementation CALayer (LookinServer)
-
-- (void)setLks_isLookinPrivateLayer:(BOOL)lks_isLookinPrivateLayer {
-    [self lookin_bindBOOL:lks_isLookinPrivateLayer forKey:@"lks_isLookinPrivateLayer"];
-}
-
-- (BOOL)lks_isLookinPrivateLayer {
-    return [self lookin_getBindBOOLForKey:@"lks_isLookinPrivateLayer"];
-}
 
 - (UIWindow *)lks_window {
     CALayer *layer = self;
@@ -42,19 +33,6 @@
     return nil;
 }
 
-- (BOOL)lks_inLookinPrivateHierarchy {
-    BOOL boolValue = NO;
-    CALayer *layer = self;
-    while (layer) {
-        if (layer.lks_isLookinPrivateLayer) {
-            boolValue = YES;
-            break;
-        }
-        layer = layer.superlayer;
-    }
-    return boolValue;
-}
-
 - (CGRect)lks_frameInWindow:(UIWindow *)window {
     UIWindow *selfWindow = [self lks_window];
     if (!selfWindow) {
@@ -64,14 +42,6 @@
     CGRect rectInSelfWindow = [selfWindow.layer convertRect:self.frame fromLayer:self.superlayer];
     CGRect rectInWindow = [window convertRect:rectInSelfWindow fromWindow:selfWindow];
     return rectInWindow;
-}
-
-- (void)setLks_avoidCapturing:(BOOL)lks_avoidCapturing {
-    [self lookin_bindBOOL:lks_avoidCapturing forKey:@"lks_avoidCapturing"];
-}
-
-- (BOOL)lks_avoidCapturing {
-    return [self lookin_getBindBOOLForKey:@"lks_avoidCapturing"];
 }
 
 #pragma mark - Host View

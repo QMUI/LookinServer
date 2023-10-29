@@ -19,7 +19,6 @@
 #import "LookinServerDefines.h"
 #import <objc/runtime.h>
 #import "LookinObject.h"
-#import "LKS_LocalInspectManager.h"
 #import "LookinAppInfo.h"
 #import "LKS_MethodTraceManager.h"
 #import "LKS_AttrGroupsMaker.h"

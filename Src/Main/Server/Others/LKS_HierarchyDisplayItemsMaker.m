@@ -44,7 +44,7 @@
 }
 
 + (LookinDisplayItem *)_displayItemWithLayer:(CALayer *)layer screenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality {
-    if (!layer || layer.lks_avoidCapturing) {
+    if (!layer) {
         return nil;
     }
     

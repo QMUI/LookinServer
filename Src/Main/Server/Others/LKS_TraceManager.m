@@ -12,7 +12,6 @@
 #import <objc/runtime.h>
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
-#import "LKS_LocalInspectManager.h"
 
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
 
@@ -89,9 +88,7 @@
     } else if ([view isKindOfClass:[UIWindow class]]) {
         CGFloat currentWindowLevel = ((UIWindow *)view).windowLevel;
         
-        if ([view isKindOfClass:[LKS_LocalInspectContainerWindow class]]) {
-            view.lks_specialTrace = [NSString stringWithFormat:@"Lookin Private Window ( Level: %@ )", @(currentWindowLevel)];
-        } else if (((UIWindow *)view).isKeyWindow) {
+        if (((UIWindow *)view).isKeyWindow) {
             view.lks_specialTrace = [NSString stringWithFormat:@"KeyWindow ( Level: %@ )", @(currentWindowLevel)];
         } else {
             view.lks_specialTrace = [NSString stringWithFormat:@"WindowLevel: %@", @(currentWindowLevel)];
