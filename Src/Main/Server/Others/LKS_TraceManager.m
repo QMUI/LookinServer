@@ -188,7 +188,7 @@
         }
         // 这个 ivarObject 可能的类型：UIView, CALayer, UIViewController, UIGestureRecognizer
         NSObject *ivarObject = object_getIvar(hostObject, ivar);
-        if (!ivarObject) {
+        if (!ivarObject || ![ivarObject isKindOfClass:[NSObject class]]) {
             continue;
         }
 
@@ -215,6 +215,9 @@
             continue;
         }
         
+        if (![ivarObject respondsToSelector:@selector(lks_ivarTraces)] || ![ivarObject respondsToSelector:@selector(setLks_ivarTraces:)]) {
+            continue;
+        }
         if (!ivarObject.lks_ivarTraces) {
             ivarObject.lks_ivarTraces = [NSArray array];
         }
