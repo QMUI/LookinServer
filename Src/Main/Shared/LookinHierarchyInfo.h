@@ -39,7 +39,6 @@
 
 @property(nonatomic, strong) LookinAppInfo *appInfo;
 
-/// 标记该 LookinServer 是通过什么方式安装的，0:未知，1:CocoaPods，2:手动，3:源代码，4:断点
 @property(nonatomic, assign) int serverVersion;
 
 @end

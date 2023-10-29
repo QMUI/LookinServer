@@ -23,7 +23,7 @@
 static const int LOOKIN_SERVER_VERSION = 7;
 
 /// current release version of LookinServer
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.2";
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.3";
 
 /// current connection protocol version of LookinClient
 static const int LOOKIN_CLIENT_VERSION = 7;
@@ -118,10 +118,6 @@ enum {
     LookinErrCode_ServerVersionTooHigh = -600,
     // LookinServer 版本过低，要升级 server
     LookinErrCode_ServerVersionTooLow = -601,
-    // LookinServer 是私有版本，但 client 是现网版本
-    LookinErrCode_ServerIsPrivate = -602,
-    // LookinServer 是现网版本，但 client 是私有版本
-    LookinErrCode_ClientIsPrivate = - 603,
     
     // 不支持的文件类型
     LookinErrCode_UnsupportedFileType = -700,

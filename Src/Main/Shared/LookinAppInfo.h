@@ -26,6 +26,8 @@ typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
 @property(nonatomic, assign) BOOL shouldUseCache;
 /// LookinServer 的版本
 @property(nonatomic, assign) int serverVersion;
+/// 类似 "1.1.9"
+@property(nonatomic, assign) NSString *serverReadableVersion;
 /// app 的当前截图
 @property(nonatomic, strong) LookinImage *screenshot;
 /// 可能为 nil，比如新建的 iOS 空项目

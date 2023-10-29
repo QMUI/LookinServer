@@ -42,7 +42,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (self = [super init]) {
         
         self.serverVersion = [aDecoder decodeIntForKey:@"serverVersion"];
-
+        self.serverReadableVersion = [aDecoder decodeObjectForKey:@"serverReadableVersion"];
         NSData *screenshotData = [aDecoder decodeObjectForKey:CodingKey_Screenshot];
         self.screenshot = [[LookinImage alloc] initWithData:screenshotData];
         
@@ -66,6 +66,7 @@ static NSString * const CodingKey_DeviceType = @"8";
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInt:self.serverVersion forKey:@"serverVersion"];
+    [aCoder encodeObject:self.serverReadableVersion forKey:@"serverReadableVersion"];
     
 #if TARGET_OS_IPHONE
     NSData *screenshotData = UIImagePNGRepresentation(self.screenshot);
@@ -137,6 +138,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     }
     
     LookinAppInfo *info = [[LookinAppInfo alloc] init];
+    info.serverReadableVersion = LOOKIN_SERVER_READABLE_VERSION;
     info.appInfoIdentifier = selfIdentifier;
     info.appName = [self appName];
     info.deviceDescription = [UIDevice currentDevice].name;
