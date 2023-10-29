@@ -80,7 +80,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 - (BOOL)isiOSAppOnMac {
 #if TARGET_OS_SIMULATOR
     return YES;
-#endif
+#else
     if (@available(iOS 14.0, *)) {
         return [NSProcessInfo processInfo].isiOSAppOnMac || [NSProcessInfo processInfo].isMacCatalystApp;
     }
@@ -88,6 +88,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         return [NSProcessInfo processInfo].isMacCatalystApp;
     }
     return NO;
+#endif
 }
 
 - (void)_tryToListenOnPortFrom:(int)fromPort to:(int)toPort current:(int)currentPort  {
