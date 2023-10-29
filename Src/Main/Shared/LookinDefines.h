@@ -33,8 +33,6 @@ static const int LOOKIN_SUPPORTED_SERVER_MIN = 7;
 /// the maximum connection protocol version supported by current LookinClient
 static const int LOOKIN_SUPPORTED_SERVER_MAX = 7;
 
-static NSString * const LOOKIN_SERVER_FRAMEWORK_URL = @"https://lookin.work/download/framework/LookinServer-1-0-0.zip";
-
 #pragma mark - Connection
 
 /// LookinServer 在真机上会依次尝试监听 47175 ~ 47179 这几个端口
