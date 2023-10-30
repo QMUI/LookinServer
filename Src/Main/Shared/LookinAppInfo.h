@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
 @property(nonatomic, assign) BOOL shouldUseCache;
 /// LookinServer 的版本
 @property(nonatomic, assign) int serverVersion;
-/// 类似 "1.1.9"
+/// 类似 "1.1.9"，只在 1.2.3 以及之后的 LookinServer 版本里有值
 @property(nonatomic, assign) NSString *serverReadableVersion;
 /// 如果 iOS 侧使用了 SPM 或引入了 Swift Subspec，则该属性为 1
 /// 如果 iOS 侧没使用，则该属性为 -1
