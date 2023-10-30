@@ -13,9 +13,9 @@
 
 @implementation TestView
 
-- (BOOL)lookin_shouldCaptureImage {
-    return YES;
-}
+//- (BOOL)lookin_shouldCaptureImage {
+//    return YES;
+//}
 
 @end
 
@@ -25,9 +25,9 @@
 
 @implementation TestLayer
 
-- (BOOL)lookin_shouldCaptureImage {
-    return YES;
-}
+//- (BOOL)lookin_shouldCaptureImage {
+//    return YES;
+//}
 
 @end
 

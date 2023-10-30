@@ -31,14 +31,7 @@
         @"section": @"CatInfo",
         @"title": @"Nickname",
         @"value": @"British shorthair",
-        @"valueType": @"string",
-        // Optional. Set this key to allow user to modify the property value in Lookin.
-        @"setter": ^(id newValue){
-            if (![newValue isKindOfClass:[NSString class]]) {
-                return;
-            }
-            NSLog(@"Get new value from lookin: %@", newValue);
-        }
+        @"valueType": @"string"
     }];
     
     // number property
@@ -46,14 +39,7 @@
         @"section": @"CatInfo",
         @"title": @"Age",
         @"value": @13.2,
-        @"valueType": @"number",
-        // Optional. Set this key to allow user to modify the property value in Lookin.
-        @"setter": ^(id newValue){
-            if (![newValue isKindOfClass:[NSNumber class]]) {
-                return;
-            }
-            NSLog(@"Get new value from lookin: %@", newValue);
-        }
+        @"valueType": @"number"
     }];
     
     // bool property
@@ -61,14 +47,7 @@
         @"section": @"CatInfo",
         @"title": @"IsFriendly",
         @"value": @YES,
-        @"valueType": @"bool",
-        // Optional. Set this key to allow user to modify the property value in Lookin.
-        @"setter": ^(id newValue){
-            if (![newValue isKindOfClass:[NSNumber class]]) {
-                return;
-            }
-            NSLog(@"Get new value from lookin: %@", newValue);
-        }
+        @"valueType": @"bool"
     }];
     
     // color property
@@ -76,14 +55,7 @@
         @"section": @"CatInfo",
         @"title": @"SkinColor",
         @"value": [UIColor redColor],
-        @"valueType": @"color",
-        // Optional. Set this key to allow user to modify the property value in Lookin.
-        @"setter": ^(id newValue){
-            if (![newValue isKindOfClass:[UIColor class]]) {
-                return;
-            }
-            NSLog(@"Get new value from lookin: %@", newValue);
-        }
+        @"valueType": @"color"
     }];
     
     // enum property
@@ -93,14 +65,7 @@
         @"value": @"Male",
         @"valueType": @"enum",
         // Set object for this key when the valueType is "enum".
-        @"allEnumCases": @[@"Male", @"Female"],
-        // Optional. Set this key to allow user to modify the property value in Lookin.
-        @"setter": ^(id newValue){
-            if (![newValue isKindOfClass:[NSString class]]) {
-                return;
-            }
-            NSLog(@"Get new value from lookin: %@", newValue);
-        }
+        @"allEnumCases": @[@"Male", @"Female"]
     }];
     
     return [properties copy];;
