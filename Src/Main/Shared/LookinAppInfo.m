@@ -42,7 +42,8 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (self = [super init]) {
         
         self.serverVersion = [aDecoder decodeIntForKey:@"serverVersion"];
-
+        self.serverReadableVersion = [aDecoder decodeObjectForKey:@"serverReadableVersion"];
+        self.swiftEnabledInLookinServer = [aDecoder decodeIntForKey:@"swiftEnabledInLookinServer"];
         NSData *screenshotData = [aDecoder decodeObjectForKey:CodingKey_Screenshot];
         self.screenshot = [[LookinImage alloc] initWithData:screenshotData];
         
@@ -66,6 +67,8 @@ static NSString * const CodingKey_DeviceType = @"8";
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInt:self.serverVersion forKey:@"serverVersion"];
+    [aCoder encodeObject:self.serverReadableVersion forKey:@"serverReadableVersion"];
+    [aCoder encodeInt:self.swiftEnabledInLookinServer forKey:@"swiftEnabledInLookinServer"];
     
 #if TARGET_OS_IPHONE
     NSData *screenshotData = UIImagePNGRepresentation(self.screenshot);
@@ -137,6 +140,12 @@ static NSString * const CodingKey_DeviceType = @"8";
     }
     
     LookinAppInfo *info = [[LookinAppInfo alloc] init];
+    info.serverReadableVersion = LOOKIN_SERVER_READABLE_VERSION;
+#ifdef LOOKIN_SERVER_SWIFT_ENABLED
+    info.swiftEnabledInLookinServer = 1;
+#else
+    info.swiftEnabledInLookinServer = -1;
+#endif
     info.appInfoIdentifier = selfIdentifier;
     info.appName = [self appName];
     info.deviceDescription = [UIDevice currentDevice].name;

@@ -12,9 +12,7 @@
 #import "Lookin_PTChannel.h"
 #import "LKS_RequestHandler.h"
 #import "LookinConnectionResponseAttachment.h"
-#import "LKS_LocalInspectManager.h"
 #import "LKS_ExportManager.h"
-#import "LKS_PerspectiveManager.h"
 #import "LookinServerDefines.h"
 
 NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNotificationName";
@@ -82,7 +80,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 - (BOOL)isiOSAppOnMac {
 #if TARGET_OS_SIMULATOR
     return YES;
-#endif
+#else
     if (@available(iOS 14.0, *)) {
         return [NSProcessInfo processInfo].isiOSAppOnMac || [NSProcessInfo processInfo].isMacCatalystApp;
     }
@@ -90,6 +88,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         return [NSProcessInfo processInfo].isMacCatalystApp;
     }
     return NO;
+#endif
 }
 
 - (void)_tryToListenOnPortFrom:(int)fromPort to:(int)toPort current:(int)currentPort  {
@@ -197,79 +196,27 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 #pragma mark - Handler
 
 - (void)_handleLocalInspectIn2D:(NSNotification *)note {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSArray<UIWindow *> *includedWindows = nil;
-        NSArray<UIWindow *> *excludedWindows = nil;
-        [self parseUserInfo:note.userInfo toIncludedWindows:&includedWindows excludedWindows:&excludedWindows];
-
-        [[LKS_LocalInspectManager sharedInstance] startLocalInspectWithIncludedWindows:includedWindows excludedWindows:excludedWindows];
-    });
+    UIAlertController  *alertController = [UIAlertController  alertControllerWithTitle:@"Lookin" message:@"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality."  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okAction];
+    UIApplication *app = [UIApplication  sharedApplication];
+    UIWindow *keyWindow = [app keyWindow];
+    UIViewController *rootViewController = [keyWindow rootViewController];
+    [rootViewController presentViewController:alertController animated:YES completion:nil];
+    
+    NSLog(@"LookinServer - Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
 }
 
 - (void)_handleLocalInspectIn3D:(NSNotification *)note {
-    NSArray<UIWindow *> *includedWindows = nil;
-    NSArray<UIWindow *> *excludedWindows = nil;
-    [self parseUserInfo:note.userInfo toIncludedWindows:&includedWindows excludedWindows:&excludedWindows];
+    UIAlertController  *alertController = [UIAlertController  alertControllerWithTitle:@"Lookin" message:@"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality."  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okAction];
+    UIApplication *app = [UIApplication  sharedApplication];
+    UIWindow *keyWindow = [app keyWindow];
+    UIViewController *rootViewController = [keyWindow rootViewController];
+    [rootViewController presentViewController:alertController animated:YES completion:nil];
     
-    [[LKS_PerspectiveManager sharedInstance] showWithIncludedWindows:includedWindows excludedWindows:excludedWindows];
-}
-
-- (void)parseUserInfo:(NSDictionary *)info toIncludedWindows:(NSArray<UIWindow *> **)includedWindowsPtr excludedWindows:(NSArray<UIWindow *> **)excludedWindowsPtr {
-    if (info[@"includedWindows"] && info[@"excludedWindows"]) {
-        NSLog(@"LookinServer - Do not pass 'includedWindows' and 'excludedWindows' in the same time. Learn more: https://lookin.work/faq/lookin-ios/");
-    }
-    
-    [info enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        if ([key isEqual:@"includedWindows"] || [key isEqual:@"excludedWindows"]) {
-            return;
-        }
-        NSLog(@"LookinServer - The key '%@' you passed is not valid. Learn more: https://lookin.work/faq/lookin-ios/", key);
-    }];
-    
-    NSArray<UIWindow *> *includedWindows = [info objectForKey:@"includedWindows"];
-    if (includedWindows) {
-        if ([includedWindows isKindOfClass:[NSArray class]]) {
-            includedWindows = [includedWindows lookin_filter:^BOOL(UIWindow *obj) {
-                if ([obj isKindOfClass:[UIWindow class]]) {
-                    return YES;
-                }
-                NSLog(@"LookinServer - Error. The class of element in 'includedWindows' array must be UIWindow, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass(obj.class));
-                return NO;
-            }];
-            
-        } else {
-            NSLog(@"LookinServer - Error. The 'includedWindows' must be a NSArray, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass([includedWindows class]));
-            includedWindows = nil;
-        }
-    }
-    
-    NSArray<UIWindow *> *excludedWindows = nil;
-    // 只有当 includedWindows 无效时，才会应用 excludedWindows
-    if (includedWindows.count == 0) {
-        excludedWindows = [info objectForKey:@"excludedWindows"];
-        if (excludedWindows) {
-            if ([excludedWindows isKindOfClass:[NSArray class]]) {
-                excludedWindows = [excludedWindows lookin_filter:^BOOL(UIWindow *obj) {
-                    if ([obj isKindOfClass:[UIWindow class]]) {
-                        return YES;
-                    }
-                    NSLog(@"LookinServer - Error. The class of element in 'excludedWindows' array must be UIWindow, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass(obj.class));
-                    return NO;
-                }];
-                
-            } else {
-                NSLog(@"LookinServer - Error. The 'excludedWindows' must be a NSArray, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass([excludedWindows class]));
-                excludedWindows = nil;
-            }
-        }
-    }
-    
-    if (includedWindowsPtr) {
-        *includedWindowsPtr = includedWindows;
-    }
-    if (excludedWindowsPtr) {
-        *excludedWindowsPtr = excludedWindows;
-    }
+    NSLog(@"LookinServer - Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
 }
 
 @end

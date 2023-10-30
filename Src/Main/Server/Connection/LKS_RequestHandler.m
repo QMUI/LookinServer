@@ -19,9 +19,7 @@
 #import "LookinServerDefines.h"
 #import <objc/runtime.h>
 #import "LookinObject.h"
-#import "LKS_LocalInspectManager.h"
 #import "LookinAppInfo.h"
-#import "LKS_MethodTraceManager.h"
 #import "LKS_AttrGroupsMaker.h"
 #import "LKS_AttrModificationHandler.h"
 #import "LKS_AttrModificationPatchHandler.h"
@@ -47,9 +45,6 @@
                               @(LookinRequestTypeFetchObject),
                               @(LookinRequestTypeAllAttrGroups),
                               @(LookinRequestTypeAllSelectorNames),
-                              @(LookinRequestTypeAddMethodTrace),
-                              @(LookinRequestTypeDeleteMethodTrace),
-                              @(LookinRequestTypeClassesAndMethodTraceLit),
                               @(LookinRequestTypeInvokeMethod),
                               @(LookinRequestTypeFetchImageViewImage),
                               @(LookinRequestTypeModifyRecognizerEnable),
@@ -166,49 +161,6 @@
         
         NSArray<NSString *> *selNames = [self _methodNameListForClass:targetClass hasArg:hasArg];
         [self _submitResponseWithData:selNames requestType:requestType tag:tag];
-        
-    } else if (requestType == LookinRequestTypeAddMethodTrace) {
-        if (![object isKindOfClass:[NSDictionary class]]) {
-            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
-            return;
-        }
-        NSDictionary *dict = object;
-        NSString *className = dict[@"className"];
-        NSString *selName = dict[@"selName"];
-        
-        Class targetClass = NSClassFromString(className);
-        if (!targetClass) {
-            NSString *errorMsg = [NSString stringWithFormat:LKS_Localized(@"Didn't find the class named \"%@\". Please input another class and try again."), object];
-            [self _submitResponseWithError:LookinErrorMake(errorMsg, @"") requestType:requestType tag:tag];
-            return;
-        }
-        
-        SEL targetSelector = NSSelectorFromString(selName);
-        if (class_getInstanceMethod(targetClass, targetSelector) == NULL) {
-            NSString *errorMsg = [NSString stringWithFormat:LKS_Localized(@"%@ doesn't have a method called \"%@\". Please input another method name and try again."), className, selName];
-            [self _submitResponseWithError:LookinErrorMake(errorMsg, @"") requestType:requestType tag:tag];
-            return;
-        }
-        
-        [[LKS_MethodTraceManager sharedInstance] addWithClassName:className selName:selName];
-        [self _submitResponseWithData:[LKS_MethodTraceManager sharedInstance].currentActiveTraceList requestType:requestType tag:tag];
-        
-    } else if (requestType == LookinRequestTypeDeleteMethodTrace) {
-        if (![object isKindOfClass:[NSDictionary class]]) {
-            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
-            return;
-        }
-        NSDictionary *dict = object;
-        NSString *className = dict[@"className"];
-        NSString *selName = dict[@"selName"];
-        
-        [[LKS_MethodTraceManager sharedInstance] removeWithClassName:className selName:selName];
-        [self _submitResponseWithData:[LKS_MethodTraceManager sharedInstance].currentActiveTraceList requestType:requestType tag:tag];
-        
-    } else if (requestType == LookinRequestTypeClassesAndMethodTraceLit) {
-        LKS_MethodTraceManager *mng = [LKS_MethodTraceManager sharedInstance];
-        NSDictionary *dict = @{@"classes":mng.allClassesListInApp, @"activeList":mng.currentActiveTraceList};
-        [self _submitResponseWithData:dict requestType:requestType tag:tag];
         
     } else if (requestType == LookinRequestTypeInvokeMethod) {
         NSDictionary *param = object;

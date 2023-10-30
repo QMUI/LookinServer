@@ -23,7 +23,7 @@
 static const int LOOKIN_SERVER_VERSION = 7;
 
 /// current release version of LookinServer
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.2";
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.3";
 
 /// current connection protocol version of LookinClient
 static const int LOOKIN_CLIENT_VERSION = 7;
@@ -32,12 +32,6 @@ static const int LOOKIN_CLIENT_VERSION = 7;
 static const int LOOKIN_SUPPORTED_SERVER_MIN = 7;
 /// the maximum connection protocol version supported by current LookinClient
 static const int LOOKIN_SUPPORTED_SERVER_MAX = 7;
-
-/// Legacy code. No effect actually.
-static BOOL LOOKIN_SERVER_IS_EXPERIMENTAL = NO;
-static BOOL LOOKIN_CLIENT_IS_EXPERIMENTAL = NO;
-static const int LOOKIN_SERVER_SETUP_TYPE = 1;
-static NSString * const LOOKIN_SERVER_FRAMEWORK_URL = @"https://lookin.work/download/framework/LookinServer-1-0-0.zip";
 
 #pragma mark - Connection
 
@@ -77,23 +71,12 @@ enum {
     /// 请求 attribute group list
     LookinRequestTypeAllAttrGroups = 210,
     
-    /// 请求 iOS App 里所有的 class 名字列表和监听中的方法列表
-    LookinRequestTypeClassesAndMethodTraceLit = 212,
-    
     /// 请求 iOS App 里某个 class 的所有 selector 名字列表（包括 superclass）
     LookinRequestTypeAllSelectorNames = 213,
-    
-    // 增加 methodTrace
-    LookinRequestTypeAddMethodTrace = 214,
-    // 删除 methodTrace
-    LookinRequestTypeDeleteMethodTrace = 215,
 
     LookinPush_BringForwardScreenshotTask = 303,
     // 用户在 Lookin 客户端取消了之前 HierarchyDetails 的拉取
     LookinPush_CanceHierarchyDetails = 304,
-    
-    /// iOS 端推送 method trace 信息
-    LookinPush_MethodTraceRecord = 403
 };
 
 static NSString * const LookinParam_ViewLayerTag = @"tag";
@@ -135,10 +118,6 @@ enum {
     LookinErrCode_ServerVersionTooHigh = -600,
     // LookinServer 版本过低，要升级 server
     LookinErrCode_ServerVersionTooLow = -601,
-    // LookinServer 是私有版本，但 client 是现网版本
-    LookinErrCode_ServerIsPrivate = -602,
-    // LookinServer 是现网版本，但 client 是私有版本
-    LookinErrCode_ClientIsPrivate = - 603,
     
     // 不支持的文件类型
     LookinErrCode_UnsupportedFileType = -700,

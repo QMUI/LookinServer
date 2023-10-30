@@ -172,9 +172,8 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @property(nonatomic, assign) BOOL preferToBeCollapsed;
 
-@property(nonatomic, assign) BOOL isSelected;
-
-@property(nonatomic, assign) BOOL isHovered;
+- (void)notifySelectionChangeToDelegates;
+- (void)notifyHoverChangeToDelegates;
 
 - (BOOL)itemIsKindOfClassWithName:(NSString *)className;
 - (BOOL)itemIsKindOfClassesWithNames:(NSSet<NSString *> *)classNames;

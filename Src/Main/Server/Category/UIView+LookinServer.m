@@ -40,9 +40,6 @@
     }
     
     UIView *targetView = [self.subviews lookin_lastFiltered:^BOOL(__kindof UIView *obj) {
-        if (obj.layer.lks_isLookinPrivateLayer) {
-            return NO;
-        }
         if (obj.hidden || obj.alpha <= 0.01) {
             return NO;
         }
