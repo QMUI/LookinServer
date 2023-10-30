@@ -1,7 +1,8 @@
 use_frameworks!
 
 target 'LookinDemoSwift' do
-#    pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']
-    
-    pod 'LookinServer', :path=>'../../', :configurations => ['Debug']
+#      pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']
+  
+      pod 'LookinServer', :path=>'../../', :subspecs => ['Swift'], :configurations => ['Debug']
+#    pod 'LookinServer', :configurations => ['Debug']
 end
