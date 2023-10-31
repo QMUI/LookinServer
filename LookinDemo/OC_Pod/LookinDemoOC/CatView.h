@@ -5,11 +5,11 @@
 //  Created by likai.123 on 2023/10/16.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CatView : NSObject
+@interface CatView : UIView
 
 - (NSDictionary<NSString *, id> *)lookin_customDebugInfos;
     

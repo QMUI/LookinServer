@@ -58,6 +58,9 @@
     newDisplayItem.attributesGroupList = [self.attributesGroupList lookin_map:^id(NSUInteger idx, LookinAttributesGroup *value) {
         return value.copy;
     }];
+    newDisplayItem.customAttrGroupList = [self.customAttrGroupList lookin_map:^id(NSUInteger idx, LookinAttributesGroup *value) {
+        return value.copy;
+    }];
     newDisplayItem.eventHandlers = [self.eventHandlers lookin_map:^id(NSUInteger idx, LookinEventHandler *value) {
         return value.copy;
     }];
@@ -76,6 +79,7 @@
     [aCoder encodeObject:self.layerObject forKey:@"layerObject"];
     [aCoder encodeObject:self.hostViewControllerObject forKey:@"hostViewControllerObject"];
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
+    [aCoder encodeObject:self.customAttrGroupList forKey:@"customAttrGroupList"];
     [aCoder encodeBool:self.representedAsKeyWindow forKey:@"representedAsKeyWindow"];
     [aCoder encodeObject:self.eventHandlers forKey:@"eventHandlers"];
     [aCoder encodeBool:self.shouldCaptureImage forKey:@"shouldCaptureImage"];
@@ -107,6 +111,7 @@
         self.layerObject = [aDecoder decodeObjectForKey:@"layerObject"];
         self.hostViewControllerObject = [aDecoder decodeObjectForKey:@"hostViewControllerObject"];
         self.attributesGroupList = [aDecoder decodeObjectForKey:@"attributesGroupList"];
+        self.customAttrGroupList = [aDecoder decodeObjectForKey:@"customAttrGroupList"];
         self.representedAsKeyWindow = [aDecoder decodeBoolForKey:@"representedAsKeyWindow"];
         
         id soloScreenshotObj = [aDecoder decodeObjectForKey:@"soloScreenshot"];
@@ -168,6 +173,17 @@
 - (void)setAttributesGroupList:(NSSet<LookinAttributesGroup *> *)attributesGroupList {
     _attributesGroupList = [attributesGroupList copy];
     [attributesGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, BOOL * _Nonnull stop) {
+        [group.attrSections enumerateObjectsUsingBlock:^(LookinAttributesSection * _Nonnull section, NSUInteger idx, BOOL * _Nonnull stop) {
+            [section.attributes enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
+                attr.targetDisplayItem = self;
+            }];
+        }];
+    }];
+}
+
+- (void)setCustomAttrGroupList:(NSArray<LookinAttributesGroup *> *)customAttrGroupList {
+    _customAttrGroupList = customAttrGroupList;
+    [customAttrGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, NSUInteger idx, BOOL * _Nonnull stop) {
         [group.attrSections enumerateObjectsUsingBlock:^(LookinAttributesSection * _Nonnull section, NSUInteger idx, BOOL * _Nonnull stop) {
             [section.attributes enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
                 attr.targetDisplayItem = self;

@@ -13,7 +13,6 @@
 #import "LookinAttributesGroup.h"
 #import "LookinDisplayItem.h"
 #import "LookinAppInfo.h"
-
 #import "NSArray+Lookin.h"
 
 #if TARGET_OS_IPHONE

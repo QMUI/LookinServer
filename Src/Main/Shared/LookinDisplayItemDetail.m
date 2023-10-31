@@ -26,6 +26,7 @@
     [aCoder encodeObject:self.hiddenValue forKey:@"hiddenValue"];
     [aCoder encodeObject:self.alphaValue forKey:@"alphaValue"];
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
+    [aCoder encodeObject:self.customAttrGroupList forKey:@"customAttrGroupList"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -38,6 +39,7 @@
         self.hiddenValue = [aDecoder decodeObjectForKey:@"hiddenValue"];
         self.alphaValue = [aDecoder decodeObjectForKey:@"alphaValue"];
         self.attributesGroupList = [aDecoder decodeObjectForKey:@"attributesGroupList"];
+        self.customAttrGroupList = [aDecoder decodeObjectForKey:@"customAttrGroupList"];
     }
     return self;
 }

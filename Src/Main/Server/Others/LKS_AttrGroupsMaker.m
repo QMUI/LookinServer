@@ -19,6 +19,10 @@
 
 @implementation LKS_AttrGroupsMaker
 
++ (NSArray<LookinAttributesGroup *> *)customAttrGroupsForLayer:(CALayer *)layer {
+    return nil;
+}
+
 + (NSArray<LookinAttributesGroup *> *)attrGroupsForLayer:(CALayer *)layer {
     if (!layer) {
         NSAssert(NO, @"");

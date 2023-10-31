@@ -82,6 +82,8 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 /// attrGroups 列表
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *attributesGroupList;
+/// 通过 lookin_customDebugInfos 返回的属性列表
+@property(nonatomic, copy) NSArray<LookinAttributesGroup *> *customAttrGroupList;
 
 @property(nonatomic, copy) NSArray<LookinEventHandler *> *eventHandlers;
 
