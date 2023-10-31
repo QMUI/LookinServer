@@ -172,18 +172,8 @@
 }
 
 - (void)setAttributesGroupList:(NSArray<LookinAttributesGroup *> *)attributesGroupList {
-    _attributesGroupList = [attributesGroupList sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesGroup *obj1, LookinAttributesGroup *obj2) {
-        NSArray *order = [LookinDashboardBlueprint groupIDs];
-        NSUInteger idx1 = [order indexOfObject:obj1.identifier];
-        NSUInteger idx2 = [order indexOfObject:obj2.identifier];
-        if (idx1 < idx2) {
-            return NSOrderedAscending;
-        } else if (idx1 > idx2) {
-            return NSOrderedDescending;
-        } else {
-            return NSOrderedSame;
-        }
-    }];
+    _attributesGroupList = attributesGroupList;
+    
     [_attributesGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, NSUInteger idx, BOOL * _Nonnull stop) {
         [group.attrSections enumerateObjectsUsingBlock:^(LookinAttributesSection * _Nonnull section, NSUInteger idx, BOOL * _Nonnull stop) {
             [section.attributes enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
