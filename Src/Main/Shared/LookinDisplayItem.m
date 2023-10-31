@@ -19,6 +19,7 @@
 #import "Color+Lookin.h"
 #import "NSArray+Lookin.h"
 #import "NSObject+Lookin.h"
+#import "LookinDashboardBlueprint.h"
 
 #if TARGET_OS_IPHONE
 #import "UIColor+LookinServer.h"
@@ -170,9 +171,20 @@
     return self.viewObject ? : self.layerObject;
 }
 
-- (void)setAttributesGroupList:(NSSet<LookinAttributesGroup *> *)attributesGroupList {
-    _attributesGroupList = [attributesGroupList copy];
-    [attributesGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, BOOL * _Nonnull stop) {
+- (void)setAttributesGroupList:(NSArray<LookinAttributesGroup *> *)attributesGroupList {
+    _attributesGroupList = [attributesGroupList sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesGroup *obj1, LookinAttributesGroup *obj2) {
+        NSArray *order = [LookinDashboardBlueprint groupIDs];
+        NSUInteger idx1 = [order indexOfObject:obj1.identifier];
+        NSUInteger idx2 = [order indexOfObject:obj2.identifier];
+        if (idx1 < idx2) {
+            return NSOrderedAscending;
+        } else if (idx1 > idx2) {
+            return NSOrderedDescending;
+        } else {
+            return NSOrderedSame;
+        }
+    }];
+    [_attributesGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, NSUInteger idx, BOOL * _Nonnull stop) {
         [group.attrSections enumerateObjectsUsingBlock:^(LookinAttributesSection * _Nonnull section, NSUInteger idx, BOOL * _Nonnull stop) {
             [section.attributes enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
                 attr.targetDisplayItem = self;
@@ -183,6 +195,7 @@
 
 - (void)setCustomAttrGroupList:(NSArray<LookinAttributesGroup *> *)customAttrGroupList {
     _customAttrGroupList = customAttrGroupList;
+    // 传进来的时候就已经排好序了
     [customAttrGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, NSUInteger idx, BOOL * _Nonnull stop) {
         [group.attrSections enumerateObjectsUsingBlock:^(LookinAttributesSection * _Nonnull section, NSUInteger idx, BOOL * _Nonnull stop) {
             [section.attributes enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -579,6 +592,17 @@
         }
     }
     _subtitle = subtitle;
+}
+
+- (NSArray<LookinAttributesGroup *> *)queryAllAttrGroupList {
+    NSMutableArray *array = [NSMutableArray array];
+    if (self.attributesGroupList) {
+        [array addObjectsFromArray:self.attributesGroupList];
+    }
+    if (self.customAttrGroupList) {
+        [array addObjectsFromArray:self.customAttrGroupList];
+    }
+    return array;
 }
 
 @end

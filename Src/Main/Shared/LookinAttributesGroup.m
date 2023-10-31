@@ -48,11 +48,7 @@
 }
 
 - (NSUInteger)hash {
-    if ([self.identifier isEqualToString:LookinAttrGroup_UserCustom]) {
-        return self.userCustomTitle.hash;
-    } else {
-        return self.identifier.hash;
-    }
+    return self.uniqueKey.hash;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -77,6 +73,14 @@
 
 + (BOOL)supportsSecureCoding {
     return YES;
+}
+
+- (NSString *)uniqueKey {
+    if ([self.identifier isEqualToString:LookinAttrGroup_UserCustom]) {
+        return self.userCustomTitle;
+    } else {
+        return self.identifier;
+    }
 }
 
 @end
