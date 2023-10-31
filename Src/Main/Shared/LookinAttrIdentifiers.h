@@ -32,12 +32,15 @@ extern LookinAttrGroupIdentifier const LookinAttrGroup_UITextView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UITextField;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView;
 
+extern LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom;
 
 #pragma mark - Section
 
 typedef NSString * LookinAttrSectionIdentifier;
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_None;
+
+extern LookinAttrSectionIdentifier const LookinAttrSec_UserCustom;
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_Class_Class;
 
@@ -128,6 +131,9 @@ extern LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_QMUIFo
 typedef NSString * LookinAttrIdentifier;
 
 extern LookinAttrIdentifier const LookinAttr_None;
+
+/// 用户自定义的
+extern LookinAttrIdentifier const LookinAttr_UserCustom;
 
 extern LookinAttrIdentifier const LookinAttr_Class_Class_Class;
 

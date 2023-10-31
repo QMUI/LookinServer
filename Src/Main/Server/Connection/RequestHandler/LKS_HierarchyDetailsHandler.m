@@ -14,6 +14,7 @@
 #import "LookinStaticAsyncUpdateTask.h"
 #import "LKS_ConnectionManager.h"
 #import "LookinServerDefines.h"
+#import "LKS_CustomAttrGroupsMaker.h"
 
 @interface LKS_HierarchyDetailsHandler ()
 
@@ -107,7 +108,7 @@
             
             if (![self.attrGroupsSyncedOids containsObject:@(task.oid)]) {
                 itemDetail.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-                itemDetail.customAttrGroupList = [LKS_AttrGroupsMaker customAttrGroupsForLayer:layer];
+                itemDetail.customAttrGroupList = [LKS_CustomAttrGroupsMaker customAttrGroupsForLayer:layer];
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
             }
             if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {

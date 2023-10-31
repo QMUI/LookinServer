@@ -22,6 +22,7 @@
     newAttr.identifier = self.identifier;
     newAttr.value = self.value;
     newAttr.attrType = self.attrType;
+    newAttr.extraValue = self.extraValue;
     return newAttr;
 }
 
@@ -31,6 +32,7 @@
     [aCoder encodeObject:self.identifier forKey:@"identifier"];
     [aCoder encodeInteger:self.attrType forKey:@"attrType"];
     [aCoder encodeObject:self.value forKey:@"value"];
+    [aCoder encodeObject:self.extraValue forKey:@"extraValue"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -38,6 +40,7 @@
         self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
         self.attrType = [aDecoder decodeIntegerForKey:@"attrType"];
         self.value = [aDecoder decodeObjectForKey:@"value"];
+        self.extraValue = [aDecoder decodeObjectForKey:@"extraValue"];
     }
     return self;
 }

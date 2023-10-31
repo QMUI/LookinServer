@@ -28,7 +28,6 @@
 /// Has value when isUserCustom is true
 @property(nonatomic, copy) NSString *userCustomTitle;
 
-/// When isUserCustom is YES, the identifier will be LookinAttrGroup_None.
 @property(nonatomic, copy) LookinAttrGroupIdentifier identifier;
 
 @property(nonatomic, copy) NSArray<LookinAttributesSection *> *attrSections;

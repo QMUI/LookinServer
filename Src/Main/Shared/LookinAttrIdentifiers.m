@@ -38,6 +38,8 @@ LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView = @"ve";
 
 LookinAttrSectionIdentifier const LookinAttrSec_None = @"n";
 
+LookinAttrSectionIdentifier const LookinAttrSec_UserCustom = @"sec_ctm";
+
 LookinAttrSectionIdentifier const LookinAttrSec_Class_Class = @"cl_c";
 
 LookinAttrSectionIdentifier const LookinAttrSec_Relation_Relation = @"r_r";
@@ -125,8 +127,10 @@ LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_QMUIForegroun
 #pragma mark - Attr
 
 LookinAttrIdentifier const LookinAttr_None = @"n";
+LookinAttrIdentifier const LookinAttr_UserCustom = @"ctm";
 
 LookinAttrIdentifier const LookinAttr_Class_Class_Class = @"c_c_c";
+
 
 LookinAttrIdentifier const LookinAttr_Relation_Relation_Relation = @"r_r_r";
 

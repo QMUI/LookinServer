@@ -16,6 +16,7 @@
 #import "LookinServerDefines.h"
 #import "UIColor+LookinServer.h"
 #import "LKSConfigManager.h"
+#import "LKS_CustomAttrGroupsMaker.h"
 
 @implementation LKS_HierarchyDisplayItemsMaker
 
@@ -62,7 +63,7 @@
     
     if (hasAttrList) {
         item.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-        item.customAttrGroupList = [LKS_AttrGroupsMaker customAttrGroupsForLayer:layer];
+        item.customAttrGroupList = [LKS_CustomAttrGroupsMaker customAttrGroupsForLayer:layer];
     }
     
     item.isHidden = layer.isHidden;

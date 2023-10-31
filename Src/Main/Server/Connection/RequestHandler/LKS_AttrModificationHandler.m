@@ -15,6 +15,7 @@
 #import "LookinDisplayItemDetail.h"
 #import "LookinStaticAsyncUpdateTask.h"
 #import "LookinServerDefines.h"
+#import "LKS_CustomAttrGroupsMaker.h"
 
 @implementation LKS_AttrModificationHandler
 
@@ -206,7 +207,7 @@
         LookinDisplayItemDetail *detail = [LookinDisplayItemDetail new];
         detail.displayItemOid = modification.targetOid;
         detail.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-        detail.customAttrGroupList = [LKS_AttrGroupsMaker customAttrGroupsForLayer:layer];
+        detail.customAttrGroupList = [LKS_CustomAttrGroupsMaker customAttrGroupsForLayer:layer];
         detail.frameValue = [NSValue valueWithCGRect:layer.frame];
         detail.boundsValue = [NSValue valueWithCGRect:layer.bounds];
         detail.hiddenValue = [NSNumber numberWithBool:layer.isHidden];

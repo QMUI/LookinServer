@@ -32,9 +32,32 @@
 //
 //@end
 
+@interface Moss : NSObject
+
+@end
+
+@implementation Moss
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        NSLog(@"moss - init");
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    NSLog(@"moss - dealloc");
+}
+
+@end
+
 @interface ViewController ()
 
 @property(nonatomic, strong) CatView *catView;
+@property(nonatomic, strong) Moss *retained;
 
 @end
 
@@ -67,6 +90,27 @@
 //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"Lookin_Export" object:nil];
 //    });
+//    [self test];
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        NSLog(@"%@", self.retained);
+        
+//    });
+}
+
+//- (Moss *)test {
+//    NSMethodSignature *signature = [self methodSignatureForSelector:@selector(make)];
+//    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+//    [invocation setTarget:self];
+//    [invocation setSelector:@selector(make)];
+//    [invocation invoke];
+//    Moss __unsafe_unretained *tempRawData;
+//    [invocation getReturnValue:&tempRawData];
+//    Moss *rawData = tempRawData;
+//    return rawData;
+//}
+
+- (Moss *)make {
+    return [Moss new];
 }
 
 @end
