@@ -52,6 +52,10 @@
     return YES;
 }
 
+- (BOOL)isUserCustom {
+    return [self.identifier isEqualToString:LookinAttr_UserCustom];
+}
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

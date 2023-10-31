@@ -36,6 +36,8 @@
 /// 标识该 LookinAttribute 对象隶属于哪一个 LookinDisplayItem
 @property(nonatomic, weak) LookinDisplayItem *targetDisplayItem;
 
+- (BOOL)isUserCustom;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
