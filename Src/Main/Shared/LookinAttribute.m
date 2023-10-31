@@ -20,6 +20,7 @@
 - (id)copyWithZone:(NSZone *)zone {
     LookinAttribute *newAttr = [[LookinAttribute allocWithZone:zone] init];
     newAttr.identifier = self.identifier;
+    newAttr.displayTitle = self.displayTitle;
     newAttr.value = self.value;
     newAttr.attrType = self.attrType;
     newAttr.extraValue = self.extraValue;
@@ -29,6 +30,7 @@
 #pragma mark - <NSCoding>
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.displayTitle forKey:@"displayTitle"];
     [aCoder encodeObject:self.identifier forKey:@"identifier"];
     [aCoder encodeInteger:self.attrType forKey:@"attrType"];
     [aCoder encodeObject:self.value forKey:@"value"];
@@ -37,6 +39,7 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
+        self.displayTitle = [aDecoder decodeObjectForKey:@"displayTitle"];
         self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
         self.attrType = [aDecoder decodeIntegerForKey:@"attrType"];
         self.value = [aDecoder decodeObjectForKey:@"value"];

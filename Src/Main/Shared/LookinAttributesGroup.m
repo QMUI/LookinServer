@@ -22,7 +22,6 @@
 
 - (id)copyWithZone:(NSZone *)zone {
     LookinAttributesGroup *newGroup = [[LookinAttributesGroup allocWithZone:zone] init];
-    newGroup.isUserCustom = self.isUserCustom;
     newGroup.userCustomTitle = self.userCustomTitle;
     newGroup.identifier = self.identifier;
     newGroup.attrSections = [self.attrSections lookin_map:^id(NSUInteger idx, LookinAttributesSection *value) {
@@ -34,7 +33,6 @@
 #pragma mark - <NSCoding>
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeBool:self.isUserCustom forKey:@"isUserCustom"];
     [aCoder encodeObject:self.userCustomTitle forKey:@"userCustomTitle"];
     [aCoder encodeObject:self.identifier forKey:@"identifier"];
     [aCoder encodeObject:self.attrSections forKey:@"attrSections"];
@@ -42,7 +40,6 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        self.isUserCustom = [aDecoder decodeBoolForKey:@"isUserCustom"];
         self.userCustomTitle = [aDecoder decodeObjectForKey:@"userCustomTitle"];
         self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
         self.attrSections = [aDecoder decodeObjectForKey:@"attrSections"];
@@ -51,7 +48,7 @@
 }
 
 - (NSUInteger)hash {
-    if (self.isUserCustom) {
+    if ([self.identifier isEqualToString:LookinAttrGroup_UserCustom]) {
         return self.userCustomTitle.hash;
     } else {
         return self.identifier.hash;
@@ -67,15 +64,14 @@
     }
     LookinAttributesGroup *targetObject = object;
     
-    if (self.isUserCustom != targetObject.isUserCustom) {
+    if (![self.identifier isEqualToString:targetObject.identifier]) {
         return false;
     }
-    if (self.isUserCustom) {
+    if ([self.identifier isEqualToString:LookinAttrGroup_UserCustom]) {
         BOOL ret = [self.userCustomTitle isEqualToString:targetObject.userCustomTitle];
         return ret;
     } else {
-        BOOL ret = (self.identifier == targetObject.identifier);
-        return ret;
+        return true;
     }
 }
 

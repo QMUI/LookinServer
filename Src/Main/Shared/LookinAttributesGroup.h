@@ -24,8 +24,7 @@
  */
 @interface LookinAttributesGroup : NSObject <NSSecureCoding, NSCopying>
 
-@property(nonatomic, assign) BOOL isUserCustom;
-/// Has value when isUserCustom is true
+/// 只有在 identifier 为 custom 时，才存在该值
 @property(nonatomic, copy) NSString *userCustomTitle;
 
 @property(nonatomic, copy) LookinAttrGroupIdentifier identifier;

@@ -63,7 +63,7 @@
     
     if (hasAttrList) {
         item.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-        item.customAttrGroupList = [LKS_CustomAttrGroupsMaker customAttrGroupsForLayer:layer];
+        item.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
     }
     
     item.isHidden = layer.isHidden;

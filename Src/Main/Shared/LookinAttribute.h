@@ -20,6 +20,9 @@
 
 @property(nonatomic, copy) LookinAttrIdentifier identifier;
 
+/// 只有 Custom Attr 才有该属性
+@property(nonatomic, copy) NSString *displayTitle;
+
 /// 标识 value 的具体类型（如 double / NSString /...）
 @property(nonatomic, assign) LookinAttrType attrType;
 

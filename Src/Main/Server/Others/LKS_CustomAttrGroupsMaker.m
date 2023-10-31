@@ -16,10 +16,27 @@
 #import "UIColor+LookinServer.h"
 #import "LookinServerDefines.h"
 
+@interface LKS_CustomAttrGroupsMaker ()
+
+/// key 是 section title
+@property(nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<LookinAttribute *> *> *sectionAndAttrs;
+
+@property(nonatomic, weak) CALayer *layer;
+
+@end
+
 @implementation LKS_CustomAttrGroupsMaker
 
-+ (NSArray<LookinAttributesGroup *> *)customAttrGroupsForLayer:(CALayer *)layer {
-    if (!layer) {
+- (instancetype)initWithLayer:(CALayer *)layer {
+    if (self = [super init]) {
+        self.sectionAndAttrs = [NSMutableDictionary dictionary];
+        self.layer = layer;
+    }
+    return self;
+}
+
+- (NSArray<LookinAttributesGroup *> *)make {
+    if (!self.layer) {
         NSAssert(NO, @"");
         return nil;
     }
@@ -29,36 +46,55 @@
         [selectors addObject:[NSString stringWithFormat:@"lookin_customDebugInfos_%@", @(i)]];
     }
     
-    NSMutableArray<LookinAttribute *> *allAttrs = [NSMutableArray array];
     for (NSString *name in selectors) {
-        NSArray<LookinAttribute *> *layerAttrs = [self attrsForViewOrLayer:layer selectorName:name];
-        [allAttrs addObjectsFromArray:layerAttrs];
+        [self makeAttrsForViewOrLayer:self.layer selectorName:name];
         
-        UIView *view = layer.lks_hostView;
+        UIView *view = self.layer.lks_hostView;
         if (view) {
-            NSArray<LookinAttribute *> *viewAttrs = [self attrsForViewOrLayer:view selectorName:name];
-            [allAttrs addObjectsFromArray:viewAttrs];
+            [self makeAttrsForViewOrLayer:view selectorName:name];
         }
     }
     
-    return nil;
-}
-
-+ (NSArray<LookinAttribute *> *)attrsForViewOrLayer:(id)viewOrLayer selectorName:(NSString *)selectorName {
-    if (!viewOrLayer || !selectorName.length) {
+    if ([self.sectionAndAttrs count] == 0) {
         return nil;
     }
+    NSMutableArray<LookinAttributesGroup *> *groups = [NSMutableArray array];
+    [self.sectionAndAttrs enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull groupTitle, NSMutableArray<LookinAttribute *> * _Nonnull attrs, BOOL * _Nonnull stop) {
+        LookinAttributesGroup *group = [LookinAttributesGroup new];
+        group.userCustomTitle = groupTitle;
+        group.identifier = LookinAttrGroup_UserCustom;
+        
+        NSMutableArray<LookinAttributesSection *> *sections = [NSMutableArray array];
+        [attrs enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
+            LookinAttributesSection *sec = [LookinAttributesSection new];
+            sec.identifier = LookinAttrSec_UserCustom;
+            sec.attributes = @[attr];
+            [sections addObject:sec];
+        }];
+        
+        group.attrSections = sections;
+    }];
+    [groups sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesGroup *obj1, LookinAttributesGroup *obj2) {
+        return [obj1.userCustomTitle compare:obj2.userCustomTitle];
+    }];
+    return [groups copy];
+}
+
+- (void)makeAttrsForViewOrLayer:(id)viewOrLayer selectorName:(NSString *)selectorName {
+    if (!viewOrLayer || !selectorName.length) {
+        return;
+    }
     if (![viewOrLayer isKindOfClass:[UIView class]] && ![viewOrLayer isKindOfClass:[CALayer class]]) {
-        return nil;
+        return;
     }
     SEL selector = NSSelectorFromString(selectorName);
     if (![viewOrLayer respondsToSelector:selector]) {
-        return nil;
+        return;
     }
     NSMethodSignature *signature = [viewOrLayer methodSignatureForSelector:selector];
     if (signature.numberOfArguments > 2) {
         NSAssert(NO, @"LookinServer - There should be no explicit parameters.");
-        return nil;
+        return;
     }
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     [invocation setTarget:viewOrLayer];
@@ -70,52 +106,59 @@
     [invocation getReturnValue:&tempRawData];
     NSDictionary<NSString *, id> *rawData = tempRawData;
     
-    NSArray<LookinAttribute *> *attrs = [self attrsFromRawData:rawData];
-    if (!attrs || attrs.count == 0) {
-        return nil;
-    }
-    return attrs;
+    [self makeAttrsFromRawData:rawData];
 }
 
-+ (NSArray<LookinAttribute *> *)attrsFromRawData:(NSDictionary<NSString *, id> *)data {
+- (void)makeAttrsFromRawData:(NSDictionary<NSString *, id> *)data {
     if (!data || ![data isKindOfClass:[NSDictionary class]]) {
-        return nil;
+        return;
     }
     NSArray *rawProperties = data[@"properties"];
     if (!rawProperties || [rawProperties isKindOfClass:[NSArray class]]) {
-        return nil;
+        return;
     }
     
-    NSMutableArray<LookinAttribute *> *attrs = [NSMutableArray array];
     for (NSDictionary<NSString *, id> *dict in rawProperties) {
-        LookinAttribute *attr = [self attrFromRawDict:dict];
+        NSString *section;
+        LookinAttribute *attr = [self attrFromRawDict:dict section:&section];
         if (!attr) {
-            [attrs addObject:attr];
+            continue;
         }
+        if (!self.sectionAndAttrs[section]) {
+            self.sectionAndAttrs[section] = [NSMutableArray array];
+        }
+        [self.sectionAndAttrs[section] addObject:attr];
     }
-    return attrs;
 }
 
-+ (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict {
+- (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict section:(inout NSString **)inoutSectionTitle {
     LookinAttribute *attr = [LookinAttribute new];
     attr.identifier = LookinAttr_UserCustom;
     
+    NSString *title = dict[@"title"];
     NSString *type = dict[@"valueType"];
-    NSString *section = dict[@"section"] ? : @"Custom";
+    NSString *section = dict[@"section"];
     id value = dict[@"value"];
-    
-    if (!type || ![type isKindOfClass:[NSString class]]) {
-        NSLog(@"LookinServer - Wrong valueType");
+
+    if (!title || ![title isKindOfClass:[NSString class]]) {
+        NSLog(@"LookinServer - Wrong title");
         return nil;
     }
-    if (!section || ![section isKindOfClass:[NSString class]]) {
-        NSLog(@"LookinServer - Wrong section");
+    if (!type || ![type isKindOfClass:[NSString class]]) {
+        NSLog(@"LookinServer - Wrong valueType");
         return nil;
     }
     if (!value) {
         NSLog(@"LookinServer - No value");
         return nil;
     }
+    if (!section || ![section isKindOfClass:[NSString class]] || section.length == 0) {
+        *inoutSectionTitle = @"Custom";
+    } else {
+        *inoutSectionTitle = section;
+    }
+    
+    attr.displayTitle = title;
     
     NSString *fixedType = type.lowercaseString;
     if ([fixedType isEqualToString:@"string"]) {

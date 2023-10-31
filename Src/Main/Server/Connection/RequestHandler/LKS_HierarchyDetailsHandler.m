@@ -108,7 +108,7 @@
             
             if (![self.attrGroupsSyncedOids containsObject:@(task.oid)]) {
                 itemDetail.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-                itemDetail.customAttrGroupList = [LKS_CustomAttrGroupsMaker customAttrGroupsForLayer:layer];
+                itemDetail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
             }
             if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {

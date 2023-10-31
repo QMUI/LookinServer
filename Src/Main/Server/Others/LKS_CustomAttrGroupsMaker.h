@@ -12,7 +12,9 @@
 
 @interface LKS_CustomAttrGroupsMaker : NSObject
 
-+ (NSArray<LookinAttributesGroup *> *)customAttrGroupsForLayer:(CALayer *)layer;
+- (instancetype)initWithLayer:(CALayer *)layer;
+
+- (NSArray<LookinAttributesGroup *> *)make;
 
 @end
 

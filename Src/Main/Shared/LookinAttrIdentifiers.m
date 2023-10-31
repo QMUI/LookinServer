@@ -33,6 +33,7 @@ LookinAttrGroupIdentifier const LookinAttrGroup_UITextView = @"te";
 LookinAttrGroupIdentifier const LookinAttrGroup_UITextField = @"tf";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView = @"ve";
 
+LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom = @"guc"; // user custom
 
 #pragma mark - Section
 

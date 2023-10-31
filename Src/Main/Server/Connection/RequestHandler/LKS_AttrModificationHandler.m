@@ -207,7 +207,7 @@
         LookinDisplayItemDetail *detail = [LookinDisplayItemDetail new];
         detail.displayItemOid = modification.targetOid;
         detail.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-        detail.customAttrGroupList = [LKS_CustomAttrGroupsMaker customAttrGroupsForLayer:layer];
+        detail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
         detail.frameValue = [NSValue valueWithCGRect:layer.frame];
         detail.boundsValue = [NSValue valueWithCGRect:layer.bounds];
         detail.hiddenValue = [NSNumber numberWithBool:layer.isHidden];
