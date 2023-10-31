@@ -73,6 +73,7 @@
         }];
         
         group.attrSections = sections;
+        [groups addObject:group];
     }];
     [groups sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesGroup *obj1, LookinAttributesGroup *obj2) {
         return [obj1.userCustomTitle compare:obj2.userCustomTitle];
@@ -114,7 +115,7 @@
         return;
     }
     NSArray *rawProperties = data[@"properties"];
-    if (!rawProperties || [rawProperties isKindOfClass:[NSArray class]]) {
+    if (!rawProperties || ![rawProperties isKindOfClass:[NSArray class]]) {
         return;
     }
     

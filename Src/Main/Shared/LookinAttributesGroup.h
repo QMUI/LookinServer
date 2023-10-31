@@ -34,6 +34,8 @@
 /// 如果是 custom 则返回 userCustomTitle，如果不是 custom 则返回 identifier
 - (NSString *)uniqueKey;
 
+- (BOOL)isUserCustom;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

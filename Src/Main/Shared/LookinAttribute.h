@@ -8,8 +8,6 @@
 //  Copyright © 2018 QMUI Team. All rights reserved.
 //
 
-
-
 #import "LookinAttrIdentifiers.h"
 #import "LookinCodingValueType.h"
 #import "LookinAttrType.h"

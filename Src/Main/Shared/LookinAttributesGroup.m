@@ -13,7 +13,7 @@
 #import "LookinAttributesGroup.h"
 #import "LookinAttribute.h"
 #import "LookinAttributesSection.h"
-
+#import "LookinDashboardBlueprint.h"
 #import "NSArray+Lookin.h"
 
 @implementation LookinAttributesGroup
@@ -75,12 +75,35 @@
     return YES;
 }
 
+- (void)setAttrSections:(NSArray<LookinAttributesSection *> *)attrSections {
+    if (self.isUserCustom) {
+        _attrSections = attrSections;
+        return;
+    }
+    _attrSections = [attrSections sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesSection * _Nonnull obj1, LookinAttributesSection * _Nonnull obj2) {
+        NSArray *order = [LookinDashboardBlueprint sectionIDsForGroupID:self.identifier];
+        NSUInteger idx1 = [order indexOfObject:obj1.identifier];
+        NSUInteger idx2 = [order indexOfObject:obj2.identifier];
+        if (idx1 < idx2) {
+            return NSOrderedAscending;
+        } else if (idx1 > idx2) {
+            return NSOrderedDescending;
+        } else {
+            return NSOrderedSame;
+        }
+    }];
+}
+
 - (NSString *)uniqueKey {
     if ([self.identifier isEqualToString:LookinAttrGroup_UserCustom]) {
         return self.userCustomTitle;
     } else {
         return self.identifier;
     }
+}
+
+- (BOOL)isUserCustom {
+    return [self.identifier isEqualToString:LookinAttrSec_UserCustom];
 }
 
 @end
