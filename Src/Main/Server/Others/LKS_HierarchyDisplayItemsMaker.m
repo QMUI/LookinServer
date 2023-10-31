@@ -17,6 +17,7 @@
 #import "UIColor+LookinServer.h"
 #import "LKSConfigManager.h"
 #import "LKS_CustomAttrGroupsMaker.h"
+#import "LKS_CustomDisplayItemsMaker.h"
 
 @implementation LKS_HierarchyDisplayItemsMaker
 
@@ -87,14 +88,19 @@
     
     if (layer.sublayers.count) {
         NSArray<CALayer *> *sublayers = [layer.sublayers copy];
-        NSMutableArray<LookinDisplayItem *> *array = [NSMutableArray arrayWithCapacity:sublayers.count];
+        NSMutableArray<LookinDisplayItem *> *allSubitems = [NSMutableArray arrayWithCapacity:sublayers.count];
         [sublayers enumerateObjectsUsingBlock:^(__kindof CALayer * _Nonnull sublayer, NSUInteger idx, BOOL * _Nonnull stop) {
             LookinDisplayItem *sublayer_item = [self _displayItemWithLayer:sublayer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality];
             if (sublayer_item) {
-                [array addObject:sublayer_item];
+                [allSubitems addObject:sublayer_item];
             }
         }];
-        item.subitems = [array copy];
+        
+        NSArray<LookinDisplayItem *> *customSubitems = [[[LKS_CustomDisplayItemsMaker alloc] initWithLayer:layer] make];
+        if (customSubitems.count > 0) {
+            [allSubitems addObjectsFromArray:customSubitems];
+        }
+        item.subitems = [allSubitems copy];
     }
     
     return item;

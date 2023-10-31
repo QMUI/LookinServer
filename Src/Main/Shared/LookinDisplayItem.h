@@ -11,6 +11,7 @@
 #import "TargetConditionals.h"
 #import "LookinObject.h"
 #import "LookinDefines.h"
+#import "LookinCustomDisplayItemInfo.h"
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
@@ -61,6 +62,9 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @interface LookinDisplayItem : NSObject <NSSecureCoding, NSCopying>
 
+/// 当 customInfo 不为 nil 时，意思是该 DisplayItem 为 UserCustom 配置的。此时，Encode 属性中仅 subitems 和 customAttrGroupList 属性有意义，其它几乎所有属性都无意义
+@property(nonatomic, strong) LookinCustomDisplayItemInfo *customInfo;
+
 @property(nonatomic, copy) NSArray<LookinDisplayItem *> *subitems;
 
 @property(nonatomic, assign) BOOL isHidden;
@@ -92,8 +96,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 // 如果当前 item 代表 UIWindow 且是 keyWindow，则该属性为 YES
 @property(nonatomic, assign) BOOL representedAsKeyWindow;
 
-@property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
-@property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
 
 /// view 或 layer 的 backgroundColor，利用该属性来提前渲染 node 的背景色，使得用户感觉加载的快一点
 /// 注意有一个缺点是，理论上应该像 screenshot 一样拆成 soloBackgroundColor 和 groupBackgroundColor，这里的 backgroundColor 实际上是 soloBackgroundColor，因此某些场景的显示会有瑕疵
@@ -103,6 +105,9 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 @property(nonatomic, assign) BOOL shouldCaptureImage;
 
 #pragma mark - No Encode/Decode
+
+@property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
+@property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
 
 /// 父节点
 @property(nonatomic, weak) LookinDisplayItem *superItem;

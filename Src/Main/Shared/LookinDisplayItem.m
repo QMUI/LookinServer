@@ -47,6 +47,7 @@
     newDisplayItem.subitems = [self.subitems lookin_map:^id(NSUInteger idx, LookinDisplayItem *value) {
         return value.copy;
     }];
+    newDisplayItem.customInfo = self.customInfo.copy;
     newDisplayItem.isHidden = self.isHidden;
     newDisplayItem.alpha = self.alpha;
     newDisplayItem.frame = self.frame;
@@ -73,6 +74,7 @@
 #pragma mark - <NSCoding>
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.customInfo forKey:@"customInfo"];
     [aCoder encodeObject:self.subitems forKey:@"subitems"];
     [aCoder encodeBool:self.isHidden forKey:@"hidden"];
     [aCoder encodeFloat:self.alpha forKey:@"alpha"];
@@ -105,6 +107,7 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
+        self.customInfo = [aDecoder decodeObjectForKey:@"customInfo"];
         self.subitems = [aDecoder decodeObjectForKey:@"subitems"];
         self.isHidden = [aDecoder decodeBoolForKey:@"hidden"];
         self.alpha = [aDecoder decodeFloatForKey:@"alpha"];
