@@ -18,7 +18,7 @@
 #import <Appkit/Appkit.h>
 #endif
 
-@class LookinAttributesGroup, LookinIvarTrace, LookinPreviewItemLayer, LookinEventHandler, LookinDisplayItemNode, LookinDisplayItem;
+@class LookinAttributesGroup, LookinIvarTrace, LookinPreviewItemLayer, LookinEventHandler, LKDisplayItemNode, LookinDisplayItem;
 
 typedef NS_ENUM(NSUInteger, LookinDisplayItemImageEncodeType) {
     LookinDisplayItemImageEncodeTypeNone,   // 不进行 encode
@@ -155,7 +155,7 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @property(nonatomic, weak) LookinPreviewItemLayer *previewLayer;
 
-@property(nonatomic, weak) LookinDisplayItemNode *previewNode;
+@property(nonatomic, weak) LKDisplayItemNode *previewNode;
 
 /// 如果该值为 YES，则该 item 及所有子 item 均不会在 preview 中被显示出来，只能在 hierarchy 中选择。默认为 NO
 @property(nonatomic, assign) BOOL noPreview;
