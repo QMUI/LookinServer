@@ -562,6 +562,10 @@
 }
 
 - (NSString *)subtitle {
+    if (self.customInfo) {
+        return self.customInfo.subtitle;
+    }
+    
     NSString *text = self.hostViewControllerObject.shortSelfClassName;
     if (text.length) {
         return [NSString stringWithFormat:@"%@.view", text];
