@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'LookinCustomInfoDemo' do
+    pod 'LookinServer', :path=>'../../', :subspecs => ['Swift'], :configurations => ['Debug']
+end
