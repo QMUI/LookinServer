@@ -1,4 +1,4 @@
-#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER
 
 //
 //  LookinDisplayItem.m
@@ -7,8 +7,6 @@
 //  Created by Li Kai on 2018/11/15.
 //  Copyright © 2018 QMUI Team. All rights reserved.
 //
-
-
 
 #import "LookinDisplayItem.h"
 #import "LookinAttributesGroup.h"
@@ -548,23 +546,11 @@
 - (void)setViewObject:(LookinObject *)viewObject {
     _viewObject = viewObject;
     [self _updateSubtitleProperty];
-    [self _updateTitleProperty];
 }
 
 - (void)setLayerObject:(LookinObject *)layerObject {
     _layerObject = layerObject;
     [self _updateSubtitleProperty];
-    [self _updateTitleProperty];
-}
-
-- (void)_updateTitleProperty {
-    if (self.viewObject) {
-        _title = self.viewObject.shortSelfClassName;
-    } else if (self.layerObject) {
-        _title = self.layerObject.shortSelfClassName;
-    } else {
-        _title = nil;
-    }
 }
 
 - (void)_updateSubtitleProperty {
@@ -596,6 +582,18 @@
         [array addObjectsFromArray:self.customAttrGroupList];
     }
     return array;
+}
+
+- (NSString *)title {
+    if (self.customInfo) {
+        return self.customInfo.title;
+    } else if (self.viewObject) {
+        return self.viewObject.shortSelfClassName;
+    } else if (self.layerObject) {
+        return self.layerObject.shortSelfClassName;
+    } else {
+        return nil;
+    }
 }
 
 @end
