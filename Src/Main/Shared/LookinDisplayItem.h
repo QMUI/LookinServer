@@ -108,6 +108,7 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 /// 该 item 在左侧 hierarchy 中显示的字符串，通常是类名
 - (NSString *)title;
+- (NSString *)subtitle;
 
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
@@ -117,8 +118,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 /// 如果存在 viewObject 则返回 viewObject，否则返回 layerObject
 - (LookinObject *)displayingObject;
-
-@property(nonatomic, copy, readonly) NSString *subtitle;
 
 /// 在 hierarchy 中的层级，比如顶层的 UIWindow.indentLevel 为 0，UIWindow 的 subitem 的 indentLevel 为 1
 - (NSInteger)indentLevel;

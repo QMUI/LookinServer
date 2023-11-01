@@ -538,41 +538,6 @@
     [self _notifyDelegatesWith:LookinDisplayItemProperty_HighlightedSearchString];
 }
 
-- (void)setHostViewControllerObject:(LookinObject *)hostViewControllerObject {
-    _hostViewControllerObject = hostViewControllerObject;
-    [self _updateSubtitleProperty];
-}
-
-- (void)setViewObject:(LookinObject *)viewObject {
-    _viewObject = viewObject;
-    [self _updateSubtitleProperty];
-}
-
-- (void)setLayerObject:(LookinObject *)layerObject {
-    _layerObject = layerObject;
-    [self _updateSubtitleProperty];
-}
-
-- (void)_updateSubtitleProperty {
-    NSString *subtitle = @"";
-    if (self.hostViewControllerObject.shortSelfClassName.length) {
-        subtitle = [NSString stringWithFormat:@"%@.view", self.hostViewControllerObject.shortSelfClassName];
-        
-    } else {
-        LookinObject *representedObject = self.viewObject ? : self.layerObject;
-        if (representedObject.specialTrace.length) {
-            subtitle = representedObject.specialTrace;
-            
-        } else if (representedObject.ivarTraces.count) {
-            NSArray<NSString *> *ivarNameList = [representedObject.ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
-                return value.ivarName;
-            }];
-            subtitle = [[[NSSet setWithArray:ivarNameList] allObjects] componentsJoinedByString:@"   "];
-        }
-    }
-    _subtitle = subtitle;
-}
-
 - (NSArray<LookinAttributesGroup *> *)queryAllAttrGroupList {
     NSMutableArray *array = [NSMutableArray array];
     if (self.attributesGroupList) {
@@ -594,6 +559,27 @@
     } else {
         return nil;
     }
+}
+
+- (NSString *)subtitle {
+    NSString *text = self.hostViewControllerObject.shortSelfClassName;
+    if (text.length) {
+        return [NSString stringWithFormat:@"%@.view", text];
+    }
+    
+    LookinObject *representedObject = self.viewObject ? : self.layerObject;
+    if (representedObject.specialTrace.length) {
+        return representedObject.specialTrace;
+        
+    }
+    if (representedObject.ivarTraces.count) {
+        NSArray<NSString *> *ivarNameList = [representedObject.ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
+            return value.ivarName;
+        }];
+        return [[[NSSet setWithArray:ivarNameList] allObjects] componentsJoinedByString:@"   "];
+    }
+    
+    return nil;
 }
 
 @end
