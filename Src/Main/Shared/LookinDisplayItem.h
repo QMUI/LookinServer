@@ -161,6 +161,7 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 @property(nonatomic, assign) BOOL noPreview;
 
 /// 如果自身或某个上级元素的 noPreview 值为 YES，则该方法返回 YES
+/// 注意：当 userCustom 为 YES 时，该属性也可能返回 YES
 @property(nonatomic, assign, readonly) BOOL inNoPreviewHierarchy;
 
 /// 当小于 0 时表示未被设置
