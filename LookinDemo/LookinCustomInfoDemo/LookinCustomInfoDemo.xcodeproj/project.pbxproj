@@ -14,6 +14,9 @@
 		A7F8FC6A2AF2BE8400ABC7F4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7F8FC682AF2BE8400ABC7F4 /* Main.storyboard */; };
 		A7F8FC6C2AF2BE8500ABC7F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7F8FC6B2AF2BE8500ABC7F4 /* Assets.xcassets */; };
 		A7F8FC6F2AF2BE8500ABC7F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7F8FC6D2AF2BE8500ABC7F4 /* LaunchScreen.storyboard */; };
+		A7F8FC792AF2BFA900ABC7F4 /* CatView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC782AF2BFA900ABC7F4 /* CatView.m */; };
+		A7F8FC7C2AF2C05500ABC7F4 /* DogLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC7B2AF2C05500ABC7F4 /* DogLayer.m */; };
+		A7F8FC7F2AF2C2D600ABC7F4 /* BirdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC7E2AF2C2D600ABC7F4 /* BirdView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +30,12 @@
 		A7F8FC6B2AF2BE8500ABC7F4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7F8FC6E2AF2BE8500ABC7F4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A7F8FC702AF2BE8500ABC7F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7F8FC762AF2BFA900ABC7F4 /* LookinCustomInfoDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LookinCustomInfoDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		A7F8FC772AF2BFA900ABC7F4 /* CatView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatView.h; sourceTree = "<group>"; };
+		A7F8FC782AF2BFA900ABC7F4 /* CatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CatView.m; sourceTree = "<group>"; };
+		A7F8FC7A2AF2C05500ABC7F4 /* DogLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DogLayer.h; sourceTree = "<group>"; };
+		A7F8FC7B2AF2C05500ABC7F4 /* DogLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DogLayer.m; sourceTree = "<group>"; };
+		A7F8FC7E2AF2C2D600ABC7F4 /* BirdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirdView.swift; sourceTree = "<group>"; };
 		F085E939F792D70A87AF4EE0 /* Pods-LookinCustomInfoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinCustomInfoDemo.release.xcconfig"; path = "Target Support Files/Pods-LookinCustomInfoDemo/Pods-LookinCustomInfoDemo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,6 +89,7 @@
 		A7F8FC612AF2BE8400ABC7F4 /* LookinCustomInfoDemo */ = {
 			isa = PBXGroup;
 			children = (
+				A7F8FC7D2AF2C05B00ABC7F4 /* Demo */,
 				A7F8FC622AF2BE8400ABC7F4 /* AppDelegate.swift */,
 				A7F8FC642AF2BE8400ABC7F4 /* SceneDelegate.swift */,
 				A7F8FC662AF2BE8400ABC7F4 /* ViewController.swift */,
@@ -87,8 +97,21 @@
 				A7F8FC6B2AF2BE8500ABC7F4 /* Assets.xcassets */,
 				A7F8FC6D2AF2BE8500ABC7F4 /* LaunchScreen.storyboard */,
 				A7F8FC702AF2BE8500ABC7F4 /* Info.plist */,
+				A7F8FC762AF2BFA900ABC7F4 /* LookinCustomInfoDemo-Bridging-Header.h */,
 			);
 			path = LookinCustomInfoDemo;
+			sourceTree = "<group>";
+		};
+		A7F8FC7D2AF2C05B00ABC7F4 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				A7F8FC772AF2BFA900ABC7F4 /* CatView.h */,
+				A7F8FC782AF2BFA900ABC7F4 /* CatView.m */,
+				A7F8FC7A2AF2C05500ABC7F4 /* DogLayer.h */,
+				A7F8FC7B2AF2C05500ABC7F4 /* DogLayer.m */,
+				A7F8FC7E2AF2C2D600ABC7F4 /* BirdView.swift */,
+			);
+			path = Demo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,6 +148,7 @@
 				TargetAttributes = {
 					A7F8FC5E2AF2BE8400ABC7F4 = {
 						CreatedOnToolsVersion = 15.0;
+						LastSwiftMigration = 1500;
 					};
 				};
 			};
@@ -209,6 +233,9 @@
 				A7F8FC672AF2BE8400ABC7F4 /* ViewController.swift in Sources */,
 				A7F8FC632AF2BE8400ABC7F4 /* AppDelegate.swift in Sources */,
 				A7F8FC652AF2BE8400ABC7F4 /* SceneDelegate.swift in Sources */,
+				A7F8FC7F2AF2C2D600ABC7F4 /* BirdView.swift in Sources */,
+				A7F8FC7C2AF2C05500ABC7F4 /* DogLayer.m in Sources */,
+				A7F8FC792AF2BFA900ABC7F4 /* CatView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,6 +386,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5V3Z8FVWHU;
@@ -378,6 +406,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Lookin.LookinCustomInfoDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "LookinCustomInfoDemo/LookinCustomInfoDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -389,6 +419,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5V3Z8FVWHU;
@@ -408,6 +439,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Lookin.LookinCustomInfoDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "LookinCustomInfoDemo/LookinCustomInfoDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
