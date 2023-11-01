@@ -105,34 +105,35 @@
     // 小心这里的内存管理
     NSDictionary<NSString *, id> * __unsafe_unretained tempRawData;
     [invocation getReturnValue:&tempRawData];
-    NSDictionary<NSString *, id> *rawData = tempRawData;
-    
-    [self makeAttrsFromRawData:rawData];
-}
-
-- (void)makeAttrsFromRawData:(NSDictionary<NSString *, id> *)data {
-    if (!data || ![data isKindOfClass:[NSDictionary class]]) {
+    if (!tempRawData || ![tempRawData isKindOfClass:[NSDictionary class]]) {
         return;
     }
-    NSArray *rawProperties = data[@"properties"];
+    
+    NSDictionary<NSString *, id> *rawData = tempRawData;
+    NSArray *rawProperties = rawData[@"properties"];
+    
+    [self makeAttrsFromRawProperties:rawProperties];
+}
+
+- (void)makeAttrsFromRawProperties:(NSArray *)rawProperties {
     if (!rawProperties || ![rawProperties isKindOfClass:[NSArray class]]) {
         return;
     }
     
     for (NSDictionary<NSString *, id> *dict in rawProperties) {
-        NSString *section;
-        LookinAttribute *attr = [self attrFromRawDict:dict section:&section];
+        NSString *groupTitle;
+        LookinAttribute *attr = [LKS_CustomAttrGroupsMaker attrFromRawDict:dict groupTitle:&groupTitle];
         if (!attr) {
             continue;
         }
-        if (!self.sectionAndAttrs[section]) {
-            self.sectionAndAttrs[section] = [NSMutableArray array];
+        if (!self.sectionAndAttrs[groupTitle]) {
+            self.sectionAndAttrs[groupTitle] = [NSMutableArray array];
         }
-        [self.sectionAndAttrs[section] addObject:attr];
+        [self.sectionAndAttrs[groupTitle] addObject:attr];
     }
 }
 
-- (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict section:(inout NSString **)inoutSectionTitle {
++ (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict groupTitle:(inout NSString **)inoutGroupTitle {
     LookinAttribute *attr = [LookinAttribute new];
     attr.identifier = LookinAttr_UserCustom;
     
@@ -154,9 +155,9 @@
         return nil;
     }
     if (!section || ![section isKindOfClass:[NSString class]] || section.length == 0) {
-        *inoutSectionTitle = @"Custom";
+        *inoutGroupTitle = @"Custom";
     } else {
-        *inoutSectionTitle = section;
+        *inoutGroupTitle = section;
     }
     
     attr.displayTitle = title;
@@ -221,6 +222,51 @@
     
     NSLog(@"LookinServer - Unsupported value type.");
     return nil;
+}
+
++ (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties {
+    if (!rawProperties || ![rawProperties isKindOfClass:[NSArray class]]) {
+        return nil;
+    }
+    // key 是 group title
+    NSMutableDictionary<NSString *, NSMutableArray<LookinAttribute *> *> *groupTitleAndAttrs = [NSMutableDictionary dictionary];
+    
+    for (NSDictionary<NSString *, id> *dict in rawProperties) {
+        NSString *groupTitle;
+        LookinAttribute *attr = [LKS_CustomAttrGroupsMaker attrFromRawDict:dict groupTitle:&groupTitle];
+        if (!attr) {
+            continue;
+        }
+        if (!groupTitleAndAttrs[groupTitle]) {
+            groupTitleAndAttrs[groupTitle] = [NSMutableArray array];
+        }
+        [groupTitleAndAttrs[groupTitle] addObject:attr];
+    }
+    
+    if ([groupTitleAndAttrs count] == 0) {
+        return nil;
+    }
+    NSMutableArray<LookinAttributesGroup *> *groups = [NSMutableArray array];
+    [groupTitleAndAttrs enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull groupTitle, NSMutableArray<LookinAttribute *> * _Nonnull attrs, BOOL * _Nonnull stop) {
+        LookinAttributesGroup *group = [LookinAttributesGroup new];
+        group.userCustomTitle = groupTitle;
+        group.identifier = LookinAttrGroup_UserCustom;
+        
+        NSMutableArray<LookinAttributesSection *> *sections = [NSMutableArray array];
+        [attrs enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
+            LookinAttributesSection *sec = [LookinAttributesSection new];
+            sec.identifier = LookinAttrSec_UserCustom;
+            sec.attributes = @[attr];
+            [sections addObject:sec];
+        }];
+        
+        group.attrSections = sections;
+        [groups addObject:group];
+    }];
+    [groups sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesGroup *obj1, LookinAttributesGroup *obj2) {
+        return [obj1.userCustomTitle compare:obj2.userCustomTitle];
+    }];
+    return [groups copy];
 }
 
 @end

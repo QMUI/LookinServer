@@ -12,9 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LookinCustomDisplayItemInfo : NSObject <NSSecureCoding, NSCopying>
 
-/// 当 isUserCustom 为 NO 时，该属性必定为 nil
-/// 当 isUserCustom 为 YES 时，该属性可能有值（CGRect）也可能是 nil
+/// 该属性可能有值（CGRect）也可能是 nil（nil 时则表示无图像）
 @property(nonatomic, strong) NSValue *frameInWindow;
+@property(nonatomic, copy) NSString *title;
+@property(nonatomic, copy) NSString *subtitle;
 
 @end
 

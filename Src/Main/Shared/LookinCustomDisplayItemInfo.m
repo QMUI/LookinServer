@@ -15,20 +15,31 @@
     LookinCustomDisplayItemInfo *newInstance = [[LookinCustomDisplayItemInfo allocWithZone:zone] init];
     
     if (self.frameInWindow) {
+#if TARGET_OS_IPHONE
         CGRect rect = [self.frameInWindow CGRectValue];
         newInstance.frameInWindow = [NSValue valueWithCGRect:rect];
+#elif TARGET_OS_MAC
+        CGRect rect = [self.frameInWindow rectValue];
+        newInstance.frameInWindow = [NSValue valueWithRect:rect];
+#endif
     }
+    newInstance.title = self.title;
+    newInstance.subtitle = self.subtitle;
     
     return newInstance;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.frameInWindow forKey:@"frameInWindow"];
+    [aCoder encodeObject:self.title forKey:@"title"];
+    [aCoder encodeObject:self.subtitle forKey:@"subtitle"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.frameInWindow = [aDecoder decodeObjectForKey:@"frameInWindow"];
+        self.title = [aDecoder decodeObjectForKey:@"title"];
+        self.subtitle = [aDecoder decodeObjectForKey:@"subtitle"];
     }
     return self;
 }

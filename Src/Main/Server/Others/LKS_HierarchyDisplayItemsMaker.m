@@ -95,12 +95,15 @@
                 [allSubitems addObject:sublayer_item];
             }
         }];
-        
-        NSArray<LookinDisplayItem *> *customSubitems = [[[LKS_CustomDisplayItemsMaker alloc] initWithLayer:layer] make];
-        if (customSubitems.count > 0) {
-            [allSubitems addObjectsFromArray:customSubitems];
-        }
         item.subitems = [allSubitems copy];
+    }
+    NSArray<LookinDisplayItem *> *customSubitems = [[[LKS_CustomDisplayItemsMaker alloc] initWithLayer:layer] make];
+    if (customSubitems.count > 0) {
+        if (item.subitems) {
+            item.subitems = [item.subitems arrayByAddingObjectsFromArray:customSubitems];
+        } else {
+            item.subitems = customSubitems;
+        }
     }
     
     return item;

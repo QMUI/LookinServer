@@ -16,6 +16,7 @@
 @interface LKS_CustomDisplayItemsMaker ()
 
 @property(nonatomic, weak) CALayer *layer;
+@property(nonatomic, strong) NSMutableArray *allSubitems;
 
 @end
 
@@ -24,6 +25,7 @@
 - (instancetype)initWithLayer:(CALayer *)layer {
     if (self = [super init]) {
         self.layer = layer;
+        self.allSubitems = [NSMutableArray array];
     }
     return self;
 }
@@ -48,7 +50,11 @@
         }
     }
     
-    return nil;
+    if (self.allSubitems.count) {
+        return self.allSubitems;
+    } else {
+        return nil;
+    }
 }
 
 - (void)makeSubitemsForViewOrLayer:(id)viewOrLayer selectorName:(NSString *)selectorName {
@@ -85,7 +91,10 @@
         return;
     }
     NSArray *rawSubviews = data[@"subviews"];
-    NSArray<LookinDisplayItem *> *subitems = [self displayItemsFromRawArray:rawSubviews];
+    NSArray<LookinDisplayItem *> *newSubitems = [self displayItemsFromRawArray:rawSubviews];
+    if (newSubitems) {
+        [self.allSubitems addObjectsFromArray:newSubitems];
+    }
 }
 
 - (NSArray<LookinDisplayItem *> *)displayItemsFromRawArray:(NSArray<NSDictionary *> *)rawArray {
@@ -118,8 +127,10 @@
     newItem.isHidden = NO;
     newItem.alpha = 1.0;
     newItem.customInfo = [LookinCustomDisplayItemInfo new];
+    newItem.customInfo.title = title;
+    newItem.customInfo.subtitle = subtitle;
     newItem.customInfo.frameInWindow = frameValue;
-    newItem.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:self.layer] make];
+    newItem.customAttrGroupList = [LKS_CustomAttrGroupsMaker makeGroupsFromRawProperties:properties];
     
     return newItem;
 }
