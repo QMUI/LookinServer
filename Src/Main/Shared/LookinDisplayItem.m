@@ -249,7 +249,6 @@
         
         [obj _updateInHiddenHierarchyProperty];
         [obj _updateDisplayingInHierarchyProperty];
-        [obj _updateFrameToRoot];
     }];
 }
 
@@ -404,19 +403,6 @@
     return [NSString stringWithFormat:@"%@", self.title];
 }
 
-- (void)setFrameToRoot:(CGRect)frameToRoot {
-    if (CGRectEqualToRect(_frameToRoot, frameToRoot)) {
-        return;
-    }
-    _frameToRoot = frameToRoot;
-    [(NSArray<LookinDisplayItem *> *)self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj _updateFrameToRoot];
-        [obj _updateInNoPreviewHierarchy];
-    }];
-    
-    [self _notifyDelegatesWith:LookinDisplayItemProperty_FrameToRoot];
-}
-
 - (void)setPreviewItemDelegate:(id<LookinDisplayItemDelegate>)previewItemDelegate {
     _previewItemDelegate = previewItemDelegate;
     
@@ -444,31 +430,20 @@
 
 - (void)setFrame:(CGRect)frame {
     _frame = frame;
-    [self _updateFrameToRoot];
+    [self recursivelyNotifyFrameToRootMayChange];
+}
+
+- (void)recursivelyNotifyFrameToRootMayChange {
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_FrameToRoot];
+
+    [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj recursivelyNotifyFrameToRootMayChange];
+    }];
 }
 
 - (void)setBounds:(CGRect)bounds {
     _bounds = bounds;
-    [(NSArray<LookinDisplayItem *> *)self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj _updateFrameToRoot];
-    }];
-}
-
-- (void)_updateFrameToRoot {
-    if (!self.superItem) {
-        self.frameToRoot = self.frame;
-        return;
-    }
-    CGRect superFrameToRoot = self.superItem.frameToRoot;
-    CGRect superBounds = self.superItem.bounds;
-    CGRect selfFrame = self.frame;
-    
-    CGFloat x = selfFrame.origin.x - superBounds.origin.x + superFrameToRoot.origin.x;
-    CGFloat y = selfFrame.origin.y - superBounds.origin.y + superFrameToRoot.origin.y;
-    
-    CGFloat width = selfFrame.size.width;
-    CGFloat height = selfFrame.size.height;
-    self.frameToRoot = CGRectMake(x, y, width, height);
+    [self recursivelyNotifyFrameToRootMayChange];
 }
 
 - (void)setInNoPreviewHierarchy:(BOOL)inNoPreviewHierarchy {

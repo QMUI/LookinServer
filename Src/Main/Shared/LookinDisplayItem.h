@@ -167,11 +167,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 当小于 0 时表示未被设置
 @property(nonatomic, assign) NSInteger previewZIndex;
 
-/**
- 在当前 hierarchy 的最顶层的 item 的坐标系中，该 item 的 frame 值
- */
-@property(nonatomic, assign, readonly) CGRect frameToRoot;
-
 /// 遍历自身和所有上级元素
 - (void)enumerateSelfAndAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
 
