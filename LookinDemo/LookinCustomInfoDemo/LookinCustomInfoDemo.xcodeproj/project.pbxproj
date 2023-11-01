@@ -18,6 +18,8 @@
 		A7F8FC7C2AF2C05500ABC7F4 /* DogLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC7B2AF2C05500ABC7F4 /* DogLayer.m */; };
 		A7F8FC7F2AF2C2D600ABC7F4 /* BirdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC7E2AF2C2D600ABC7F4 /* BirdView.swift */; };
 		A7F8FC812AF2C59600ABC7F4 /* HorseLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC802AF2C59600ABC7F4 /* HorseLayer.swift */; };
+		A7F8FC872AF2C7D600ABC7F4 /* UIView+Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC862AF2C7D600ABC7F4 /* UIView+Custom.m */; };
+		A7F8FC892AF2C93300ABC7F4 /* CALayer+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC882AF2C93300ABC7F4 /* CALayer+Custom.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,9 @@
 		A7F8FC7B2AF2C05500ABC7F4 /* DogLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DogLayer.m; sourceTree = "<group>"; };
 		A7F8FC7E2AF2C2D600ABC7F4 /* BirdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirdView.swift; sourceTree = "<group>"; };
 		A7F8FC802AF2C59600ABC7F4 /* HorseLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorseLayer.swift; sourceTree = "<group>"; };
+		A7F8FC852AF2C7D600ABC7F4 /* UIView+Custom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Custom.h"; sourceTree = "<group>"; };
+		A7F8FC862AF2C7D600ABC7F4 /* UIView+Custom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Custom.m"; sourceTree = "<group>"; };
+		A7F8FC882AF2C93300ABC7F4 /* CALayer+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Custom.swift"; sourceTree = "<group>"; };
 		F085E939F792D70A87AF4EE0 /* Pods-LookinCustomInfoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinCustomInfoDemo.release.xcconfig"; path = "Target Support Files/Pods-LookinCustomInfoDemo/Pods-LookinCustomInfoDemo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,14 +112,33 @@
 		A7F8FC7D2AF2C05B00ABC7F4 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				A7F8FC8A2AF2C9C500ABC7F4 /* ObjectiveC */,
+				A7F8FC8B2AF2C9D000ABC7F4 /* Swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		A7F8FC8A2AF2C9C500ABC7F4 /* ObjectiveC */ = {
+			isa = PBXGroup;
+			children = (
 				A7F8FC772AF2BFA900ABC7F4 /* CatView.h */,
 				A7F8FC782AF2BFA900ABC7F4 /* CatView.m */,
 				A7F8FC7A2AF2C05500ABC7F4 /* DogLayer.h */,
 				A7F8FC7B2AF2C05500ABC7F4 /* DogLayer.m */,
+				A7F8FC852AF2C7D600ABC7F4 /* UIView+Custom.h */,
+				A7F8FC862AF2C7D600ABC7F4 /* UIView+Custom.m */,
+			);
+			path = ObjectiveC;
+			sourceTree = "<group>";
+		};
+		A7F8FC8B2AF2C9D000ABC7F4 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
 				A7F8FC7E2AF2C2D600ABC7F4 /* BirdView.swift */,
 				A7F8FC802AF2C59600ABC7F4 /* HorseLayer.swift */,
+				A7F8FC882AF2C93300ABC7F4 /* CALayer+Custom.swift */,
 			);
-			path = Demo;
+			path = Swift;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -234,11 +258,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7F8FC672AF2BE8400ABC7F4 /* ViewController.swift in Sources */,
+				A7F8FC872AF2C7D600ABC7F4 /* UIView+Custom.m in Sources */,
 				A7F8FC812AF2C59600ABC7F4 /* HorseLayer.swift in Sources */,
 				A7F8FC632AF2BE8400ABC7F4 /* AppDelegate.swift in Sources */,
 				A7F8FC652AF2BE8400ABC7F4 /* SceneDelegate.swift in Sources */,
 				A7F8FC7F2AF2C2D600ABC7F4 /* BirdView.swift in Sources */,
 				A7F8FC7C2AF2C05500ABC7F4 /* DogLayer.m in Sources */,
+				A7F8FC892AF2C93300ABC7F4 /* CALayer+Custom.swift in Sources */,
 				A7F8FC792AF2BFA900ABC7F4 /* CatView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

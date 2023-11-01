@@ -16,7 +16,7 @@ class HorseLayer: CALayer {
         return ret
     }
     
-    func makeCustomProperties() -> [Any] {
+    private func makeCustomProperties() -> [Any] {
         let stringProperty: [String:Any] = [
             "section": "HorseInfo",
             "title": "Nickname",
@@ -63,7 +63,7 @@ class HorseLayer: CALayer {
             // Optional
             // 可选
             "subtitle": "GoodMorning",
-            "frameInWindow": NSValue.init(cgRect: CGRect(x: 0, y: 0, width: 500, height: 500)),
+            "frameInWindow": NSValue.init(cgRect: CGRect(x: 0, y: 0, width: 300, height: 500)),
             "properties": [
                 ["section":"Animal Info", "title":"Name", "value":"Mary", "valueType":"string"],
                 ["section":"Animal Info", "title":"Age", "value":3.2, "valueType":"number"]
