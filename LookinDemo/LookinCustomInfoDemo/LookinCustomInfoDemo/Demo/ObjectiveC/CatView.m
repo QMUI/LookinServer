@@ -10,6 +10,15 @@
 
 @implementation CatView
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.name = @"Tom";
+    }
+    return self;
+}
+
 - (NSDictionary<NSString *, id> *)lookin_customDebugInfos {
     NSDictionary<NSString *, id> *ret = @{
         @"properties": [self makeCustomProperties],
@@ -21,12 +30,16 @@
 - (NSArray *)makeCustomProperties {
     NSMutableArray *properties = [NSMutableArray array];
     
+    __weak __typeof__(self) weakSelf = self;
     // string property
     [properties addObject:@{
         @"section": @"CatInfo",
         @"title": @"Nickname",
-        @"value": @"British shorthair",
-        @"valueType": @"string"
+        @"value": self.name,//@"British shorthair",
+        @"valueType": @"string",
+        @"retainedSetter": ^(NSString *newString) {
+            weakSelf.name = newString;
+        }
     }];
     
     // number property
