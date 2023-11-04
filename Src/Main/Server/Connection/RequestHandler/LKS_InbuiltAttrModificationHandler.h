@@ -1,7 +1,7 @@
 #ifdef SHOULD_COMPILE_LOOKIN_SERVER 
 
 //
-//  LKS_AttrModificationHandler.h
+//  LKS_InbuiltAttrModificationHandler.h
 //  LookinServer
 //
 //  Created by Li Kai on 2019/6/12.
@@ -12,7 +12,7 @@
 
 @class LookinAttributeModification, LookinDisplayItemDetail, LookinStaticAsyncUpdateTask;
 
-@interface LKS_AttrModificationHandler : NSObject
+@interface LKS_InbuiltAttrModificationHandler : NSObject
 
 + (void)handleModification:(LookinAttributeModification *)modification completion:(void (^)(LookinDisplayItemDetail *data, NSError *error))completion;
 

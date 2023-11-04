@@ -16,15 +16,17 @@
 @interface LKS_CustomDisplayItemsMaker ()
 
 @property(nonatomic, weak) CALayer *layer;
+@property(nonatomic, assign) BOOL saveAttrSetter;
 @property(nonatomic, strong) NSMutableArray *allSubitems;
 
 @end
 
 @implementation LKS_CustomDisplayItemsMaker
 
-- (instancetype)initWithLayer:(CALayer *)layer {
+- (instancetype)initWithLayer:(CALayer *)layer saveAttrSetter:(BOOL)saveAttrSetter {
     if (self = [super init]) {
         self.layer = layer;
+        self.saveAttrSetter = saveAttrSetter;
         self.allSubitems = [NSMutableArray array];
     }
     return self;
@@ -130,7 +132,7 @@
     newItem.customInfo.title = title;
     newItem.customInfo.subtitle = subtitle;
     newItem.customInfo.frameInWindow = frameValue;
-    newItem.customAttrGroupList = [LKS_CustomAttrGroupsMaker makeGroupsFromRawProperties:properties];
+    newItem.customAttrGroupList = [LKS_CustomAttrGroupsMaker makeGroupsFromRawProperties:properties saveCustomSetter:self.saveAttrSetter];
     
     return newItem;
 }

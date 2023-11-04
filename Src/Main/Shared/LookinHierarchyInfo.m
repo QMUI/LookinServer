@@ -18,6 +18,7 @@
 #if TARGET_OS_IPHONE
 #import "LKS_HierarchyDisplayItemsMaker.h"
 #import "LKSConfigManager.h"
+#import "LKS_CustomAttrSetterManager.h"
 #endif
 
 @implementation LookinHierarchyInfo
@@ -25,9 +26,11 @@
 #if TARGET_OS_IPHONE
 
 + (instancetype)staticInfo {
+    [[LKS_CustomAttrSetterManager sharedInstance] removeAll];
+    
     LookinHierarchyInfo *info = [LookinHierarchyInfo new];
     info.serverVersion = LOOKIN_SERVER_VERSION;
-    info.displayItems = [LKS_HierarchyDisplayItemsMaker itemsWithScreenshots:NO attrList:NO lowImageQuality:NO];
+    info.displayItems = [LKS_HierarchyDisplayItemsMaker itemsWithScreenshots:NO attrList:NO lowImageQuality:NO saveCustomSetter:YES];
     info.appInfo = [LookinAppInfo currentInfoWithScreenshot:NO icon:YES localIdentifiers:nil];
     info.collapsedClassList = [LKSConfigManager collapsedClassList];
     info.colorAlias = [LKSConfigManager colorAlias];
@@ -37,7 +40,7 @@
 + (instancetype)exportedInfo {
     LookinHierarchyInfo *info = [LookinHierarchyInfo new];
     info.serverVersion = LOOKIN_SERVER_VERSION;
-    info.displayItems = [LKS_HierarchyDisplayItemsMaker itemsWithScreenshots:YES attrList:YES lowImageQuality:YES];
+    info.displayItems = [LKS_HierarchyDisplayItemsMaker itemsWithScreenshots:YES attrList:YES lowImageQuality:YES saveCustomSetter:NO];
     info.appInfo = [LookinAppInfo currentInfoWithScreenshot:NO icon:YES localIdentifiers:nil];
     info.collapsedClassList = [LKSConfigManager collapsedClassList];
     info.colorAlias = [LKSConfigManager colorAlias];

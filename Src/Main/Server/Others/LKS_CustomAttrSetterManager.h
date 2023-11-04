@@ -14,11 +14,13 @@ typedef void(^LKS_StringSetter)(NSString *);
 
 @interface LKS_CustomAttrSetterManager : NSObject
 
++ (instancetype)sharedInstance;
+
 - (void)removeAll;
 
 - (void)saveStringSetter:(LKS_StringSetter)setter uniqueID:(NSString *)uniqueID;
 
-- (nullable LKS_StringSetter)getSetterWithUniqueID:(NSString *)uniqueID;
+- (nullable LKS_StringSetter)getStringSetterWithID:(NSString *)uniqueID;
 
 @end
 

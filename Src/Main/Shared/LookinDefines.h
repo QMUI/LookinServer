@@ -52,8 +52,8 @@ enum {
     LookinRequestTypeHierarchy = 202,
     /// 请求 screenshots 和 attrGroups 信息
     LookinRequestTypeHierarchyDetails = 203,
-    /// 请求修改某个 Attribute 的值
-    LookinRequestTypeModification = 204,
+    /// 请求修改某个内置的 Attribute 的值
+    LookinRequestTypeInbuiltAttrModification = 204,
     /// 修改某个 attr 后，请求一系列最新的 Screenshots、属性值等信息
     LookinRequestTypeAttrModificationPatch = 205,
     /// 执行某个方法
@@ -73,7 +73,10 @@ enum {
     
     /// 请求 iOS App 里某个 class 的所有 selector 名字列表（包括 superclass）
     LookinRequestTypeAllSelectorNames = 213,
-
+    
+    /// 请求修改某个自定义 Attribute 的值
+    LookinRequestTypeCustomAttrModification = 214,
+    
     LookinPush_BringForwardScreenshotTask = 303,
     // 用户在 Lookin 客户端取消了之前 HierarchyDetails 的拉取
     LookinPush_CanceHierarchyDetails = 304,

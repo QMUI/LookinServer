@@ -31,8 +31,9 @@
 /// 当 attyType 为 LookinAttrTypeEnumString 时，extraValue 是一个 [String] 且保存了 allEnumCases
 @property(nonatomic, strong) id extraValue;
 
-/// 对于有 retainedSetter 的 Custom Attr，attr 会被配置一个唯一的字符串保存在该属性中，后续
-@property(nonatomic, copy) NSString *retainedSetterUniqueID;
+/// 仅 Custom Attr 可能有该属性
+/// 对于有 retainedSetter 的 Custom Attr，它的 setter 会以 customSetterID 作为 key 被保存到 LKS_CustomAttrSetterManager 里，后续可以通过这个 uniqueID 重新把 setter 从 LKS_CustomAttrSetterManager 里取出来并调用
+@property(nonatomic, copy) NSString *customSetterID;
 
 #pragma mark - 以下属性不会参与 encode/decode
 

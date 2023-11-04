@@ -8,8 +8,6 @@
 //  https://lookin.work
 //
 
-
-
 #import "LookinAttributeModification.h"
 
 @implementation LookinAttributeModification

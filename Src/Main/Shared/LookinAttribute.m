@@ -24,6 +24,7 @@
     newAttr.value = self.value;
     newAttr.attrType = self.attrType;
     newAttr.extraValue = self.extraValue;
+    newAttr.customSetterID = self.customSetterID;
     return newAttr;
 }
 
@@ -35,6 +36,7 @@
     [aCoder encodeInteger:self.attrType forKey:@"attrType"];
     [aCoder encodeObject:self.value forKey:@"value"];
     [aCoder encodeObject:self.extraValue forKey:@"extraValue"];
+    [aCoder encodeObject:self.customSetterID forKey:@"customSetterID"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -44,6 +46,7 @@
         self.attrType = [aDecoder decodeIntegerForKey:@"attrType"];
         self.value = [aDecoder decodeObjectForKey:@"value"];
         self.extraValue = [aDecoder decodeObjectForKey:@"extraValue"];
+        self.customSetterID = [aDecoder decodeObjectForKey:@"customSetterID"];
     }
     return self;
 }

@@ -16,7 +16,7 @@
 
 - (NSArray<LookinAttributesGroup *> *)make;
 
-+ (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties;
++ (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties saveCustomSetter:(BOOL)saveCustomSetter;
 
 @end
 

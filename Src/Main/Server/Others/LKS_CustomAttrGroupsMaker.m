@@ -15,6 +15,7 @@
 #import "LookinIvarTrace.h"
 #import "UIColor+LookinServer.h"
 #import "LookinServerDefines.h"
+#import "LKS_CustomAttrSetterManager.h"
 
 @interface LKS_CustomAttrGroupsMaker ()
 
@@ -122,7 +123,7 @@
     
     for (NSDictionary<NSString *, id> *dict in rawProperties) {
         NSString *groupTitle;
-        LookinAttribute *attr = [LKS_CustomAttrGroupsMaker attrFromRawDict:dict groupTitle:&groupTitle];
+        LookinAttribute *attr = [LKS_CustomAttrGroupsMaker attrFromRawDict:dict saveCustomSetter:YES groupTitle:&groupTitle];
         if (!attr) {
             continue;
         }
@@ -133,7 +134,7 @@
     }
 }
 
-+ (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict groupTitle:(inout NSString **)inoutGroupTitle {
++ (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict saveCustomSetter:(BOOL)saveCustomSetter groupTitle:(inout NSString **)inoutGroupTitle {
     LookinAttribute *attr = [LookinAttribute new];
     attr.identifier = LookinAttr_UserCustom;
     
@@ -141,7 +142,7 @@
     NSString *type = dict[@"valueType"];
     NSString *section = dict[@"section"];
     id value = dict[@"value"];
-
+    
     if (!title || ![title isKindOfClass:[NSString class]]) {
         NSLog(@"LookinServer - Wrong title");
         return nil;
@@ -170,6 +171,12 @@
         }
         attr.attrType = LookinAttrTypeNSString;
         attr.value = value;
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_StringSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveStringSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
         return attr;
     }
     
@@ -224,7 +231,7 @@
     return nil;
 }
 
-+ (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties {
++ (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties saveCustomSetter:(BOOL)saveCustomSetter {
     if (!rawProperties || ![rawProperties isKindOfClass:[NSArray class]]) {
         return nil;
     }
@@ -233,7 +240,7 @@
     
     for (NSDictionary<NSString *, id> *dict in rawProperties) {
         NSString *groupTitle;
-        LookinAttribute *attr = [LKS_CustomAttrGroupsMaker attrFromRawDict:dict groupTitle:&groupTitle];
+        LookinAttribute *attr = [LKS_CustomAttrGroupsMaker attrFromRawDict:dict saveCustomSetter:saveCustomSetter groupTitle:&groupTitle];
         if (!attr) {
             continue;
         }

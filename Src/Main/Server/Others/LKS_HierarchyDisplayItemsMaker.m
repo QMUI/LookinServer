@@ -18,17 +18,18 @@
 #import "LKSConfigManager.h"
 #import "LKS_CustomAttrGroupsMaker.h"
 #import "LKS_CustomDisplayItemsMaker.h"
+#import "LKS_CustomAttrSetterManager.h"
 
 @implementation LKS_HierarchyDisplayItemsMaker
 
-+ (NSArray<LookinDisplayItem *> *)itemsWithScreenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality {
++ (NSArray<LookinDisplayItem *> *)itemsWithScreenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality saveCustomSetter:(BOOL)saveCustomSetter {
     
     [[LKS_TraceManager sharedInstance] reload];
     
     NSArray<UIWindow *> *windows = [[UIApplication sharedApplication].windows copy];
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:windows.count];
     [windows enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
-        LookinDisplayItem *item = [self _displayItemWithLayer:window.layer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality];
+        LookinDisplayItem *item = [self _displayItemWithLayer:window.layer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality saveCustomSetter:saveCustomSetter];
         item.representedAsKeyWindow = window.isKeyWindow;
         if (item) {
             [resultArray addObject:item];
@@ -38,7 +39,7 @@
     return [resultArray copy];
 }
 
-+ (LookinDisplayItem *)_displayItemWithLayer:(CALayer *)layer screenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality {
++ (LookinDisplayItem *)_displayItemWithLayer:(CALayer *)layer screenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality saveCustomSetter:(BOOL)saveCustomSetter {
     if (!layer) {
         return nil;
     }
@@ -90,14 +91,14 @@
         NSArray<CALayer *> *sublayers = [layer.sublayers copy];
         NSMutableArray<LookinDisplayItem *> *allSubitems = [NSMutableArray arrayWithCapacity:sublayers.count];
         [sublayers enumerateObjectsUsingBlock:^(__kindof CALayer * _Nonnull sublayer, NSUInteger idx, BOOL * _Nonnull stop) {
-            LookinDisplayItem *sublayer_item = [self _displayItemWithLayer:sublayer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality];
+            LookinDisplayItem *sublayer_item = [self _displayItemWithLayer:sublayer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality saveCustomSetter:saveCustomSetter];
             if (sublayer_item) {
                 [allSubitems addObject:sublayer_item];
             }
         }];
         item.subitems = [allSubitems copy];
     }
-    NSArray<LookinDisplayItem *> *customSubitems = [[[LKS_CustomDisplayItemsMaker alloc] initWithLayer:layer] make];
+    NSArray<LookinDisplayItem *> *customSubitems = [[[LKS_CustomDisplayItemsMaker alloc] initWithLayer:layer saveAttrSetter:saveCustomSetter] make];
     if (customSubitems.count > 0) {
         if (item.subitems) {
             item.subitems = [item.subitems arrayByAddingObjectsFromArray:customSubitems];

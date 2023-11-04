@@ -1,14 +1,14 @@
 #ifdef SHOULD_COMPILE_LOOKIN_SERVER 
 
 //
-//  LKS_AttrModificationHandler.m
+//  LKS_InbuiltAttrModificationHandler.m
 //  LookinServer
 //
 //  Created by Li Kai on 2019/6/12.
 //  https://lookin.work
 //
 
-#import "LKS_AttrModificationHandler.h"
+#import "LKS_InbuiltAttrModificationHandler.h"
 #import "UIColor+LookinServer.h"
 #import "LookinAttributeModification.h"
 #import "LKS_AttrGroupsMaker.h"
@@ -17,7 +17,7 @@
 #import "LookinServerDefines.h"
 #import "LKS_CustomAttrGroupsMaker.h"
 
-@implementation LKS_AttrModificationHandler
+@implementation LKS_InbuiltAttrModificationHandler
 
 + (void)handleModification:(LookinAttributeModification *)modification completion:(void (^)(LookinDisplayItemDetail *data, NSError *error))completion {
     if (!completion) {

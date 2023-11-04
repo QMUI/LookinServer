@@ -16,6 +16,19 @@
 
 @implementation LKS_CustomAttrSetterManager
 
++ (instancetype)sharedInstance {
+    static dispatch_once_t onceToken;
+    static LKS_CustomAttrSetterManager *instance = nil;
+    dispatch_once(&onceToken,^{
+        instance = [[super allocWithZone:NULL] init];
+    });
+    return instance;
+}
+
++ (id)allocWithZone:(struct _NSZone *)zone {
+    return [self sharedInstance];
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -32,7 +45,7 @@
     self.stringSetterMap[uniqueID] = setter;
 }
 
-- (nullable LKS_StringSetter)getSetterWithUniqueID:(nonnull NSString *)uniqueID {
+- (nullable LKS_StringSetter)getStringSetterWithID:(nonnull NSString *)uniqueID {
     return self.stringSetterMap[uniqueID];
 }
 

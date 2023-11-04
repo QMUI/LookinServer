@@ -13,7 +13,7 @@
 
 @interface LKS_CustomDisplayItemsMaker : NSObject
 
-- (instancetype)initWithLayer:(CALayer *)layer;
+- (instancetype)initWithLayer:(CALayer *)layer saveAttrSetter:(BOOL)saveAttrSetter;
 
 - (NSArray<LookinDisplayItem *> *)make;
 
