@@ -8,7 +8,5 @@
 #import <UIKit/UIKit.h>
 
 @interface CatView : UIView
-
-@property(nonatomic, copy) NSString *name;
     
 @end

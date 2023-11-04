@@ -8,13 +8,27 @@
 #import "CatView.h"
 #import <UIKit/UIKit.h>
 
+@interface CatView ()
+
+@property(nonatomic, copy) NSString *name;
+@property(nonatomic, assign) double age;
+@property(nonatomic, assign) BOOL isFriendly;
+@property(nonatomic, strong) UIColor *skinColor;
+@property(nonatomic, copy) NSString *gender;
+
+@end
+
 @implementation CatView
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        self.name = @"Tom";
+        self.name = @"British shorthairs";
+        self.age = 6.4;
+        self.isFriendly = NO;
+        self.skinColor = [UIColor redColor];
+        self.gender = @"Male";
     }
     return self;
 }
@@ -35,7 +49,7 @@
     [properties addObject:@{
         @"section": @"CatInfo",
         @"title": @"Nickname",
-        @"value": self.name,//@"British shorthair",
+        @"value": self.name,
         @"valueType": @"string",
         @"retainedSetter": ^(NSString *newString) {
             weakSelf.name = newString;
@@ -46,34 +60,46 @@
     [properties addObject:@{
         @"section": @"CatInfo",
         @"title": @"Age",
-        @"value": @13.2,
-        @"valueType": @"number"
+        @"value": @(self.age),
+        @"valueType": @"number",
+        @"retainedSetter": ^(NSNumber *newNumber) {
+            weakSelf.age = [newNumber doubleValue];
+        }
     }];
     
     // bool property
     [properties addObject:@{
         @"section": @"Animal Info",
         @"title": @"IsFriendly",
-        @"value": @NO,
-        @"valueType": @"bool"
+        @"value": @(self.isFriendly),
+        @"valueType": @"bool",
+        @"retainedSetter": ^(BOOL newBool) {
+            weakSelf.isFriendly = newBool;
+        }
     }];
     
     // color property
     [properties addObject:@{
         @"section": @"Animal Info",
         @"title": @"SkinColor",
-        @"value": [UIColor redColor],
-        @"valueType": @"color"
+        @"value": self.skinColor,
+        @"valueType": @"color",
+        @"retainedSetter": ^(UIColor *newColor) {
+            weakSelf.skinColor = newColor;
+        }
     }];
     
     // enum property
     [properties addObject:@{
         @"section": @"Animal Info",
         @"title": @"Gender",
-        @"value": @"Male",
+        @"value": self.gender,
         @"valueType": @"enum",
         // Set object for this key when the valueType is "enum".
-        @"allEnumCases": @[@"Male", @"Female"]
+        @"allEnumCases": @[@"Male", @"Female"],
+        @"retainedSetter": ^(NSString *newValue) {
+            weakSelf.gender = newValue;
+        }
     }];
     
     return [properties copy];;
