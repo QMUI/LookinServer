@@ -8,6 +8,7 @@
 
 #import "LKS_CustomAttrModificationHandler.h"
 #import "LKS_CustomAttrSetterManager.h"
+#import "UIColor+LookinServer.h"
 
 @implementation LKS_CustomAttrModificationHandler
 
@@ -22,6 +23,68 @@
                 return NO;
             }
             LKS_StringSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getStringSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue);
+            return YES;
+        }
+            
+        case LookinAttrTypeDouble: {
+            NSNumber *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSNumber class]]) {
+                return NO;
+            }
+            LKS_NumberSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getNumberSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue);
+            return YES;
+        }
+            
+        case LookinAttrTypeBOOL: {
+            NSNumber *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSNumber class]]) {
+                return NO;
+            }
+            LKS_BoolSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getBoolSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue.boolValue);
+            return YES;
+        }
+        
+        case LookinAttrTypeUIColor: {
+            // 这个 type 比较特别，因为它的 value 可能故意为 nil
+            LKS_ColorSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getColorSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            
+            NSArray<NSNumber *> *newValue = modification.value;
+            if (newValue == nil) {
+                setter(nil);
+                return YES;
+            }
+            if (![newValue isKindOfClass:[NSArray class]]) {
+                return NO;
+            }
+            UIColor *color = [UIColor lks_colorFromRGBAComponents:newValue];
+            if (!color) {
+                return NO;
+            }
+            setter(color);
+            return YES;
+        }
+            
+        case LookinAttrTypeEnumString: {
+            NSString *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSString class]]) {
+                return NO;
+            }
+            LKS_EnumSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getEnumSetterWithID:modification.customSetterID];
             if (!setter) {
                 return NO;
             }

@@ -11,12 +11,12 @@
 
 - (NSDictionary<NSString *, id> *)lookin_customDebugInfos_0 {
     NSDictionary<NSString *, id> *ret = @{
-        @"properties": [self makeCustomProperties],
+        @"properties": [self category_makeCustomProperties],
     };
     return ret;
 }
 
-- (NSArray *)makeCustomProperties {
+- (NSArray *)category_makeCustomProperties {
     NSMutableArray *properties = [NSMutableArray array];
     
     [properties addObject:@{

@@ -171,12 +171,14 @@
         }
         attr.attrType = LookinAttrTypeNSString;
         attr.value = value;
+        
         if (saveCustomSetter && dict[@"retainedSetter"]) {
             NSString *uniqueID = [[NSUUID new] UUIDString];
             LKS_StringSetter setter = dict[@"retainedSetter"];
             [[LKS_CustomAttrSetterManager sharedInstance] saveStringSetter:setter uniqueID:uniqueID];
             attr.customSetterID = uniqueID;
         }
+        
         return attr;
     }
     
@@ -187,6 +189,14 @@
         }
         attr.attrType = LookinAttrTypeDouble;
         attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_NumberSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveNumberSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
         return attr;
     }
         
@@ -197,6 +207,14 @@
         }
         attr.attrType = LookinAttrTypeBOOL;
         attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_BoolSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveBoolSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
         return attr;
     }
     
@@ -207,6 +225,14 @@
         }
         attr.attrType = LookinAttrTypeUIColor;
         attr.value = [(UIColor *)value lks_rgbaComponents];
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_ColorSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveColorSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
         return attr;
         
     }
@@ -223,6 +249,14 @@
         if ([allEnumCases isKindOfClass:[NSArray class]]) {
             attr.extraValue = allEnumCases;
         }
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_EnumSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveEnumSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
         return attr;
         
     }
