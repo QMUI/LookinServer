@@ -151,10 +151,6 @@
         NSLog(@"LookinServer - Wrong valueType");
         return nil;
     }
-    if (!value) {
-        NSLog(@"LookinServer - No value");
-        return nil;
-    }
     if (!section || ![section isKindOfClass:[NSString class]] || section.length == 0) {
         *inoutGroupTitle = @"Custom";
     } else {
@@ -165,7 +161,8 @@
     
     NSString *fixedType = type.lowercaseString;
     if ([fixedType isEqualToString:@"string"]) {
-        if (![value isKindOfClass:[NSString class]]) {
+        if (value != nil && ![value isKindOfClass:[NSString class]]) {
+            // nil 是合法的
             NSLog(@"LookinServer - Wrong value type.");
             return nil;
         }
@@ -183,6 +180,10 @@
     }
     
     if ([fixedType isEqualToString:@"number"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
         if (![value isKindOfClass:[NSNumber class]]) {
             NSLog(@"LookinServer - Wrong value type.");
             return nil;
@@ -201,6 +202,10 @@
     }
         
     if ([fixedType isEqualToString:@"bool"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
         if (![value isKindOfClass:[NSNumber class]]) {
             NSLog(@"LookinServer - Wrong value type.");
             return nil;
@@ -219,7 +224,8 @@
     }
     
     if ([fixedType isEqualToString:@"color"]) {
-        if (![value isKindOfClass:[UIColor class]]) {
+        if (value != nil && ![value isKindOfClass:[UIColor class]]) {
+            // nil 是合法的
             NSLog(@"LookinServer - Wrong value type.");
             return nil;
         }
@@ -234,10 +240,13 @@
         }
         
         return attr;
-        
     }
     
     if ([fixedType isEqualToString:@"enum"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
         if (![value isKindOfClass:[NSString class]]) {
             NSLog(@"LookinServer - Wrong value type.");
             return nil;
@@ -258,7 +267,6 @@
         }
         
         return attr;
-        
     }
     
     NSLog(@"LookinServer - Unsupported value type.");

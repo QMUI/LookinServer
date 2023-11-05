@@ -19,7 +19,8 @@
     switch (modification.attrType) {
         case LookinAttrTypeNSString: {
             NSString *newValue = modification.value;
-            if (![newValue isKindOfClass:[NSString class]]) {
+            if (newValue != nil && ![newValue isKindOfClass:[NSString class]]) {
+                // nil 是合法的
                 return NO;
             }
             LKS_StringSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getStringSetterWithID:modification.customSetterID];
@@ -57,7 +58,6 @@
         }
         
         case LookinAttrTypeUIColor: {
-            // 这个 type 比较特别，因为它的 value 可能故意为 nil
             LKS_ColorSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getColorSetterWithID:modification.customSetterID];
             if (!setter) {
                 return NO;
@@ -65,6 +65,7 @@
             
             NSArray<NSNumber *> *newValue = modification.value;
             if (newValue == nil) {
+                // nil 是合法的
                 setter(nil);
                 return YES;
             }

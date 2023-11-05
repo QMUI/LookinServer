@@ -8,13 +8,18 @@
 #import "CatView.h"
 #import <UIKit/UIKit.h>
 
+typedef enum : NSUInteger {
+    CatViewGenderMale,
+    CatViewGenderFemale
+} CatViewGender;
+
 @interface CatView ()
 
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, assign) double age;
 @property(nonatomic, assign) BOOL isFriendly;
 @property(nonatomic, strong) UIColor *skinColor;
-@property(nonatomic, copy) NSString *gender;
+@property(nonatomic, assign) CatViewGender gender;
 
 @end
 
@@ -28,33 +33,36 @@
         self.age = 6.4;
         self.isFriendly = NO;
         self.skinColor = [UIColor redColor];
-        self.gender = @"Male";
+        self.gender = CatViewGenderMale;
     }
     return self;
 }
 
 - (NSDictionary<NSString *, id> *)lookin_customDebugInfos {
     NSDictionary<NSString *, id> *ret = @{
-        @"properties": [self makeCustomProperties],
-        @"subviews": [self makeCustomSubviews]
+        @"properties": [self catView_makeCustomProperties],
+        @"subviews": [self catView_makeCustomSubviews]
     };
     return ret;
 }
 
-- (NSArray *)makeCustomProperties {
+- (NSArray *)catView_makeCustomProperties {
     NSMutableArray *properties = [NSMutableArray array];
     
     __weak __typeof__(self) weakSelf = self;
     // string property
-    [properties addObject:@{
+    NSMutableDictionary *stringProperty = @{
         @"section": @"CatInfo",
         @"title": @"Nickname",
-        @"value": self.name,
         @"valueType": @"string",
         @"retainedSetter": ^(NSString *newString) {
             weakSelf.name = newString;
         }
-    }];
+    }.mutableCopy;
+    if (self.name) {
+        stringProperty[@"value"] = self.name;
+    }
+    [properties addObject:stringProperty];
     
     // number property
     [properties addObject:@{
@@ -79,33 +87,37 @@
     }];
     
     // color property
-    [properties addObject:@{
+    NSMutableDictionary *colorProperty = @{
         @"section": @"Animal Info",
         @"title": @"SkinColor",
-        @"value": self.skinColor,
         @"valueType": @"color",
         @"retainedSetter": ^(UIColor *newColor) {
             weakSelf.skinColor = newColor;
         }
-    }];
+    }.mutableCopy;
+    if (self.skinColor) {
+        // 向 Dictionary 里插入 nil 会导致 Crash
+        colorProperty[@"value"] = self.skinColor;
+    }
+    [properties addObject:colorProperty];
     
     // enum property
     [properties addObject:@{
         @"section": @"Animal Info",
         @"title": @"Gender",
-        @"value": self.gender,
+        @"value": [self stringFromGender:self.gender],
         @"valueType": @"enum",
         // Set object for this key when the valueType is "enum".
         @"allEnumCases": @[@"Male", @"Female"],
         @"retainedSetter": ^(NSString *newValue) {
-            weakSelf.gender = newValue;
+            weakSelf.gender = [self genderFromString:newValue];
         }
     }];
     
     return [properties copy];;
 }
 
-- (NSArray *)makeCustomSubviews {
+- (NSArray *)catView_makeCustomSubviews {
     NSMutableArray *subviews = [NSMutableArray array];
     
     [subviews addObject:@{
@@ -145,6 +157,25 @@
     }];
     
     return [subviews copy];
+}
+
+- (NSString *)stringFromGender:(CatViewGender)gender {
+    switch (gender) {
+        case CatViewGenderMale:
+            return @"Male";
+        case CatViewGenderFemale:
+            return @"Female";
+    }
+}
+
+- (CatViewGender)genderFromString:(NSString *)string {
+    if ([string isEqualToString:@"Male"]) {
+        return CatViewGenderMale;
+    } else if ([string isEqualToString:@"Female"]) {
+        return CatViewGenderFemale;
+    } else {
+        return CatViewGenderFemale;
+    }
 }
 
 @end

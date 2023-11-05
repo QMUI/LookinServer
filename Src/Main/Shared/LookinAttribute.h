@@ -25,6 +25,7 @@
 @property(nonatomic, assign) LookinAttrType attrType;
 
 /// 具体的值，需配合 attrType 属性来解析它
+/// 对于 String、Color 等 attyType，该属性可能为 nil
 @property(nonatomic, strong) id value;
 
 /// 额外信息，大部分情况下它是 nil
