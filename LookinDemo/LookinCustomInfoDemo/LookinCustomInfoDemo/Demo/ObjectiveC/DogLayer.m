@@ -20,6 +20,8 @@
 /// https://bytedance.feishu.cn/docx/TRridRXeUoErMTxs94bcnGchnlb
 - (NSDictionary<NSString *, id> *)lookin_customDebugInfos {
     NSDictionary<NSString *, id> *ret = @{
+        // 这些信息会在 Lookin 的右侧属性面板中被展示。
+        // These details will be displayed in the right-hand property panel of Lookin.
         @"properties": [self dogLayer_makeCustomProperties],
     };
     return ret;
@@ -30,22 +32,22 @@
     
     // string property
     [properties addObject:@{
-        /// 可选项。 在 Lookin 中展示的属性组的名称。
-        /// Optional. The name of the property group displayed in Lookin.
+        // 可选项。 在 Lookin 中展示的属性组的名称。
+        // Optional. The name of the property group displayed in Lookin.
         @"section": @"DogInfo",
-        /// 必填项。在 Lookin 中展示的属性的名称。
-        /// Required. The name of the property displayed in Lookin.
+        // 必填项。在 Lookin 中展示的属性的名称。
+        // Required. The name of the property displayed in Lookin.
         @"title": @"Nickname",
-        /// 可选项。在 Lookin 中展示的属性的值。如果属性值为 nil 则不要设置该项，否则 NSDictionary 可能由于插入 nil 而 Crash。
-        /// Optional. The value of the property displayed in Lookin. If the property value is nil, do not set this item, otherwise NSDictionary may crash due to inserting nil.
+        // 可选项。在 Lookin 中展示的属性的值。如果属性值为 nil 则不要设置该项，否则 NSDictionary 可能由于插入 nil 而 Crash。
+        // Optional. The value of the property displayed in Lookin. If the property value is nil, do not set this item, otherwise NSDictionary may crash due to inserting nil.
         @"value": @"Sushi",
-        /// 必填项。告知 Lookin 以 String 格式解析和展示该属性。
-        /// Required. Specify the format in which Lookin should parse and display the property.
+        // 必填项。告知 Lookin 以 String 格式解析和展示该属性。
+        // Required. Specify the format in which Lookin should parse and display the property.
         @"valueType": @"string",
-        /// 可选项。如果配置了该字段，则用户可以在 Lookin 中实时修改该属性。
-        ///【警告】这个 block 会被 Lookin 始终持有，因此请万分注意内存管理。
-        /// Optional. If this field is configured, users can modify the property by Lookin.
-        /// [Warning] This block will be retained by Lookin indefinitely, so please be extremely careful with memory management.
+        // 可选项。如果配置了该字段，则用户可以在 Lookin 中实时修改该属性。
+        //【警告】这个 block 会被 Lookin 始终持有，因此请万分注意内存管理。
+        // Optional. If this field is configured, users can modify the property by Lookin.
+        // [Warning] This block will be retained by Lookin indefinitely, so please be extremely careful with memory management.
         @"retainedSetter": ^(NSString *newString) {
             NSLog(@"Try to modify by Lookin.");
         }
