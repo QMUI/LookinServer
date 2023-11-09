@@ -76,7 +76,9 @@
     }
     
     CGSize contextSize = self.frame.size;
-    NSAssert(contextSize.width > 0 && contextSize.height > 0, @"");
+    if (contextSize.width <= 0 || contextSize.height <= 0) {
+        return nil;
+    }
     UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
