@@ -23,6 +23,9 @@
 @property(nonatomic, assign) LookinAttrType attrType;
 @property(nonatomic, strong) id value;
 
+/// 1.0.4 开始加入这个参数
+@property(nonatomic, copy) NSString *clientReadableVersion;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

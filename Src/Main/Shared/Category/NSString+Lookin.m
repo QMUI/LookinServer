@@ -135,6 +135,29 @@
     return self;
 }
 
+- (NSInteger)lookin_numbericOSVersion {
+    if (self.length == 0) {
+        NSAssert(NO, @"");
+        return 0;
+    }
+    NSArray *versionArr = [self componentsSeparatedByString:@"."];
+    if (versionArr.count != 3) {
+        NSAssert(NO, @"");
+        return 0;
+    }
+    
+    NSInteger numbericOSVersion = 0;
+    NSInteger pos = 0;
+    
+    while ([versionArr count] > pos && pos < 3) {
+        numbericOSVersion += ([[versionArr objectAtIndex:pos] integerValue] * pow(10, (4 - pos * 2)));
+        pos++;
+    }
+    
+    return numbericOSVersion;
+}
+
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

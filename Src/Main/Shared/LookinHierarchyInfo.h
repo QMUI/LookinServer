@@ -24,7 +24,8 @@
 
 #if TARGET_OS_IPHONE
 
-+ (instancetype)staticInfo;
+/// version 可能为 nil，此时说明 Client 版本号 < 1.0.4
++ (instancetype)staticInfoWithLookinVersion:(NSString *)version;
 
 + (instancetype)exportedInfo;
 

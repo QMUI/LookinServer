@@ -108,7 +108,11 @@
             
             if (![self.attrGroupsSyncedOids containsObject:@(task.oid)]) {
                 itemDetail.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-                itemDetail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
+                
+                NSString *version = task.clientReadableVersion;
+                if (version.length > 0 && [version lookin_numbericOSVersion] >= 10004) {
+                    itemDetail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
+                }
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
             }
             if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {

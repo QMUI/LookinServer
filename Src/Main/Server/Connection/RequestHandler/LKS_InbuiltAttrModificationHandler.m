@@ -207,7 +207,12 @@
         LookinDisplayItemDetail *detail = [LookinDisplayItemDetail new];
         detail.displayItemOid = modification.targetOid;
         detail.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForLayer:layer];
-        detail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
+        
+        NSString *version = modification.clientReadableVersion;
+        if (version.length > 0 && [version lookin_numbericOSVersion] >= 10004) {
+            detail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
+        }
+        
         detail.frameValue = [NSValue valueWithCGRect:layer.frame];
         detail.boundsValue = [NSValue valueWithCGRect:layer.bounds];
         detail.hiddenValue = [NSNumber numberWithBool:layer.isHidden];

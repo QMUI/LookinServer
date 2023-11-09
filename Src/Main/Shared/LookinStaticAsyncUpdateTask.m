@@ -17,12 +17,14 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:@(self.oid) forKey:@"oid"];
     [aCoder encodeInteger:self.taskType forKey:@"taskType"];
+    [aCoder encodeObject:self.clientReadableVersion forKey:@"clientReadableVersion"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.oid = [[aDecoder decodeObjectForKey:@"oid"] unsignedLongValue];
         self.taskType = [aDecoder decodeIntegerForKey:@"taskType"];
+        self.clientReadableVersion = [aDecoder decodeObjectForKey:@"clientReadableVersion"];
     }
     return self;
 }
