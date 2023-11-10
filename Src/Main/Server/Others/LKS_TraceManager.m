@@ -219,7 +219,7 @@
 
         LookinIvarTrace *ivarTrace = [LookinIvarTrace new];
         ivarTrace.hostObject = hostObject;
-        ivarTrace.hostClassName = NSStringFromClass(targetClass);
+        ivarTrace.hostClassName = [self makeDisplayClassNameWithSuper:targetClass childClass:hostObject.class];
         ivarTrace.ivarName = [[NSString alloc] lookin_safeInitWithUTF8String:ivarNameChar];
         
         if (hostObject == ivarObject) {
@@ -254,6 +254,19 @@
     
     Class superClass = [targetClass superclass];
     [self _markIVarsOfObject:hostObject class:superClass];
+}
+
+// 比如 superClass 可能是 UIView，而 childClass 可能是 UIButton
+- (NSString *)makeDisplayClassNameWithSuper:(Class)superClass childClass:(Class)childClass {
+    NSString *superName = NSStringFromClass(superClass);
+    if (!childClass) {
+        return superName;
+    }
+    NSString *childName = NSStringFromClass(childClass);
+    if ([childName isEqualToString:superName]) {
+        return superName;
+    }
+    return [NSString stringWithFormat:@"%@ : %@", childName, superName];
 }
 
 static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces(void) {
