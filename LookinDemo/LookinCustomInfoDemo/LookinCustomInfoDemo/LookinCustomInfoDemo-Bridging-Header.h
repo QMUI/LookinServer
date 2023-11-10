@@ -4,3 +4,4 @@
 
 #import "CatView.h"
 #import "DogLayer.h"
+#import "SomeViewModel.h"

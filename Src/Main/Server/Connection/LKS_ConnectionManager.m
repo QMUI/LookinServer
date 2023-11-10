@@ -14,6 +14,7 @@
 #import "LookinConnectionResponseAttachment.h"
 #import "LKS_ExportManager.h"
 #import "LookinServerDefines.h"
+#import "LKS_TraceManager.h"
 
 NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNotificationName";
 
@@ -52,6 +53,9 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspectIn3D:) name:@"Lookin_3D" object:nil];
         [[NSNotificationCenter defaultCenter] addObserverForName:@"Lookin_Export" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
             [[LKS_ExportManager sharedInstance] exportAndShare];
+        }];
+        [[NSNotificationCenter defaultCenter] addObserverForName:@"Lookin_RelationSearch" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+            [[LKS_TraceManager sharedInstance] addSearchTarger:note.object];
         }];
         
         self.requestHandler = [LKS_RequestHandler new];

@@ -12,6 +12,7 @@
 #import <objc/runtime.h>
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
+#import "LookinWeakContainer.h"
 
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
 
@@ -30,6 +31,12 @@
 #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
 #endif
 
+@interface LKS_TraceManager ()
+
+@property(nonatomic, strong) NSMutableArray<LookinWeakContainer *> *searchTargets;
+
+@end
+
 @implementation LKS_TraceManager
 
 + (instancetype)sharedInstance {
@@ -45,9 +52,27 @@
     return [self sharedInstance];
 }
 
+- (void)addSearchTarger:(id)target {
+    if (!target) {
+        return;
+    }
+    if (!self.searchTargets) {
+        self.searchTargets = [NSMutableArray array];
+    }
+    LookinWeakContainer *container = [LookinWeakContainer containerWithObject:target];
+    [self.searchTargets addObject:container];
+}
+
 - (void)reload {
     // 把旧的先都清理掉
     [NSObject lks_clearAllObjectsTraces];
+    
+    [self.searchTargets enumerateObjectsUsingBlock:^(LookinWeakContainer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (!obj.object) {
+            return;
+        }
+        [self _markIVarsInAllClassLevelsOfObject:obj.object];
+    }];
     
     [[[UIApplication sharedApplication].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
         [self _addTraceForLayersRootedByLayer:window.layer];

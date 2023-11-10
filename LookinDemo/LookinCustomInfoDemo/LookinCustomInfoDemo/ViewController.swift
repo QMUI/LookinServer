@@ -12,9 +12,15 @@ class ViewController: UIViewController {
     private let catView = CatView()
     private let birdView = BirdView()
     private let horseLayer = HorseLayer()
+    private let viewModel0 = GoodViewModel()
+    private let viewModel1 = SomeViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        viewModel0.viewModelTargetView = catView
+        viewModel1.viewModelTargetView = birdView
+        
         dogLayer.backgroundColor = UIColor.blue.cgColor
         view.layer.addSublayer(dogLayer)
         dogLayer.frame = CGRect(x: 20, y: 20, width: 100, height: 100)
