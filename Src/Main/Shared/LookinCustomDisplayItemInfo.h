@@ -6,11 +6,7 @@
 //  Created by likai.123 on 2023/11/1.
 //
 
-#if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
-#elif TARGET_OS_MAC
-#import <Appkit/Appkit.h>
-#endif
+#import <Foundation/Foundation.h>
 
 @interface LookinCustomDisplayItemInfo : NSObject <NSSecureCoding, NSCopying>
 

@@ -3,17 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7B0854D42AA98EFE00286334 /* LookinServer in Frameworks */ = {isa = PBXBuildFile; productRef = 7B0854D32AA98EFE00286334 /* LookinServer */; };
 		A76A15B728F43C9300086B38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15B628F43C9300086B38 /* AppDelegate.swift */; };
 		A76A15B928F43C9300086B38 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15B828F43C9300086B38 /* SceneDelegate.swift */; };
 		A76A15BB28F43C9300086B38 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76A15BA28F43C9300086B38 /* ViewController.swift */; };
 		A76A15BE28F43C9300086B38 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A76A15BC28F43C9300086B38 /* Main.storyboard */; };
 		A76A15C028F43C9300086B38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A76A15BF28F43C9300086B38 /* Assets.xcassets */; };
 		A76A15C328F43C9300086B38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A76A15C128F43C9300086B38 /* LaunchScreen.storyboard */; };
+		A77024F92AFFF72B005EA27B /* LookinServer in Frameworks */ = {isa = PBXBuildFile; productRef = A77024F82AFFF72B005EA27B /* LookinServer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7B0854D42AA98EFE00286334 /* LookinServer in Frameworks */,
+				A77024F92AFFF72B005EA27B /* LookinServer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +86,7 @@
 			);
 			name = LookinDemoSwift;
 			packageProductDependencies = (
-				7B0854D32AA98EFE00286334 /* LookinServer */,
+				A77024F82AFFF72B005EA27B /* LookinServer */,
 			);
 			productName = LookinDemoSwift;
 			productReference = A76A15B328F43C9300086B38 /* LookinDemoSwift.app */;
@@ -117,7 +117,7 @@
 			);
 			mainGroup = A76A15AA28F43C9300086B38;
 			packageReferences = (
-				7B0854D22AA98EFE00286334 /* XCRemoteSwiftPackageReference "LookinServer" */,
+				A77024F72AFFF72B005EA27B /* XCLocalSwiftPackageReference "../.." */,
 			);
 			productRefGroup = A76A15B428F43C9300086B38 /* Products */;
 			projectDirPath = "";
@@ -375,21 +375,16 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		7B0854D22AA98EFE00286334 /* XCRemoteSwiftPackageReference "LookinServer" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/QMUI/LookinServer";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		A77024F72AFFF72B005EA27B /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
 		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7B0854D32AA98EFE00286334 /* LookinServer */ = {
+		A77024F82AFFF72B005EA27B /* LookinServer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7B0854D22AA98EFE00286334 /* XCRemoteSwiftPackageReference "LookinServer" */;
 			productName = LookinServer;
 		};
 /* End XCSwiftPackageProductDependency section */
