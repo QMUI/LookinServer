@@ -118,6 +118,8 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         } else {
             // 成功
             NSLog(@"LookinServer - Connected successfully on 127.0.0.1:%d", currentPort);
+            // 此时 peerChannel_ 状态为 listening
+            self.peerChannel_ = channel;
         
 //            UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@", @(currentPort)] message:nil preferredStyle:UIAlertControllerStyleAlert];
 //            [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
@@ -188,6 +190,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     [[NSNotificationCenter defaultCenter] postNotificationName:LKS_ConnectionDidEndNotificationName object:self];
 }
 
+/// 当 Client 端链接成功时，该方法会被调用，然后 channel 的状态会变成 connected
 - (void)ioFrameChannel:(Lookin_PTChannel*)channel didAcceptConnection:(Lookin_PTChannel*)otherChannel fromAddress:(Lookin_PTAddress*)address {
     if (self.peerChannel_) {
         [self.peerChannel_ cancel];
