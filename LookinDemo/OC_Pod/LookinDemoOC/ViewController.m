@@ -40,15 +40,6 @@
     [self.view addSubview:stackView];
     
     stackView.frame = self.view.bounds;
-    
-    
-    NSLog(@"UIStackViewAlignmentLeading %@", @(UIStackViewAlignmentLeading));
-    NSLog(@"UIStackViewAlignmentTop %@", @(UIStackViewAlignmentTop));
-    NSLog(@"UIStackViewAlignmentFirstBaseline %@", @(UIStackViewAlignmentFirstBaseline));
-    NSLog(@"UIStackViewAlignmentCenter %@", @(UIStackViewAlignmentCenter));
-    NSLog(@"UIStackViewAlignmentTrailing %@", @(UIStackViewAlignmentTrailing));
-    NSLog(@"UIStackViewAlignmentBottom %@", @(UIStackViewAlignmentBottom));
-    NSLog(@"UIStackViewAlignmentLastBaseline %@", @(UIStackViewAlignmentLastBaseline));
 }
 
 @end

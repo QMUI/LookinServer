@@ -424,6 +424,7 @@ static const uint8_t kUserInfoKey;
 
 
 - (void)close {
+//    NSLog(@"LookinServer - Channel will close: %@", self);
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, DISPATCH_IO_STOP);
     [self setDispatchChannel:NULL];
@@ -434,6 +435,7 @@ static const uint8_t kUserInfoKey;
 
 
 - (void)cancel {
+//    NSLog(@"LookinServer - Channel will cancel: %@", self);
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, 0);
     [self setDispatchChannel:NULL];
