@@ -12,8 +12,6 @@
 #import <Appkit/Appkit.h>
 #endif
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface LookinCustomDisplayItemInfo : NSObject <NSSecureCoding, NSCopying>
 
 /// 该属性可能有值（CGRect）也可能是 nil（nil 时则表示无图像）
@@ -22,7 +20,5 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *subtitle;
 
 @end
-
-NS_ASSUME_NONNULL_END
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
