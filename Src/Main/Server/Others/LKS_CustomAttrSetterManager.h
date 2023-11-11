@@ -6,7 +6,7 @@
 //  Created by likai.123 on 2023/11/4.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef void(^LKS_StringSetter)(NSString *);
 typedef void(^LKS_NumberSetter)(NSNumber *);
