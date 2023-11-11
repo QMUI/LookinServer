@@ -15,8 +15,13 @@ class ViewController: UIViewController {
     private let viewModel0 = GoodViewModel()
     private let viewModel1 = SomeViewModel()
     
+    private let label = UILabel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        label.font = UIFont.systemFont(ofSize: 12)
+        view.addSubview(label)
         
         viewModel0.viewModelTargetView = catView
         viewModel1.viewModelTargetView = birdView

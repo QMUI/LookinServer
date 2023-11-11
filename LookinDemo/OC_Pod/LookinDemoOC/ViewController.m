@@ -8,56 +8,7 @@
 #import "ViewController.h"
 #import "CatView.h"
 
-//@interface TestView : UIImageView
-//
-//@end
-//
-//@implementation TestView
-//
-////- (BOOL)lookin_shouldCaptureImage {
-////    return YES;
-////}
-//
-//@end
-//
-//@interface TestLayer : CALayer
-//
-//@end
-//
-//@implementation TestLayer
-//
-////- (BOOL)lookin_shouldCaptureImage {
-////    return YES;
-////}
-//
-//@end
-
-@interface Moss : NSObject
-
-@end
-
-@implementation Moss
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        NSLog(@"moss - init");
-    }
-    return self;
-}
-
-- (void)dealloc
-{
-    NSLog(@"moss - dealloc");
-}
-
-@end
-
 @interface ViewController ()
-
-@property(nonatomic, strong) CatView *catView;
-@property(nonatomic, strong) Moss *retained;
 
 @end
 
@@ -65,91 +16,39 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.tag = 1111;
-    // Do any additional setup after loading the view.
-    self.catView = [CatView new];
-    self.catView.backgroundColor = UIColor.redColor;
-    [self.view addSubview:self.catView];
-    self.catView.frame = CGRectMake(20, 20, 100, 100);
-    
-//    self.myLayer = [TestLayer new];
-//    self.myLayer.backgroundColor = UIColor.blueColor.CGColor;
-//    [self.view.layer addSublayer:self.myLayer];
-//    self.myLayer.frame = CGRectMake(20, 200, 100, 100);
-    
-//    self.scrollView = [UIScrollView new];
-//    self.scrollView.frame = CGRectMake(0, 0, 400, 800);
-//    self.scrollView.contentSize = CGSizeMake(400, 1000000);
-//    [self.view addSubview:self.scrollView];
-//    
-//    self.scrollInnerView = [UIView new];
-//    [self.scrollView addSubview:self.scrollInnerView];
-//    self.scrollInnerView.backgroundColor = UIColor.redColor;
-//    self.scrollInnerView.frame = CGRectMake(0, 800000, 100, 100);
-    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"Lookin_Export" object:nil];
-//    });
-//    [self test];
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        NSLog(@"%@", self.retained);
-        
-//    });
-}
+    // 创建 UIStackView
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.axis = UILayoutConstraintAxisVertical; // 设置布局方向为垂直
+    stackView.alignment = UIStackViewAlignmentFill; // 设置对齐方式为居中对齐
+    stackView.distribution = UIStackViewDistributionFillEqually; // 设置子视图的分布方式为均匀分布
+    stackView.spacing = 10.0; // 设置子视图之间的间距为10
 
-//- (Moss *)test {
-//    NSMethodSignature *signature = [self methodSignatureForSelector:@selector(make)];
-//    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-//    [invocation setTarget:self];
-//    [invocation setSelector:@selector(make)];
-//    [invocation invoke];
-//    Moss __unsafe_unretained *tempRawData;
-//    [invocation getReturnValue:&tempRawData];
-//    Moss *rawData = tempRawData;
-//    return rawData;
-//}
+    // 创建子视图
+    UIView *view1 = [[UIView alloc] init];
+    view1.backgroundColor = [UIColor redColor];
+    UIView *view2 = [[UIView alloc] init];
+    view2.backgroundColor = [UIColor greenColor];
+    UIView *view3 = [[UIView alloc] init];
+    view3.backgroundColor = [UIColor blueColor];
 
-- (Moss *)make {
-    return [Moss new];
+    // 将子视图添加到 UIStackView 中
+    [stackView addArrangedSubview:view1];
+    [stackView addArrangedSubview:view2];
+    [stackView addArrangedSubview:view3];
+
+    // 将 UIStackView 添加到父视图中
+    [self.view addSubview:stackView];
+    
+    stackView.frame = self.view.bounds;
+    
+    
+    NSLog(@"UIStackViewAlignmentLeading %@", @(UIStackViewAlignmentLeading));
+    NSLog(@"UIStackViewAlignmentTop %@", @(UIStackViewAlignmentTop));
+    NSLog(@"UIStackViewAlignmentFirstBaseline %@", @(UIStackViewAlignmentFirstBaseline));
+    NSLog(@"UIStackViewAlignmentCenter %@", @(UIStackViewAlignmentCenter));
+    NSLog(@"UIStackViewAlignmentTrailing %@", @(UIStackViewAlignmentTrailing));
+    NSLog(@"UIStackViewAlignmentBottom %@", @(UIStackViewAlignmentBottom));
+    NSLog(@"UIStackViewAlignmentLastBaseline %@", @(UIStackViewAlignmentLastBaseline));
 }
 
 @end
-
-//@interface NSObject (LookinConfig)
-//
-//@end
-//
-//@implementation NSObject (LookinConfig)
-//
-//+ (NSArray<NSString *> *)lookin_collapsedClassList {
-//    return @[@"UIDropShadowView"];
-//}
-//
-//+ (NSDictionary<NSString *, UIColor *> *)lookin_colorAlias {
-//    return @{
-//        @"TitleColor": [UIColor colorWithRed:0.38 green:0.85 blue:0.22 alpha:1],
-//        @"MyWhite": [UIColor colorWithRed:1 green:1 blue:1 alpha:1],
-//        @"MyBlack": [UIColor colorWithRed:0 green:0 blue:0 alpha:1]
-//    };
-//}
-////+ (BOOL)lookin_shouldCaptureImageOfView:(UIView *)view {
-////    if (view.tag == 1234) {
-////        // Lookin will not show image of the view
-////        return NO;
-////    } else {
-////        return YES;
-////    }
-////}
-//
-//+ (BOOL)lookin_shouldCaptureImageOfLayer:(CALayer *)layer {
-////    if (...) {
-////        // Lookin will not show image of the layer
-////        return NO;
-////    } else {
-//        return YES;
-////    }
-//}
-//
-//@end
-
-
