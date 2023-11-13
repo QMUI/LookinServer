@@ -50,7 +50,19 @@ Pod::Spec.new do |spec|
     }
   end
 
+  spec.subspec 'SwiftAndWireless' do |ss|
+    ss.dependency 'LookinShared/Wireless'
+    ss.dependency 'LookinServer/Core'
+    ss.source_files = 'Src/Swift/**/*'
+    ss.pod_target_xcconfig = {
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED=1 LOOKIN_SERVER_DISABLE_HOOK=1',
+      'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED',
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_WIRELESS=1'
+    }
+  end
+
   spec.subspec 'Wireless' do |ss|
+    ss.dependency 'LookinServer/Core'
     ss.dependency 'LookinShared/Wireless'
     ss.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_WIRELESS=1'
