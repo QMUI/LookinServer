@@ -8,11 +8,8 @@
 //  https://lookin.work
 //
 
-
-
 #import "LookinObject.h"
 #import "LookinIvarTrace.h"
-
 #import "NSArray+Lookin.h"
 #import "NSString+Lookin.h"
 
@@ -74,18 +71,12 @@
 
 - (void)setClassChainList:(NSArray<NSString *> *)classChainList {
     _classChainList = classChainList;
+    _completedSelfClassName = classChainList.firstObject;
+    _shortSelfClassName = [_completedSelfClassName lookin_shortClassNameString];
 }
 
 + (BOOL)supportsSecureCoding {
     return YES;
-}
-
-- (NSString *)completedSelfClassName {
-    return self.classChainList.firstObject;
-}
-
-- (NSString *)shortSelfClassName {
-    return [[self completedSelfClassName] lookin_shortClassNameString];
 }
 
 @end

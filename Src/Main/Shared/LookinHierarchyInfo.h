@@ -24,11 +24,10 @@
 
 #if TARGET_OS_IPHONE
 
-+ (instancetype)staticInfo;
+/// version 可能为 nil，此时说明 Client 版本号 < 1.0.4
++ (instancetype)staticInfoWithLookinVersion:(NSString *)version;
 
 + (instancetype)exportedInfo;
-
-+ (instancetype)perspectiveInfoWithIncludedWindows:(NSArray<UIWindow *> *)includedWindows excludedWindows:(NSArray<UIWindow *> *)excludedWindows;
 
 #endif
 
@@ -41,10 +40,7 @@
 
 @property(nonatomic, strong) LookinAppInfo *appInfo;
 
-/// 标记该 LookinServer 是通过什么方式安装的，0:未知，1:CocoaPods，2:手动，3:源代码，4:断点
 @property(nonatomic, assign) int serverVersion;
-
-@property(nonatomic, assign) int serverSetupType;
 
 @end
 

@@ -12,7 +12,7 @@
 #import <objc/runtime.h>
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
-#import "LKS_LocalInspectManager.h"
+#import "LookinWeakContainer.h"
 
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
 
@@ -31,6 +31,12 @@
 #define LOOKIN_SERVER_SWIFT_ENABLED_SUCCESSFULLY
 #endif
 
+@interface LKS_TraceManager ()
+
+@property(nonatomic, strong) NSMutableArray<LookinWeakContainer *> *searchTargets;
+
+@end
+
 @implementation LKS_TraceManager
 
 + (instancetype)sharedInstance {
@@ -46,9 +52,27 @@
     return [self sharedInstance];
 }
 
+- (void)addSearchTarger:(id)target {
+    if (!target) {
+        return;
+    }
+    if (!self.searchTargets) {
+        self.searchTargets = [NSMutableArray array];
+    }
+    LookinWeakContainer *container = [LookinWeakContainer containerWithObject:target];
+    [self.searchTargets addObject:container];
+}
+
 - (void)reload {
     // 把旧的先都清理掉
     [NSObject lks_clearAllObjectsTraces];
+    
+    [self.searchTargets enumerateObjectsUsingBlock:^(LookinWeakContainer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (!obj.object) {
+            return;
+        }
+        [self _markIVarsInAllClassLevelsOfObject:obj.object];
+    }];
     
     [[[UIApplication sharedApplication].windows copy] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
         [self _addTraceForLayersRootedByLayer:window.layer];
@@ -89,9 +113,7 @@
     } else if ([view isKindOfClass:[UIWindow class]]) {
         CGFloat currentWindowLevel = ((UIWindow *)view).windowLevel;
         
-        if ([view isKindOfClass:[LKS_LocalInspectContainerWindow class]]) {
-            view.lks_specialTrace = [NSString stringWithFormat:@"Lookin Private Window ( Level: %@ )", @(currentWindowLevel)];
-        } else if (((UIWindow *)view).isKeyWindow) {
+        if (((UIWindow *)view).isKeyWindow) {
             view.lks_specialTrace = [NSString stringWithFormat:@"KeyWindow ( Level: %@ )", @(currentWindowLevel)];
         } else {
             view.lks_specialTrace = [NSString stringWithFormat:@"WindowLevel: %@", @(currentWindowLevel)];
@@ -191,13 +213,13 @@
         }
         // 这个 ivarObject 可能的类型：UIView, CALayer, UIViewController, UIGestureRecognizer
         NSObject *ivarObject = object_getIvar(hostObject, ivar);
-        if (!ivarObject) {
+        if (!ivarObject || ![ivarObject isKindOfClass:[NSObject class]]) {
             continue;
         }
 
         LookinIvarTrace *ivarTrace = [LookinIvarTrace new];
         ivarTrace.hostObject = hostObject;
-        ivarTrace.hostClassName = NSStringFromClass(targetClass);
+        ivarTrace.hostClassName = [self makeDisplayClassNameWithSuper:targetClass childClass:hostObject.class];
         ivarTrace.ivarName = [[NSString alloc] lookin_safeInitWithUTF8String:ivarNameChar];
         
         if (hostObject == ivarObject) {
@@ -218,6 +240,9 @@
             continue;
         }
         
+        if (![ivarObject respondsToSelector:@selector(lks_ivarTraces)] || ![ivarObject respondsToSelector:@selector(setLks_ivarTraces:)]) {
+            continue;
+        }
         if (!ivarObject.lks_ivarTraces) {
             ivarObject.lks_ivarTraces = [NSArray array];
         }
@@ -229,6 +254,19 @@
     
     Class superClass = [targetClass superclass];
     [self _markIVarsOfObject:hostObject class:superClass];
+}
+
+// 比如 superClass 可能是 UIView，而 childClass 可能是 UIButton
+- (NSString *)makeDisplayClassNameWithSuper:(Class)superClass childClass:(Class)childClass {
+    NSString *superName = NSStringFromClass(superClass);
+    if (!childClass) {
+        return superName;
+    }
+    NSString *childName = NSStringFromClass(childClass);
+    if ([childName isEqualToString:superName]) {
+        return superName;
+    }
+    return [NSString stringWithFormat:@"%@ : %@", childName, superName];
 }
 
 static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces(void) {

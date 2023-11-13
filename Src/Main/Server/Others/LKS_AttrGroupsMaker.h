@@ -13,7 +13,7 @@
 @class LookinAttributesGroup;
 
 @interface LKS_AttrGroupsMaker : NSObject
-
+    
 + (NSArray<LookinAttributesGroup *> *)attrGroupsForLayer:(CALayer *)layer;
 
 @end

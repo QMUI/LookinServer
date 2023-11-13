@@ -1,0 +1,18 @@
+PODS:
+  - LookinServer/Core (1.2.4)
+  - LookinServer/Swift (1.2.4):
+    - LookinServer/Core
+
+DEPENDENCIES:
+  - LookinServer/Swift (from `../../`)
+
+EXTERNAL SOURCES:
+  LookinServer:
+    :path: "../../"
+
+SPEC CHECKSUMS:
+  LookinServer: 00c7588043ed8e7ab64ce55b9fb747e51371ad06
+
+PODFILE CHECKSUM: 46caada19d34f471f9e44165d96af39e799fd091
+
+COCOAPODS: 1.13.0

@@ -31,6 +31,7 @@
 @property(nonatomic, strong) NSNumber *alphaValue;
 
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *attributesGroupList;
+@property(nonatomic, copy) NSArray<LookinAttributesGroup *> *customAttrGroupList;
 
 @end
 

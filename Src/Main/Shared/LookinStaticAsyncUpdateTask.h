@@ -25,6 +25,9 @@ typedef NS_ENUM(NSInteger, LookinStaticAsyncUpdateTaskType) {
 
 @property(nonatomic, assign) LookinStaticAsyncUpdateTaskType taskType;
 
+/// Client 1.0.4 开始加入这个参数
+@property(nonatomic, copy) NSString *clientReadableVersion;
+
 #pragma mark - Non Coding
 
 @property(nonatomic, assign) CGSize frameSize;

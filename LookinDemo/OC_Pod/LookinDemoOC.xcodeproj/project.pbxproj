@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		79EC7DAE85ED89797E9A564E /* Pods_LookinDemoOC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080AFB1460A709729164AAD0 /* Pods_LookinDemoOC.framework */; };
+		A73F8C5E2ADC456C003FE507 /* CatView.m in Sources */ = {isa = PBXBuildFile; fileRef = A73F8C5D2ADC456C003FE507 /* CatView.m */; };
 		A76A159328F43C5A00086B38 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A76A159228F43C5A00086B38 /* AppDelegate.m */; };
 		A76A159628F43C5A00086B38 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A76A159528F43C5A00086B38 /* SceneDelegate.m */; };
 		A76A159928F43C5A00086B38 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A76A159828F43C5A00086B38 /* ViewController.m */; };
@@ -20,6 +21,8 @@
 /* Begin PBXFileReference section */
 		080AFB1460A709729164AAD0 /* Pods_LookinDemoOC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LookinDemoOC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B49E0C73BA853265940365C /* Pods-LookinDemoOC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinDemoOC.debug.xcconfig"; path = "Target Support Files/Pods-LookinDemoOC/Pods-LookinDemoOC.debug.xcconfig"; sourceTree = "<group>"; };
+		A73F8C5C2ADC456C003FE507 /* CatView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CatView.h; sourceTree = "<group>"; };
+		A73F8C5D2ADC456C003FE507 /* CatView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CatView.m; sourceTree = "<group>"; };
 		A76A158E28F43C5A00086B38 /* LookinDemoOC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LookinDemoOC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76A159128F43C5A00086B38 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A76A159228F43C5A00086B38 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -82,6 +85,8 @@
 				A76A159528F43C5A00086B38 /* SceneDelegate.m */,
 				A76A159728F43C5A00086B38 /* ViewController.h */,
 				A76A159828F43C5A00086B38 /* ViewController.m */,
+				A73F8C5C2ADC456C003FE507 /* CatView.h */,
+				A73F8C5D2ADC456C003FE507 /* CatView.m */,
 				A76A159A28F43C5A00086B38 /* Main.storyboard */,
 				A76A159D28F43C5B00086B38 /* Assets.xcassets */,
 				A76A159F28F43C5B00086B38 /* LaunchScreen.storyboard */,
@@ -218,6 +223,7 @@
 				A76A159328F43C5A00086B38 /* AppDelegate.m in Sources */,
 				A76A15A428F43C5B00086B38 /* main.m in Sources */,
 				A76A159628F43C5A00086B38 /* SceneDelegate.m in Sources */,
+				A73F8C5E2ADC456C003FE507 /* CatView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

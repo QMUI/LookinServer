@@ -1,4 +1,4 @@
-#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER
 
 //
 //  LookinDisplayItem.m
@@ -7,8 +7,6 @@
 //  Created by Li Kai on 2018/11/15.
 //  Copyright © 2018 QMUI Team. All rights reserved.
 //
-
-
 
 #import "LookinDisplayItem.h"
 #import "LookinAttributesGroup.h"
@@ -19,6 +17,7 @@
 #import "Color+Lookin.h"
 #import "NSArray+Lookin.h"
 #import "NSObject+Lookin.h"
+#import "LookinDashboardBlueprint.h"
 
 #if TARGET_OS_IPHONE
 #import "UIColor+LookinServer.h"
@@ -46,6 +45,7 @@
     newDisplayItem.subitems = [self.subitems lookin_map:^id(NSUInteger idx, LookinDisplayItem *value) {
         return value.copy;
     }];
+    newDisplayItem.customInfo = self.customInfo.copy;
     newDisplayItem.isHidden = self.isHidden;
     newDisplayItem.alpha = self.alpha;
     newDisplayItem.frame = self.frame;
@@ -56,6 +56,9 @@
     newDisplayItem.layerObject = self.layerObject.copy;
     newDisplayItem.hostViewControllerObject = self.hostViewControllerObject.copy;
     newDisplayItem.attributesGroupList = [self.attributesGroupList lookin_map:^id(NSUInteger idx, LookinAttributesGroup *value) {
+        return value.copy;
+    }];
+    newDisplayItem.customAttrGroupList = [self.customAttrGroupList lookin_map:^id(NSUInteger idx, LookinAttributesGroup *value) {
         return value.copy;
     }];
     newDisplayItem.eventHandlers = [self.eventHandlers lookin_map:^id(NSUInteger idx, LookinEventHandler *value) {
@@ -69,6 +72,7 @@
 #pragma mark - <NSCoding>
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.customInfo forKey:@"customInfo"];
     [aCoder encodeObject:self.subitems forKey:@"subitems"];
     [aCoder encodeBool:self.isHidden forKey:@"hidden"];
     [aCoder encodeFloat:self.alpha forKey:@"alpha"];
@@ -76,6 +80,7 @@
     [aCoder encodeObject:self.layerObject forKey:@"layerObject"];
     [aCoder encodeObject:self.hostViewControllerObject forKey:@"hostViewControllerObject"];
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
+    [aCoder encodeObject:self.customAttrGroupList forKey:@"customAttrGroupList"];
     [aCoder encodeBool:self.representedAsKeyWindow forKey:@"representedAsKeyWindow"];
     [aCoder encodeObject:self.eventHandlers forKey:@"eventHandlers"];
     [aCoder encodeBool:self.shouldCaptureImage forKey:@"shouldCaptureImage"];
@@ -100,6 +105,7 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
+        self.customInfo = [aDecoder decodeObjectForKey:@"customInfo"];
         self.subitems = [aDecoder decodeObjectForKey:@"subitems"];
         self.isHidden = [aDecoder decodeBoolForKey:@"hidden"];
         self.alpha = [aDecoder decodeFloatForKey:@"alpha"];
@@ -107,6 +113,7 @@
         self.layerObject = [aDecoder decodeObjectForKey:@"layerObject"];
         self.hostViewControllerObject = [aDecoder decodeObjectForKey:@"hostViewControllerObject"];
         self.attributesGroupList = [aDecoder decodeObjectForKey:@"attributesGroupList"];
+        self.customAttrGroupList = [aDecoder decodeObjectForKey:@"customAttrGroupList"];
         self.representedAsKeyWindow = [aDecoder decodeBoolForKey:@"representedAsKeyWindow"];
         
         id soloScreenshotObj = [aDecoder decodeObjectForKey:@"soloScreenshot"];
@@ -165,9 +172,22 @@
     return self.viewObject ? : self.layerObject;
 }
 
-- (void)setAttributesGroupList:(NSSet<LookinAttributesGroup *> *)attributesGroupList {
-    _attributesGroupList = [attributesGroupList copy];
-    [attributesGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, BOOL * _Nonnull stop) {
+- (void)setAttributesGroupList:(NSArray<LookinAttributesGroup *> *)attributesGroupList {
+    _attributesGroupList = attributesGroupList;
+    
+    [_attributesGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, NSUInteger idx, BOOL * _Nonnull stop) {
+        [group.attrSections enumerateObjectsUsingBlock:^(LookinAttributesSection * _Nonnull section, NSUInteger idx, BOOL * _Nonnull stop) {
+            [section.attributes enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
+                attr.targetDisplayItem = self;
+            }];
+        }];
+    }];
+}
+
+- (void)setCustomAttrGroupList:(NSArray<LookinAttributesGroup *> *)customAttrGroupList {
+    _customAttrGroupList = customAttrGroupList;
+    // 传进来的时候就已经排好序了
+    [customAttrGroupList enumerateObjectsUsingBlock:^(LookinAttributesGroup * _Nonnull group, NSUInteger idx, BOOL * _Nonnull stop) {
         [group.attrSections enumerateObjectsUsingBlock:^(LookinAttributesSection * _Nonnull section, NSUInteger idx, BOOL * _Nonnull stop) {
             [section.attributes enumerateObjectsUsingBlock:^(LookinAttribute * _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
                 attr.targetDisplayItem = self;
@@ -229,7 +249,6 @@
         
         [obj _updateInHiddenHierarchyProperty];
         [obj _updateDisplayingInHierarchyProperty];
-        [obj _updateFrameToRoot];
     }];
 }
 
@@ -260,12 +279,12 @@
     [self _notifyDelegatesWith:LookinDisplayItemProperty_SoloScreenshot];
 }
 
-- (void)setIsSelected:(BOOL)isSelected {
-    if (_isSelected == isSelected) {
-        return;
-    }
-    _isSelected = isSelected;
+- (void)notifySelectionChangeToDelegates {
     [self _notifyDelegatesWith:LookinDisplayItemProperty_IsSelected];
+}
+
+- (void)notifyHoverChangeToDelegates {
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsHovered];
 }
 
 - (void)setDoNotFetchScreenshotReason:(LookinDoNotFetchScreenshotReason)doNotFetchScreenshotReason {
@@ -274,14 +293,6 @@
     }
     _doNotFetchScreenshotReason = doNotFetchScreenshotReason;
     [self _notifyDelegatesWith:LookinDisplayItemProperty_AvoidSyncScreenshot];
-}
-
-- (void)setIsHovered:(BOOL)isHovered {
-    if (_isHovered == isHovered) {
-        return;
-    }
-    _isHovered = isHovered;
-    [self _notifyDelegatesWith:LookinDisplayItemProperty_IsHovered];
 }
 
 - (void)setGroupScreenshot:(LookinImage *)groupScreenshot {
@@ -392,19 +403,6 @@
     return [NSString stringWithFormat:@"%@", self.title];
 }
 
-- (void)setFrameToRoot:(CGRect)frameToRoot {
-    if (CGRectEqualToRect(_frameToRoot, frameToRoot)) {
-        return;
-    }
-    _frameToRoot = frameToRoot;
-    [(NSArray<LookinDisplayItem *> *)self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj _updateFrameToRoot];
-        [obj _updateInNoPreviewHierarchy];
-    }];
-    
-    [self _notifyDelegatesWith:LookinDisplayItemProperty_FrameToRoot];
-}
-
 - (void)setPreviewItemDelegate:(id<LookinDisplayItemDelegate>)previewItemDelegate {
     _previewItemDelegate = previewItemDelegate;
     
@@ -432,31 +430,20 @@
 
 - (void)setFrame:(CGRect)frame {
     _frame = frame;
-    [self _updateFrameToRoot];
+    [self recursivelyNotifyFrameToRootMayChange];
+}
+
+- (void)recursivelyNotifyFrameToRootMayChange {
+    [self _notifyDelegatesWith:LookinDisplayItemProperty_FrameToRoot];
+
+    [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj recursivelyNotifyFrameToRootMayChange];
+    }];
 }
 
 - (void)setBounds:(CGRect)bounds {
     _bounds = bounds;
-    [(NSArray<LookinDisplayItem *> *)self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj _updateFrameToRoot];
-    }];
-}
-
-- (void)_updateFrameToRoot {
-    if (!self.superItem) {
-        self.frameToRoot = self.frame;
-        return;
-    }
-    CGRect superFrameToRoot = self.superItem.frameToRoot;
-    CGRect superBounds = self.superItem.bounds;
-    CGRect selfFrame = self.frame;
-    
-    CGFloat x = selfFrame.origin.x - superBounds.origin.x + superFrameToRoot.origin.x;
-    CGFloat y = selfFrame.origin.y - superBounds.origin.y + superFrameToRoot.origin.y;
-    
-    CGFloat width = selfFrame.size.width;
-    CGFloat height = selfFrame.size.height;
-    self.frameToRoot = CGRectMake(x, y, width, height);
+    [self recursivelyNotifyFrameToRootMayChange];
 }
 
 - (void)setInNoPreviewHierarchy:(BOOL)inNoPreviewHierarchy {
@@ -526,51 +513,52 @@
     [self _notifyDelegatesWith:LookinDisplayItemProperty_HighlightedSearchString];
 }
 
-- (void)setHostViewControllerObject:(LookinObject *)hostViewControllerObject {
-    _hostViewControllerObject = hostViewControllerObject;
-    [self _updateSubtitleProperty];
+- (NSArray<LookinAttributesGroup *> *)queryAllAttrGroupList {
+    NSMutableArray *array = [NSMutableArray array];
+    if (self.attributesGroupList) {
+        [array addObjectsFromArray:self.attributesGroupList];
+    }
+    if (self.customAttrGroupList) {
+        [array addObjectsFromArray:self.customAttrGroupList];
+    }
+    return array;
 }
 
-- (void)setViewObject:(LookinObject *)viewObject {
-    _viewObject = viewObject;
-    [self _updateSubtitleProperty];
-    [self _updateTitleProperty];
-}
-
-- (void)setLayerObject:(LookinObject *)layerObject {
-    _layerObject = layerObject;
-    [self _updateSubtitleProperty];
-    [self _updateTitleProperty];
-}
-
-- (void)_updateTitleProperty {
-    if (self.viewObject) {
-        _title = self.viewObject.shortSelfClassName;
+- (NSString *)title {
+    if (self.customInfo) {
+        return self.customInfo.title;
+    } else if (self.viewObject) {
+        return self.viewObject.shortSelfClassName;
     } else if (self.layerObject) {
-        _title = self.layerObject.shortSelfClassName;
+        return self.layerObject.shortSelfClassName;
     } else {
-        _title = nil;
+        return nil;
     }
 }
 
-- (void)_updateSubtitleProperty {
-    NSString *subtitle = @"";
-    if (self.hostViewControllerObject.shortSelfClassName.length) {
-        subtitle = [NSString stringWithFormat:@"%@.view", self.hostViewControllerObject.shortSelfClassName];
-        
-    } else {
-        LookinObject *representedObject = self.viewObject ? : self.layerObject;
-        if (representedObject.specialTrace.length) {
-            subtitle = representedObject.specialTrace;
-            
-        } else if (representedObject.ivarTraces.count) {
-            NSArray<NSString *> *ivarNameList = [representedObject.ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
-                return value.ivarName;
-            }];
-            subtitle = [[[NSSet setWithArray:ivarNameList] allObjects] componentsJoinedByString:@"   "];
-        }
+- (NSString *)subtitle {
+    if (self.customInfo) {
+        return self.customInfo.subtitle;
     }
-    _subtitle = subtitle;
+    
+    NSString *text = self.hostViewControllerObject.shortSelfClassName;
+    if (text.length) {
+        return [NSString stringWithFormat:@"%@.view", text];
+    }
+    
+    LookinObject *representedObject = self.viewObject ? : self.layerObject;
+    if (representedObject.specialTrace.length) {
+        return representedObject.specialTrace;
+        
+    }
+    if (representedObject.ivarTraces.count) {
+        NSArray<NSString *> *ivarNameList = [representedObject.ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
+            return value.ivarName;
+        }];
+        return [[[NSSet setWithArray:ivarNameList] allObjects] componentsJoinedByString:@"   "];
+    }
+    
+    return nil;
 }
 
 @end

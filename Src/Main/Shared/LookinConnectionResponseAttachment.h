@@ -18,7 +18,6 @@
 + (instancetype)attachmentWithError:(NSError *)error;
 
 @property(nonatomic, assign) int lookinServerVersion;
-@property(nonatomic, assign) BOOL lookinServerIsExprimental;
 
 @property(nonatomic, strong) NSError *error;
 

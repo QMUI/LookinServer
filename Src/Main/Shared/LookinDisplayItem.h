@@ -8,18 +8,17 @@
 //  Copyright © 2018 QMUI Team. All rights reserved.
 //
 
-
-
 #import "TargetConditionals.h"
 #import "LookinObject.h"
 #import "LookinDefines.h"
+#import "LookinCustomDisplayItemInfo.h"
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
 #import <Appkit/Appkit.h>
 #endif
 
-@class LookinAttributesGroup, LookinIvarTrace, LookinPreviewItemLayer, LookinEventHandler, LookinDisplayItemNode, LookinDisplayItem;
+@class LookinAttributesGroup, LookinIvarTrace, LookinPreviewItemLayer, LookinEventHandler, LKDisplayItemNode, LookinDisplayItem;
 
 typedef NS_ENUM(NSUInteger, LookinDisplayItemImageEncodeType) {
     LookinDisplayItemImageEncodeTypeNone,   // 不进行 encode
@@ -63,6 +62,9 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @interface LookinDisplayItem : NSObject <NSSecureCoding, NSCopying>
 
+/// 当 customInfo 不为 nil 时，意思是该 DisplayItem 为 UserCustom 配置的。此时，Encode 属性中仅 subitems 和 customAttrGroupList 属性有意义，其它几乎所有属性都无意义
+@property(nonatomic, strong) LookinCustomDisplayItemInfo *customInfo;
+
 @property(nonatomic, copy) NSArray<LookinDisplayItem *> *subitems;
 
 @property(nonatomic, assign) BOOL isHidden;
@@ -84,14 +86,16 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 /// attrGroups 列表
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *attributesGroupList;
+/// 通过 lookin_customDebugInfos 返回的属性列表
+@property(nonatomic, copy) NSArray<LookinAttributesGroup *> *customAttrGroupList;
+/// attributesGroupList + customAttrGroupList
+- (NSArray<LookinAttributesGroup *> *)queryAllAttrGroupList;
 
 @property(nonatomic, copy) NSArray<LookinEventHandler *> *eventHandlers;
 
 // 如果当前 item 代表 UIWindow 且是 keyWindow，则该属性为 YES
 @property(nonatomic, assign) BOOL representedAsKeyWindow;
 
-@property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
-@property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
 
 /// view 或 layer 的 backgroundColor，利用该属性来提前渲染 node 的背景色，使得用户感觉加载的快一点
 /// 注意有一个缺点是，理论上应该像 screenshot 一样拆成 soloBackgroundColor 和 groupBackgroundColor，这里的 backgroundColor 实际上是 soloBackgroundColor，因此某些场景的显示会有瑕疵
@@ -102,15 +106,18 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 #pragma mark - No Encode/Decode
 
+/// 该 item 在左侧 hierarchy 中显示的字符串，通常是类名
+- (NSString *)title;
+- (NSString *)subtitle;
+
+@property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
+@property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
+
 /// 父节点
 @property(nonatomic, weak) LookinDisplayItem *superItem;
 
 /// 如果存在 viewObject 则返回 viewObject，否则返回 layerObject
 - (LookinObject *)displayingObject;
-
-/// 该 item 在左侧 hierarchy 中显示的字符串，现在则返回其 ShortClassName
-@property(nonatomic, copy, readonly) NSString *title;
-@property(nonatomic, copy, readonly) NSString *subtitle;
 
 /// 在 hierarchy 中的层级，比如顶层的 UIWindow.indentLevel 为 0，UIWindow 的 subitem 的 indentLevel 为 1
 - (NSInteger)indentLevel;
@@ -148,21 +155,17 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @property(nonatomic, weak) LookinPreviewItemLayer *previewLayer;
 
-@property(nonatomic, weak) LookinDisplayItemNode *previewNode;
+@property(nonatomic, weak) LKDisplayItemNode *previewNode;
 
 /// 如果该值为 YES，则该 item 及所有子 item 均不会在 preview 中被显示出来，只能在 hierarchy 中选择。默认为 NO
 @property(nonatomic, assign) BOOL noPreview;
 
 /// 如果自身或某个上级元素的 noPreview 值为 YES，则该方法返回 YES
+/// 注意：当 userCustom 为 YES 时，该属性也可能返回 YES
 @property(nonatomic, assign, readonly) BOOL inNoPreviewHierarchy;
 
 /// 当小于 0 时表示未被设置
 @property(nonatomic, assign) NSInteger previewZIndex;
-
-/**
- 在当前 hierarchy 的最顶层的 item 的坐标系中，该 item 的 frame 值
- */
-@property(nonatomic, assign, readonly) CGRect frameToRoot;
 
 /// 遍历自身和所有上级元素
 - (void)enumerateSelfAndAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
@@ -174,9 +177,8 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @property(nonatomic, assign) BOOL preferToBeCollapsed;
 
-@property(nonatomic, assign) BOOL isSelected;
-
-@property(nonatomic, assign) BOOL isHovered;
+- (void)notifySelectionChangeToDelegates;
+- (void)notifyHoverChangeToDelegates;
 
 - (BOOL)itemIsKindOfClassWithName:(NSString *)className;
 - (BOOL)itemIsKindOfClassesWithNames:(NSSet<NSString *> *)classNames;

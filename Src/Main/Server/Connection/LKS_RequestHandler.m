@@ -19,11 +19,10 @@
 #import "LookinServerDefines.h"
 #import <objc/runtime.h>
 #import "LookinObject.h"
-#import "LKS_LocalInspectManager.h"
 #import "LookinAppInfo.h"
-#import "LKS_MethodTraceManager.h"
 #import "LKS_AttrGroupsMaker.h"
-#import "LKS_AttrModificationHandler.h"
+#import "LKS_InbuiltAttrModificationHandler.h"
+#import "LKS_CustomAttrModificationHandler.h"
 #import "LKS_AttrModificationPatchHandler.h"
 #import "LKS_HierarchyDetailsHandler.h"
 #import "LookinStaticAsyncUpdateTask.h"
@@ -41,15 +40,13 @@
         _validRequestTypes = [NSSet setWithObjects:@(LookinRequestTypePing),
                               @(LookinRequestTypeApp),
                               @(LookinRequestTypeHierarchy),
-                              @(LookinRequestTypeModification),
+                              @(LookinRequestTypeInbuiltAttrModification),
+                              @(LookinRequestTypeCustomAttrModification),
                               @(LookinRequestTypeAttrModificationPatch),
                               @(LookinRequestTypeHierarchyDetails),
                               @(LookinRequestTypeFetchObject),
                               @(LookinRequestTypeAllAttrGroups),
                               @(LookinRequestTypeAllSelectorNames),
-                              @(LookinRequestTypeAddMethodTrace),
-                              @(LookinRequestTypeDeleteMethodTrace),
-                              @(LookinRequestTypeClassesAndMethodTraceLit),
                               @(LookinRequestTypeInvokeMethod),
                               @(LookinRequestTypeFetchImageViewImage),
                               @(LookinRequestTypeModifyRecognizerEnable),
@@ -91,13 +88,23 @@
         [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag];
         
     } else if (requestType == LookinRequestTypeHierarchy) {
+        // 从 LookinClient 1.0.4 开始有这个参数，之前是 nil
+        NSString *clientVersion = nil;
+        if ([object isKindOfClass:[NSDictionary class]]) {
+            NSDictionary<NSString *, id> *params = object;
+            NSString *version = params[@"clientVersion"];
+            if ([version isKindOfClass:[NSString class]]) {
+                clientVersion = version;
+            }
+        }
+        
         LookinConnectionResponseAttachment *responseAttachment = [LookinConnectionResponseAttachment new];
-        responseAttachment.data = [LookinHierarchyInfo staticInfo];
+        responseAttachment.data = [LookinHierarchyInfo staticInfoWithLookinVersion:clientVersion];
         [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag];
         
-    } else if (requestType == LookinRequestTypeModification) {
+    } else if (requestType == LookinRequestTypeInbuiltAttrModification) {
         // 请求修改某个属性
-        [LKS_AttrModificationHandler handleModification:object completion:^(LookinDisplayItemDetail *data, NSError *error) {
+        [LKS_InbuiltAttrModificationHandler handleModification:object completion:^(LookinDisplayItemDetail *data, NSError *error) {
             LookinConnectionResponseAttachment *attachment = [LookinConnectionResponseAttachment new];
             if (error) {
                 attachment.error = error;
@@ -107,10 +114,18 @@
             [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:requestType tag:tag];
         }];
         
+    } else if (requestType == LookinRequestTypeCustomAttrModification) {
+        BOOL succ = [LKS_CustomAttrModificationHandler handleModification:object];
+        if (succ) {
+            [self _submitResponseWithData:nil requestType:requestType tag:tag];
+        } else {
+            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
+        }
+        
     } else if (requestType == LookinRequestTypeAttrModificationPatch) {
         NSArray<LookinStaticAsyncUpdateTask *> *tasks = object;
         NSUInteger dataTotalCount = tasks.count;
-        [LKS_AttrModificationHandler handlePatchWithTasks:tasks block:^(LookinDisplayItemDetail *data) {
+        [LKS_InbuiltAttrModificationHandler handlePatchWithTasks:tasks block:^(LookinDisplayItemDetail *data) {
             LookinConnectionResponseAttachment *attrAttachment = [LookinConnectionResponseAttachment new];
             attrAttachment.data = data;
             attrAttachment.dataTotalCount = dataTotalCount;
@@ -166,49 +181,6 @@
         
         NSArray<NSString *> *selNames = [self _methodNameListForClass:targetClass hasArg:hasArg];
         [self _submitResponseWithData:selNames requestType:requestType tag:tag];
-        
-    } else if (requestType == LookinRequestTypeAddMethodTrace) {
-        if (![object isKindOfClass:[NSDictionary class]]) {
-            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
-            return;
-        }
-        NSDictionary *dict = object;
-        NSString *className = dict[@"className"];
-        NSString *selName = dict[@"selName"];
-        
-        Class targetClass = NSClassFromString(className);
-        if (!targetClass) {
-            NSString *errorMsg = [NSString stringWithFormat:LKS_Localized(@"Didn't find the class named \"%@\". Please input another class and try again."), object];
-            [self _submitResponseWithError:LookinErrorMake(errorMsg, @"") requestType:requestType tag:tag];
-            return;
-        }
-        
-        SEL targetSelector = NSSelectorFromString(selName);
-        if (class_getInstanceMethod(targetClass, targetSelector) == NULL) {
-            NSString *errorMsg = [NSString stringWithFormat:LKS_Localized(@"%@ doesn't have a method called \"%@\". Please input another method name and try again."), className, selName];
-            [self _submitResponseWithError:LookinErrorMake(errorMsg, @"") requestType:requestType tag:tag];
-            return;
-        }
-        
-        [[LKS_MethodTraceManager sharedInstance] addWithClassName:className selName:selName];
-        [self _submitResponseWithData:[LKS_MethodTraceManager sharedInstance].currentActiveTraceList requestType:requestType tag:tag];
-        
-    } else if (requestType == LookinRequestTypeDeleteMethodTrace) {
-        if (![object isKindOfClass:[NSDictionary class]]) {
-            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
-            return;
-        }
-        NSDictionary *dict = object;
-        NSString *className = dict[@"className"];
-        NSString *selName = dict[@"selName"];
-        
-        [[LKS_MethodTraceManager sharedInstance] removeWithClassName:className selName:selName];
-        [self _submitResponseWithData:[LKS_MethodTraceManager sharedInstance].currentActiveTraceList requestType:requestType tag:tag];
-        
-    } else if (requestType == LookinRequestTypeClassesAndMethodTraceLit) {
-        LKS_MethodTraceManager *mng = [LKS_MethodTraceManager sharedInstance];
-        NSDictionary *dict = @{@"classes":mng.allClassesListInApp, @"activeList":mng.currentActiveTraceList};
-        [self _submitResponseWithData:dict requestType:requestType tag:tag];
         
     } else if (requestType == LookinRequestTypeInvokeMethod) {
         NSDictionary *param = object;

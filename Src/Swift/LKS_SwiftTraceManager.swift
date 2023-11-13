@@ -16,8 +16,10 @@ import LookinServerBase
 public class LKS_SwiftTraceManager: NSObject {
     @objc public static func swiftMarkIVars(ofObject hostObject: AnyObject) {
         var mirror: Mirror? = Mirror(reflecting: hostObject)
-        var inClass: AnyClass? = type(of: hostObject)
-        while let m = mirror, let childClass = inClass {
+        var currClass: AnyClass? = type(of: hostObject)
+        let initialInClass: AnyClass? = currClass
+        
+        while let m = mirror, let unwrappedCurrClass = currClass {
             m.children.forEach { child in
                 if let child = child as? (label: String?, value: NSObject) {
                     let label: String? = child.label?.replacingOccurrences(of: "$__lazy_storage_$_", with: "")
@@ -33,7 +35,9 @@ public class LKS_SwiftTraceManager: NSObject {
                     
                     let ivarTrace = LookinIvarTrace()
                     ivarTrace.hostObject = hostObject
-                    ivarTrace.hostClassName = NSStringFromClass(childClass)
+                    
+                    ivarTrace.hostClassName = makeDisplayClassName(superClass: unwrappedCurrClass, childClass: initialInClass)
+                    
                     ivarTrace.ivarName = label
                     
                     if (value === hostObject) {
@@ -53,8 +57,46 @@ public class LKS_SwiftTraceManager: NSObject {
                 }
             }
             mirror = m.superclassMirror
-            inClass = childClass.superclass()
+            currClass = unwrappedCurrClass.superclass()
         }
+    }
+    
+    // 比如 superClass 可能是 UIView，而 childClass 可能是 UIButton
+    private static func makeDisplayClassName(superClass: AnyClass, childClass: AnyClass?) -> String {
+        let superName = NSStringFromClass(superClass)
+        
+        guard let childClass = childClass else {
+            return superName
+        }
+        let childName = NSStringFromClass(childClass)
+        if superName == childName {
+            return superName
+        }
+        let superModule = queryModuleName(classname: superName)
+        let childModule = queryModuleName(classname: childName)
+        if superModule != nil, superModule == childModule {
+            let shortSuperName = queryShortName(classname: superName)
+            // ( UIKit.UIButton : UIView *)
+            return "\(childName) : \(shortSuperName)"
+        }
+        return "\(childName) : \(superName)"
+    }
+    
+    private static func queryModuleName(classname: String) -> String? {
+        let parts = classname.components(separatedBy: ".")
+        if parts.count != 2 {
+            return nil
+        }
+        return parts[0]
+    }
+    
+    /// 不包含 module name
+    private static func queryShortName(classname: String) -> String {
+        let parts = classname.components(separatedBy: ".")
+        if parts.count != 2 {
+            return classname
+        }
+        return parts[1]
     }
 }
 

@@ -32,11 +32,15 @@ LookinAttrGroupIdentifier const LookinAttrGroup_UITableView = @"ta";
 LookinAttrGroupIdentifier const LookinAttrGroup_UITextView = @"te";
 LookinAttrGroupIdentifier const LookinAttrGroup_UITextField = @"tf";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView = @"ve";
+LookinAttrGroupIdentifier const LookinAttrGroup_UIStackView = @"UIStackView";
 
+LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom = @"guc"; // user custom
 
 #pragma mark - Section
 
 LookinAttrSectionIdentifier const LookinAttrSec_None = @"n";
+
+LookinAttrSectionIdentifier const LookinAttrSec_UserCustom = @"sec_ctm";
 
 LookinAttrSectionIdentifier const LookinAttrSec_Class_Class = @"cl_c";
 
@@ -122,11 +126,18 @@ LookinAttrSectionIdentifier const LookinAttrSec_UITextField_ClearButtonMode = @"
 LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_Style = @"ve_s";
 LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_QMUIForegroundColor = @"ve_f";
 
+LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Axis = @"usv_axis";
+LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Distribution = @"usv_dis";
+LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Alignment = @"usv_align";
+LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Spacing = @"usv_spa";
+
 #pragma mark - Attr
 
 LookinAttrIdentifier const LookinAttr_None = @"n";
+LookinAttrIdentifier const LookinAttr_UserCustom = @"ctm";
 
 LookinAttrIdentifier const LookinAttr_Class_Class_Class = @"c_c_c";
+
 
 LookinAttrIdentifier const LookinAttr_Relation_Relation_Relation = @"r_r_r";
 
@@ -233,5 +244,10 @@ LookinAttrIdentifier const LookinAttr_UITextField_ClearButtonMode_Mode = @"tf_cb
 
 LookinAttrIdentifier const LookinAttr_UIVisualEffectView_Style_Style = @"ve_s_s";
 LookinAttrIdentifier const LookinAttr_UIVisualEffectView_QMUIForegroundColor_Color = @"ve_f_c";
+
+LookinAttrIdentifier const LookinAttr_UIStackView_Axis_Axis = @"usv_axis_axis";
+LookinAttrIdentifier const LookinAttr_UIStackView_Distribution_Distribution = @"usv_dis_dis";
+LookinAttrIdentifier const LookinAttr_UIStackView_Alignment_Alignment = @"usv_ali_ali";
+LookinAttrIdentifier const LookinAttr_UIStackView_Spacing_Spacing = @"usv_spa_spa";
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
