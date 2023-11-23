@@ -110,7 +110,7 @@ static const uint8_t kUserInfoKey;
 
 - (void)dealloc {
     ChannelInstanceCount--;
-    NSLog(@"LookinServer - Dealloc channel(ID: %@). Total count: %@", @(self.uniqueID), @(ChannelInstanceCount));
+    NSLog(@"LookinServer - Dealloc channel%@. Still lives count: %@", self.debugTag, @(ChannelInstanceCount));
 #if PT_DISPATCH_RETAIN_RELEASE
   if (dispatchObj_channel_) dispatch_release(dispatchObj_channel_);
   else if (dispatchObj_source_) dispatch_release(dispatchObj_source_);
@@ -197,6 +197,22 @@ static const uint8_t kUserInfoKey;
   if (delegate_ && [delegate respondsToSelector:@selector(ioFrameChannel:didAcceptConnection:fromAddress:)]) {
     delegateFlags_ |= kDelegateFlagImplements_ioFrameChannel_didAcceptConnection_fromAddress;
   }
+}
+
+- (NSString *)debugTag {
+    NSString *state = @"";
+    if (connState_ == kConnStateNone) {
+        state = @"None";
+    } else if (connState_ == kConnStateConnecting) {
+        state = @"Connecting";
+    } else if (connState_ == kConnStateConnected) {
+        state = @"Connected";
+    } else if (connState_ == kConnStateListening) {
+        state = @"Listening";
+    } else {
+        state = @"Undefined";
+    }
+    return [NSString stringWithFormat:@"[%@-%@,%@]", @(self.uniqueID), @(self.targetPort), state];
 }
 
 
@@ -443,7 +459,8 @@ static const uint8_t kUserInfoKey;
 
 
 - (void)close {
-//    NSLog(@"LookinServer - Channel will close: %@", self);
+    NSLog(@"LookinServer - Will close chanel: %@", self.debugTag);
+
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, DISPATCH_IO_STOP);
     [self setDispatchChannel:NULL];
@@ -452,9 +469,10 @@ static const uint8_t kUserInfoKey;
   }
 }
 
-
+/// 曾经连接上 Client，然后 Client 端关闭时，Peertalk 内部会对之前 connect 的 channel 调用该方法
 - (void)cancel {
-//    NSLog(@"LookinServer - Channel will cancel: %@", self);
+    NSLog(@"LookinServer - Will cancel chanel: %@", self.debugTag);
+    
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, 0);
     [self setDispatchChannel:NULL];

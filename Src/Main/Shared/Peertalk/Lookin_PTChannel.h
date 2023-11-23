@@ -36,7 +36,8 @@
 @property (strong) id userInfo;
 
 @property(nonatomic, assign) int uniqueID;
-@property(nonatomic, assign) int targetPort;
+@property(nonatomic, assign) NSInteger targetPort;
+- (NSString *)debugTag;
 
 // Create a new channel using the shared Lookin_PTProtocol for the current dispatch
 // queue, with *delegate*.

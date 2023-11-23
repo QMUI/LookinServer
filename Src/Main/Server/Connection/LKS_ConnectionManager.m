@@ -49,8 +49,8 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleApplicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleWillResignActiveNotification) name:UIApplicationWillResignActiveNotification object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspectIn2D:) name:@"Lookin_2D" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspectIn3D:) name:@"Lookin_3D" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspect:) name:@"Lookin_2D" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspect:) name:@"Lookin_3D" object:nil];
         [[NSNotificationCenter defaultCenter] addObserverForName:@"Lookin_Export" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
             [[LKS_ExportManager sharedInstance] exportAndShare];
         }];
@@ -65,22 +65,27 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 
 - (void)_handleWillResignActiveNotification {
     self.applicationIsActive = NO;
+    
+    if (self.peerChannel_ && ![self.peerChannel_ isConnected]) {
+        [self.peerChannel_ close];
+        self.peerChannel_ = nil;
+    }
 }
 
 - (void)_handleApplicationDidBecomeActive {
     self.applicationIsActive = YES;
-    [self tryToListenPorts];
+    [self searchPortToListenIfNoConnection];
 }
 
-- (void)tryToListenPorts {
-    if (self.peerChannel_) {
-        // 除了 connected 和 listenin 状态之外，还可能是 close 状态。如果连接了 client 端，而 client 端又关闭了，那么这里的 channel 就会变成 close
-        if ([self.peerChannel_ isConnected] || [self.peerChannel_ isListening]) {
-//            NSLog(@"LookinServer - Abort connect trying. Already has active channel.");
-            return;
-        }
+- (void)searchPortToListenIfNoConnection {
+    if ([self.peerChannel_ isConnected]) {
+        NSLog(@"LookinServer - Abort to search ports. Already has connected channel.");
+        return;
     }
-    NSLog(@"LookinServer - Trying to connect ...");
+    NSLog(@"LookinServer - Searching port to listen...");
+    [self.peerChannel_ close];
+    self.peerChannel_ = nil;
+    
     if ([self isiOSAppOnMac]) {
         [self _tryToListenOnPortFrom:LookinSimulatorIPv4PortNumberStart to:LookinSimulatorIPv4PortNumberEnd current:LookinSimulatorIPv4PortNumberStart];
     } else {
@@ -104,6 +109,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 
 - (void)_tryToListenOnPortFrom:(int)fromPort to:(int)toPort current:(int)currentPort  {
     Lookin_PTChannel *channel = [Lookin_PTChannel channelWithDelegate:self];
+    channel.targetPort = currentPort;
     [channel listenOnPort:currentPort IPv4Address:INADDR_LOOPBACK callback:^(NSError *error) {
         if (error) {
             if (error.code == 48) {
@@ -119,7 +125,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
             } else {
                 // 所有端口都尝试完毕，全部失败
                 NSLog(@"LookinServer - 127.0.0.1:%d is unavailable(%@).", currentPort, error);
-                NSLog(@"LookinServer - Connect failed in the end. Ask for help: lookin@lookin.work");
+                NSLog(@"LookinServer - Connect failed in the end.");
             }
             
         } else {
@@ -136,10 +142,6 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         [self.peerChannel_ close];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (BOOL)isConnected {
-    return self.peerChannel_ && self.peerChannel_.isConnected;
 }
 
 - (void)respond:(LookinConnectionResponseAttachment *)data requestType:(uint32_t)requestType tag:(uint32_t)tag {
@@ -189,40 +191,35 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     [self.requestHandler handleRequestType:type tag:tag object:object];
 }
 
-/// 当连接过 Lookin 客户端，然后 Lookin 客户端又被关闭时，会走到这里
-- (void)ioFrameChannel:(Lookin_PTChannel*)channel didEndWithError:(NSError*)error {
-//    NSLog(@"LookinServer - didEndWithError:%@", channel);
-    [[NSNotificationCenter defaultCenter] postNotificationName:LKS_ConnectionDidEndNotificationName object:self];
-    [self tryToListenPorts];
-}
-
 /// 当 Client 端链接成功时，该方法会被调用，然后 channel 的状态会变成 connected
 - (void)ioFrameChannel:(Lookin_PTChannel*)channel didAcceptConnection:(Lookin_PTChannel*)otherChannel fromAddress:(Lookin_PTAddress*)address {
-//    NSLog(@"LookinServer - didAcceptConnection:%@, current:%@", otherChannel, self.peerChannel_);
+    NSLog(@"LookinServer - channel:%@, acceptConnection:%@", channel.debugTag, otherChannel.debugTag);
+
     Lookin_PTChannel *previousChannel = self.peerChannel_;
-    self.peerChannel_ = otherChannel;
-    self.peerChannel_.userInfo = address;
     
-    if (previousChannel && previousChannel != self.peerChannel_) {
-        [previousChannel cancel];
+    otherChannel.targetPort = address.port;
+    self.peerChannel_ = otherChannel;
+    
+    [previousChannel cancel];
+}
+
+/// 当连接过 Lookin 客户端，然后 Lookin 客户端又被关闭时，会走到这里
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didEndWithError:(NSError*)error {
+    if (self.peerChannel_ != channel) {
+        // Client 端第一次连接上时，之前 listen 的 port 会被 Peertalk 内部 cancel（并在 didAcceptConnection 方法里给业务抛一个新建的 connected 状态的 channel），那个被 cancel 的 channel 会走到这里
+        NSLog(@"LookinServer - Ignore channel%@ end.", channel.debugTag);
+        return;
     }
+    // Client 端关闭时，会走到这里
+    NSLog(@"LookinServer - channel%@ DidEndWithError:%@", channel.debugTag, error);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:LKS_ConnectionDidEndNotificationName object:self];
+    [self searchPortToListenIfNoConnection];
 }
 
 #pragma mark - Handler
 
-- (void)_handleLocalInspectIn2D:(NSNotification *)note {
-    UIAlertController  *alertController = [UIAlertController  alertControllerWithTitle:@"Lookin" message:@"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality."  preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *okAction  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
-    [alertController addAction:okAction];
-    UIApplication *app = [UIApplication  sharedApplication];
-    UIWindow *keyWindow = [app keyWindow];
-    UIViewController *rootViewController = [keyWindow rootViewController];
-    [rootViewController presentViewController:alertController animated:YES completion:nil];
-    
-    NSLog(@"LookinServer - Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
-}
-
-- (void)_handleLocalInspectIn3D:(NSNotification *)note {
+- (void)_handleLocalInspect:(NSNotification *)note {
     UIAlertController  *alertController = [UIAlertController  alertControllerWithTitle:@"Lookin" message:@"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality."  preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *okAction  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
     [alertController addAction:okAction];
