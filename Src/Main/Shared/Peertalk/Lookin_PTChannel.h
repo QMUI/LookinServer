@@ -35,6 +35,9 @@
 // 8 bytes (64 bits).
 @property (strong) id userInfo;
 
+@property(nonatomic, assign) int uniqueID;
+@property(nonatomic, assign) int targetPort;
+
 // Create a new channel using the shared Lookin_PTProtocol for the current dispatch
 // queue, with *delegate*.
 + (Lookin_PTChannel*)channelWithDelegate:(id<Lookin_PTChannelDelegate>)delegate;

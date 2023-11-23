@@ -29,6 +29,9 @@
 #define kDelegateFlagImplements_ioFrameChannel_didAcceptConnection_fromAddress 4
 
 
+static int ChannelInstanceCount = 0;
+static int ChannelUniqueID = 0;
+
 #pragma mark -
 // Note: We are careful about the size of this struct as each connected peer
 // implies one allocation of this struct.
@@ -75,6 +78,9 @@ static const uint8_t kUserInfoKey;
   if (!(self = [super init])) return nil;
   protocol_ = protocol;
   self.delegate = delegate;
+    
+    [self didInit];
+    
   return self;
 }
 
@@ -82,16 +88,29 @@ static const uint8_t kUserInfoKey;
 - (id)initWithProtocol:(Lookin_PTProtocol*)protocol {
   if (!(self = [super init])) return nil;
   protocol_ = protocol;
+    
+    [self didInit];
+    
   return self;
 }
 
 
 - (id)init {
+    [self didInit];
+    
   return [self initWithProtocol:[Lookin_PTProtocol sharedProtocolForQueue:dispatch_get_main_queue()]];
 }
 
+- (void)didInit {
+    ChannelUniqueID++;
+    ChannelInstanceCount++;
+    self.uniqueID = ChannelUniqueID;
+    NSLog(@"LookinServer - Init channel(ID: %@). Total count: %@", @(self.uniqueID), @(ChannelInstanceCount));
+}
 
 - (void)dealloc {
+    ChannelInstanceCount--;
+    NSLog(@"LookinServer - Dealloc channel(ID: %@). Total count: %@", @(self.uniqueID), @(ChannelInstanceCount));
 #if PT_DISPATCH_RETAIN_RELEASE
   if (dispatchObj_channel_) dispatch_release(dispatchObj_channel_);
   else if (dispatchObj_source_) dispatch_release(dispatchObj_source_);
