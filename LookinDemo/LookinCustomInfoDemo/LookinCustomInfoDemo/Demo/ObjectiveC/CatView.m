@@ -116,7 +116,9 @@
         }
     }];
     
-    return [properties copy];;
+    
+    
+    return [properties copy];
 }
 
 - (NSArray *)catView_makeCustomSubviews {
