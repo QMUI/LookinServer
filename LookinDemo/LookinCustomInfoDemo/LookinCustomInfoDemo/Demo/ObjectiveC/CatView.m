@@ -235,14 +235,14 @@
         @"storage": @[
             @{
                 @"verbatim": @"Hello, world!",
-                @"__desc": @"String"
+                @"_desc": @"String"
             },
             @{
                 @"size": @"123",
-                @"__desc": @"Double"
+                @"_desc": @"Double"
             }
         ],
-        @"__desc": @"Text.Storage"
+        @"_desc": @"Text.Storage"
     }
     ;
     NSError *error;
