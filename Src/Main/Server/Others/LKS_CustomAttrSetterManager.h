@@ -42,8 +42,8 @@ typedef void(^LKS_InsetsSetter)(UIEdgeInsets);
 - (void)saveRectSetter:(LKS_RectSetter)setter uniqueID:(NSString *)uniqueID;
 - (LKS_RectSetter)getRectSetterWithID:(NSString *)uniqueID;
 
-- (void)saveSizeSetter:(LKS_RectSetter)setter uniqueID:(NSString *)uniqueID;
-- (LKS_RectSetter)getSizeSetterWithID:(NSString *)uniqueID;
+- (void)saveSizeSetter:(LKS_SizeSetter)setter uniqueID:(NSString *)uniqueID;
+- (LKS_SizeSetter)getSizeSetterWithID:(NSString *)uniqueID;
 
 - (void)savePointSetter:(LKS_PointSetter)setter uniqueID:(NSString *)uniqueID;
 - (LKS_PointSetter)getPointSetterWithID:(NSString *)uniqueID;

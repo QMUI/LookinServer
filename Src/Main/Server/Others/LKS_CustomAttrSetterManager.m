@@ -89,11 +89,11 @@
     return self.settersMap[uniqueID];
 }
 
-- (void)saveSizeSetter:(LKS_RectSetter)setter uniqueID:(NSString *)uniqueID {
+- (void)saveSizeSetter:(LKS_SizeSetter)setter uniqueID:(NSString *)uniqueID {
     self.settersMap[uniqueID] = setter;
 }
 
-- (LKS_RectSetter)getSizeSetterWithID:(NSString *)uniqueID {
+- (LKS_SizeSetter)getSizeSetterWithID:(NSString *)uniqueID {
     return self.settersMap[uniqueID];
 }
 

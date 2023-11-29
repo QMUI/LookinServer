@@ -264,6 +264,104 @@
         return attr;
     }
     
+    if ([fixedType isEqualToString:@"size"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeCGSize;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_SizeSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveSizeSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    if ([fixedType isEqualToString:@"point"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeCGPoint;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_PointSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] savePointSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    if ([fixedType isEqualToString:@"insets"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeUIEdgeInsets;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_InsetsSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveInsetsSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    if ([fixedType isEqualToString:@"shadow"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSDictionary class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        NSDictionary *shadowInfo = value;
+        if (![shadowInfo[@"offset"] isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value. No offset.");
+            return nil;
+        }
+        if (![shadowInfo[@"opacity"] isKindOfClass:[NSNumber class]]) {
+            NSLog(@"LookinServer - Wrong value. No opacity.");
+            return nil;
+        }
+        NSMutableDictionary *checkedShadowInfo = [@{
+            @"offset": shadowInfo[@"offset"],
+            @"opacity": shadowInfo[@"opacity"]
+        } mutableCopy];
+        if ([shadowInfo[@"color"] isKindOfClass:[UIColor class]]) {
+            checkedShadowInfo[@"color"] = [(UIColor *)shadowInfo[@"color"] lks_rgbaComponents];
+        }
+        
+        attr.attrType = LookinAttrTypeShadow;
+        attr.value = checkedShadowInfo;
+        
+        return attr;
+    }
+    
     if ([fixedType isEqualToString:@"enum"]) {
         if (value == nil) {
             NSLog(@"LookinServer - No value.");
