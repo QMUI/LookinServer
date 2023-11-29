@@ -242,6 +242,28 @@
         return attr;
     }
     
+    if ([fixedType isEqualToString:@"rect"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeCGRect;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_RectSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveRectSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
     if ([fixedType isEqualToString:@"enum"]) {
         if (value == nil) {
             NSLog(@"LookinServer - No value.");

@@ -93,6 +93,19 @@
             return YES;
         }
             
+        case LookinAttrTypeCGRect: {
+            NSValue *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSValue class]]) {
+                return NO;
+            }
+            LKS_RectSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getRectSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue.CGRectValue);
+            return YES;
+        }
+            
         default:
             return NO;
     }
