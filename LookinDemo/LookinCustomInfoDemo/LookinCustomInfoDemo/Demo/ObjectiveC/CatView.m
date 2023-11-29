@@ -167,6 +167,7 @@
         @"value": @{
             @"opacity": @0.5,
             @"offset": [NSValue valueWithCGSize:CGSizeMake(5, 10)],
+            @"radius": @2.5,
             // 可选项，没有该项则表示颜色为 nil
             // Optional. Do not set this item when the shadow color is nil.
             @"color": UIColor.redColor

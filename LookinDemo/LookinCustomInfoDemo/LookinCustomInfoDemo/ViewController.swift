@@ -11,7 +11,6 @@ class ViewController: UIViewController {
     private let dogLayer = DogLayer()
     private let catView = CatView()
     private let birdView = BirdView()
-    private let danceView = DanceView()
     private let horseLayer = HorseLayer()
     private let viewModel0 = GoodViewModel()
     private let viewModel1 = SomeViewModel()
@@ -42,10 +41,6 @@ class ViewController: UIViewController {
         horseLayer.backgroundColor = UIColor.orange.cgColor
         view.layer.addSublayer(horseLayer)
         horseLayer.frame = CGRect(x: 20, y: 600, width: 100, height: 100)
-        
-        danceView.backgroundColor = UIColor.purple
-        danceView.frame = CGRect(x: 150, y: 20, width: 100, height: 100)
-        view.addSubview(danceView)
     }
 
 

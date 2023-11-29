@@ -348,9 +348,14 @@
             NSLog(@"LookinServer - Wrong value. No opacity.");
             return nil;
         }
+        if (![shadowInfo[@"radius"] isKindOfClass:[NSNumber class]]) {
+            NSLog(@"LookinServer - Wrong value. No radius.");
+            return nil;
+        }
         NSMutableDictionary *checkedShadowInfo = [@{
             @"offset": shadowInfo[@"offset"],
-            @"opacity": shadowInfo[@"opacity"]
+            @"opacity": shadowInfo[@"opacity"],
+            @"radius": shadowInfo[@"radius"]
         } mutableCopy];
         if ([shadowInfo[@"color"] isKindOfClass:[UIColor class]]) {
             checkedShadowInfo[@"color"] = [(UIColor *)shadowInfo[@"color"] lks_rgbaComponents];

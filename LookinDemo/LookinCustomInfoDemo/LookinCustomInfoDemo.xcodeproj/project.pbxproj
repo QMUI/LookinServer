@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		185EFD572AF6825500C29B15 /* CatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 185EFD562AF6825500C29B15 /* CatView.m */; };
 		3D3A590A4DF0DC33BFD1D0F6 /* Pods_LookinCustomInfoDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA902BEE04AE8FD55B04E6E /* Pods_LookinCustomInfoDemo.framework */; };
-		7BAA34162B14C7C8000CAC68 /* DanceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BAA34152B14C7C8000CAC68 /* DanceView.m */; };
 		A7E305132AFEA2780074131C /* SomeViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A7E305122AFEA2780074131C /* SomeViewModel.m */; };
 		A7E305152AFEA2950074131C /* GoodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E305142AFEA2950074131C /* GoodViewModel.swift */; };
 		A7F8FC632AF2BE8400ABC7F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8FC622AF2BE8400ABC7F4 /* AppDelegate.swift */; };
@@ -30,8 +29,6 @@
 		185EFD562AF6825500C29B15 /* CatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CatView.m; sourceTree = "<group>"; };
 		5AA902BEE04AE8FD55B04E6E /* Pods_LookinCustomInfoDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LookinCustomInfoDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B794B6A0F43F3245FA49418 /* Pods-LookinCustomInfoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LookinCustomInfoDemo.debug.xcconfig"; path = "Target Support Files/Pods-LookinCustomInfoDemo/Pods-LookinCustomInfoDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		7BAA34142B14C7C8000CAC68 /* DanceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DanceView.h; sourceTree = "<group>"; };
-		7BAA34152B14C7C8000CAC68 /* DanceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DanceView.m; sourceTree = "<group>"; };
 		A7E305112AFEA2780074131C /* SomeViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SomeViewModel.h; sourceTree = "<group>"; };
 		A7E305122AFEA2780074131C /* SomeViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SomeViewModel.m; sourceTree = "<group>"; };
 		A7E305142AFEA2950074131C /* GoodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoodViewModel.swift; sourceTree = "<group>"; };
@@ -137,8 +134,6 @@
 				A7E305112AFEA2780074131C /* SomeViewModel.h */,
 				A7E305122AFEA2780074131C /* SomeViewModel.m */,
 				A7F8FC862AF2C7D600ABC7F4 /* UIView+Custom.m */,
-				7BAA34142B14C7C8000CAC68 /* DanceView.h */,
-				7BAA34152B14C7C8000CAC68 /* DanceView.m */,
 			);
 			path = ObjectiveC;
 			sourceTree = "<group>";
@@ -278,7 +273,6 @@
 				A7F8FC652AF2BE8400ABC7F4 /* SceneDelegate.swift in Sources */,
 				185EFD572AF6825500C29B15 /* CatView.m in Sources */,
 				A7E305132AFEA2780074131C /* SomeViewModel.m in Sources */,
-				7BAA34162B14C7C8000CAC68 /* DanceView.m in Sources */,
 				A7F8FC7F2AF2C2D600ABC7F4 /* BirdView.swift in Sources */,
 				A7F8FC7C2AF2C05500ABC7F4 /* DogLayer.m in Sources */,
 				A7F8FC892AF2C93300ABC7F4 /* CALayer+Custom.swift in Sources */,
