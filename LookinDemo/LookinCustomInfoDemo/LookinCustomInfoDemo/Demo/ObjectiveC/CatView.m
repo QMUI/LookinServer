@@ -175,6 +175,14 @@
         }
     }];
     
+    // json property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatJson",
+        @"value": [self createSomeJson],
+        @"valueType": @"json"
+    }];
+    
     return [properties copy];
 }
 
@@ -220,6 +228,27 @@
     }];
     
     return [subviews copy];
+}
+
+- (NSString *)createSomeJson {
+    NSDictionary *dict = @{
+        @"storage": @[
+            @{
+                @"verbatim": @"Hello, world!",
+                @"__desc": @"String"
+            },
+            @{
+                @"size": @"123",
+                @"__desc": @"Double"
+            }
+        ],
+        @"__desc": @"Text.Storage"
+    }
+    ;
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
 }
 
 @end

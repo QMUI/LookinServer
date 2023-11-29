@@ -43,7 +43,8 @@ typedef NS_ENUM(NSInteger, LookinAttrType) {
     LookinAttrTypeCustomObj,
     
     LookinAttrTypeEnumString,
-    LookinAttrTypeShadow
+    LookinAttrTypeShadow,
+    LookinAttrTypeJson
 };
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

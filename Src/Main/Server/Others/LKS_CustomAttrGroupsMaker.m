@@ -394,6 +394,17 @@
         return attr;
     }
     
+    if ([fixedType isEqualToString:@"json"]) {
+        if (![value isKindOfClass:[NSString class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeJson;
+        attr.value = value;
+        
+        return attr;
+    }
+    
     NSLog(@"LookinServer - Unsupported value type.");
     return nil;
 }
