@@ -102,20 +102,6 @@
         }
     }];
     
-    // enum property
-    [properties addObject:@{
-        @"section": @"Animal Info",
-        @"title": @"Type",
-        @"value": @"Corgi",
-        @"valueType": @"enum",
-        // 当 valueType 为 enum 时，必须设置该项，内容为所有可用的 enum 值。
-        // When valueType is "enum", this item must be set, with the content being all available enum cases.
-        @"allEnumCases": @[@"Corgi", @"Samoyed", @"Golden Retriever", @"Teddy"],
-        @"retainedSetter": ^(NSString *newValue) {
-            NSLog(@"Try to modify by Lookin.");
-        }
-    }];
-    
     // rect property
     [properties addObject:@{
         @"section": @"Animal Info",
@@ -173,6 +159,20 @@
             @"color": UIColor.redColor
         },
         @"valueType": @"shadow"
+    }];
+    
+    // enum property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"Type",
+        @"value": @"Corgi",
+        @"valueType": @"enum",
+        // 当 valueType 为 enum 时，必须设置该项，内容为所有可用的 enum 值。
+        // When valueType is "enum", this item must be set, with the content being all available enum cases.
+        @"allEnumCases": @[@"Corgi", @"Samoyed", @"Golden Retriever", @"Teddy"],
+        @"retainedSetter": ^(NSString *newValue) {
+            NSLog(@"Try to modify by Lookin.");
+        }
     }];
     
     return [properties copy];
