@@ -116,7 +116,63 @@
         }
     }];
     
+    // rect property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatRect",
+        @"value": [NSValue valueWithCGRect:CGRectMake(1, 2, 3, 4)],
+        @"valueType": @"rect",
+        @"retainedSetter": ^(CGRect newRect) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
     
+    // size property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatSize",
+        @"value": [NSValue valueWithCGSize:CGSizeMake(5, 6)],
+        @"valueType": @"size",
+        @"retainedSetter": ^(CGSize newSize) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // point property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatPoint",
+        @"value": [NSValue valueWithCGPoint:CGPointMake(7, 8)],
+        @"valueType": @"point",
+        @"retainedSetter": ^(CGPoint newPoint) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // insets property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatInsets",
+        @"value": [NSValue valueWithUIEdgeInsets:UIEdgeInsetsMake(1, 2, 3, 4)],
+        @"valueType": @"insets",
+        @"retainedSetter": ^(UIEdgeInsets newInsets) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // shadow property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatShadow",
+        @"value": @{
+            @"opacity": @0.5,
+            @"offset": [NSValue valueWithCGSize:CGSizeMake(5, 10)],
+            // 可选项，没有该项则表示颜色为 nil
+            // Optional. Do not set this item when the shadow color is nil.
+            @"color": UIColor.redColor
+        },
+        @"valueType": @"shadow"
+    }];
     
     return [properties copy];
 }
