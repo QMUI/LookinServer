@@ -38,7 +38,9 @@
         @"properties": [self catView_makeCustomProperties],
         // 可选项。这些信息会在 Lookin 左侧图层结构中被展示。
         // Optional. This information will be displayed in the layer structure on the left side of Lookin.
-        @"subviews": [self catView_makeCustomSubviews]
+        @"subviews": [self catView_makeCustomSubviews],
+        // 可选项。自定义该 View 实例在 Lookin 左侧图层树中的名字
+        @"title": @"CatName"
     };
     return ret;
 }
