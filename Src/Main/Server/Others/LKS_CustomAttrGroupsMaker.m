@@ -22,6 +22,9 @@
 /// key 是 section title
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<LookinAttribute *> *> *sectionAndAttrs;
 
+@property(nonatomic, copy) NSString *resolvedCustomDisplayTitle;
+@property(nonatomic, strong) NSMutableArray *resolvedGroups;
+
 @property(nonatomic, weak) CALayer *layer;
 
 @end
@@ -36,10 +39,10 @@
     return self;
 }
 
-- (NSArray<LookinAttributesGroup *> *)make {
+- (void)execute {
     if (!self.layer) {
         NSAssert(NO, @"");
-        return nil;
+        return;
     }
     NSMutableArray<NSString *> *selectors = [NSMutableArray array];
     [selectors addObject:@"lookin_customDebugInfos"];
@@ -57,7 +60,7 @@
     }
     
     if ([self.sectionAndAttrs count] == 0) {
-        return nil;
+        return;
     }
     NSMutableArray<LookinAttributesGroup *> *groups = [NSMutableArray array];
     [self.sectionAndAttrs enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull groupTitle, NSMutableArray<LookinAttribute *> * _Nonnull attrs, BOOL * _Nonnull stop) {
@@ -79,7 +82,8 @@
     [groups sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesGroup *obj1, LookinAttributesGroup *obj2) {
         return [obj1.userCustomTitle compare:obj2.userCustomTitle];
     }];
-    return [groups copy];
+    
+    self.resolvedGroups = groups;
 }
 
 - (void)makeAttrsForViewOrLayer:(id)viewOrLayer selectorName:(NSString *)selectorName {
@@ -112,6 +116,11 @@
     
     NSDictionary<NSString *, id> *rawData = tempRawData;
     NSArray *rawProperties = rawData[@"properties"];
+    
+    NSString *customTitle = rawData[@"title"];
+    if (customTitle && [customTitle isKindOfClass:[NSString class]] && customTitle.length > 0) {
+        self.resolvedCustomDisplayTitle = customTitle;
+    }
     
     [self makeAttrsFromRawProperties:rawProperties];
 }
@@ -407,6 +416,14 @@
     
     NSLog(@"LookinServer - Unsupported value type.");
     return nil;
+}
+
+- (NSArray<LookinAttributesGroup *> *)getGroups {
+    return self.resolvedGroups;
+}
+
+- (NSString *)getCustomDisplayTitle {
+    return self.resolvedCustomDisplayTitle;
 }
 
 + (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties saveCustomSetter:(BOOL)saveCustomSetter {

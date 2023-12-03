@@ -66,6 +66,7 @@
     }];
     newDisplayItem.shouldCaptureImage = self.shouldCaptureImage;
     newDisplayItem.representedAsKeyWindow = self.representedAsKeyWindow;
+    newDisplayItem.customDisplayTitle = self.customDisplayTitle;
     [newDisplayItem _updateDisplayingInHierarchyProperty];
     return newDisplayItem;
 }
@@ -91,6 +92,7 @@
         [aCoder encodeObject:self.soloScreenshot forKey:@"soloScreenshot"];
         [aCoder encodeObject:self.groupScreenshot forKey:@"groupScreenshot"];
     }
+    [aCoder encodeObject:self.customDisplayTitle forKey:@"customDisplayTitle"];
 #if TARGET_OS_IPHONE
     [aCoder encodeCGRect:self.frame forKey:@"frame"];
     [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
@@ -141,6 +143,7 @@
         self.eventHandlers = [aDecoder decodeObjectForKey:@"eventHandlers"];
         /// this property was added in LookinServer 1.1.3
         self.shouldCaptureImage = [aDecoder containsValueForKey:@"shouldCaptureImage"] ? [aDecoder decodeBoolForKey:@"shouldCaptureImage"] : YES;
+        self.customDisplayTitle = [aDecoder decodeObjectForKey:@"customDisplayTitle"];
 #if TARGET_OS_IPHONE
         self.frame = [aDecoder decodeCGRectForKey:@"frame"];
         self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
@@ -527,6 +530,8 @@
 - (NSString *)title {
     if (self.customInfo) {
         return self.customInfo.title;
+    } else if (self.customDisplayTitle.length > 0) {
+        return self.customDisplayTitle;
     } else if (self.viewObject) {
         return self.viewObject.shortSelfClassName;
     } else if (self.layerObject) {

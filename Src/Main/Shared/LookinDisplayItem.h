@@ -104,6 +104,10 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// Set as NO to avoid capture image of view to lift reload speed. Default to YES.
 @property(nonatomic, assign) BOOL shouldCaptureImage;
 
+/// 用户通过重写 lookin_customDebugInfos 而自定义的该实例的名字
+/// 可能为 nil
+@property(nonatomic, copy) NSString *customDisplayTitle;
+
 #pragma mark - No Encode/Decode
 
 /// 该 item 在左侧 hierarchy 中显示的字符串，通常是类名
