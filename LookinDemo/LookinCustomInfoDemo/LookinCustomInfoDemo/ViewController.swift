@@ -41,8 +41,20 @@ class ViewController: UIViewController {
         horseLayer.backgroundColor = UIColor.orange.cgColor
         view.layer.addSublayer(horseLayer)
         horseLayer.frame = CGRect(x: 20, y: 600, width: 100, height: 100)
+        
+        getLookinVersion()
     }
 
-
+    private func getLookinVersion() {
+        // NSMutableDictionary 是引用传递，而 Swift 原生字典是值传递，因此这里只能用 NSMutableDictionary
+        // NSMutableDictionary is passed by reference, while Swift's native dictionary is passed by value, so here we can only use NSMutableDictionary.
+        let lookinInfos = NSMutableDictionary()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "GetLookinInfo"), object: nil, userInfo: ["infos": lookinInfos])
+        if let lookinServerVersion = lookinInfos["lookinServerVersion"] as? String {
+            print("LookinServer version: \(lookinServerVersion)")
+        } else {
+            print("No LookinServer. Or LookinServer version is lower than 1.2.5")
+        }
+    }
 }
 
