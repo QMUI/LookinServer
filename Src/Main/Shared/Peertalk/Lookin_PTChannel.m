@@ -105,12 +105,12 @@ static const uint8_t kUserInfoKey;
     ChannelUniqueID++;
     ChannelInstanceCount++;
     self.uniqueID = ChannelUniqueID;
-    NSLog(@"LookinServer - Init channel(ID: %@). Total count: %@", @(self.uniqueID), @(ChannelInstanceCount));
+//    NSLog(@"LookinServer - Init channel(ID: %@). Total count: %@", @(self.uniqueID), @(ChannelInstanceCount));
 }
 
 - (void)dealloc {
     ChannelInstanceCount--;
-    NSLog(@"LookinServer - Dealloc channel%@. Still lives count: %@", self.debugTag, @(ChannelInstanceCount));
+//    NSLog(@"LookinServer - Dealloc channel%@. Still lives count: %@", self.debugTag, @(ChannelInstanceCount));
 #if PT_DISPATCH_RETAIN_RELEASE
   if (dispatchObj_channel_) dispatch_release(dispatchObj_channel_);
   else if (dispatchObj_source_) dispatch_release(dispatchObj_source_);
@@ -446,7 +446,7 @@ static const uint8_t kUserInfoKey;
     
     NSError *err = nil;
     if (![peerChannel startReadingFromConnectedChannel:dispatchChannel error:&err]) {
-      NSLog(@"startReadingFromConnectedChannel failed in accept: %@", err);
+//      NSLog(@"startReadingFromConnectedChannel failed in accept: %@", err);
     }
   } else {
     close(clientSocketFD);
@@ -459,7 +459,7 @@ static const uint8_t kUserInfoKey;
 
 
 - (void)close {
-    NSLog(@"LookinServer - Will close chanel: %@", self.debugTag);
+//    NSLog(@"LookinServer - Will close chanel: %@", self.debugTag);
 
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, DISPATCH_IO_STOP);
@@ -471,7 +471,7 @@ static const uint8_t kUserInfoKey;
 
 /// 曾经连接上 Client，然后 Client 端关闭时，Peertalk 内部会对之前 connect 的 channel 调用该方法
 - (void)cancel {
-    NSLog(@"LookinServer - Will cancel chanel: %@", self.debugTag);
+//    NSLog(@"LookinServer - Will cancel chanel: %@", self.debugTag);
     
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, 0);
