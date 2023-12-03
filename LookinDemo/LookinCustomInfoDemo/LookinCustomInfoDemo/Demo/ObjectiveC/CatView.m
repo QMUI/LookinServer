@@ -234,22 +234,34 @@
 }
 
 - (NSString *)createSomeJson {
-    NSDictionary *dict = @{
-        @"storage": @[
-            @{
-                @"verbatim": @"Hello, world!",
-                @"_desc": @"String"
-            },
-            @{
-                @"size": @"123",
-                @"_desc": @"Double"
-            }
-        ],
-        @"_desc": @"Text.Storage"
-    }
-    ;
+    NSArray *arr = @[
+        @{
+            @"title":  @"allowedBehaviors",
+            @"desc": @"HostingControllerAllowedBehaviors",
+            @"details": @[
+                @{
+                    @"title":  @"rawValue",
+                    @"desc": @"0"
+                }, @{
+                    @"title":  @"contentScrollViewBridge",
+                    @"desc": @"UIKitContentScrollViewBridge",
+                    @"details": @[
+                        @{
+                            @"title":  @"bridgeSetEdges",
+                            @"desc": @"[:]"
+                        }, @{
+                            @"title":  @"pixelLength",
+                            @"desc": @"0.33333333"
+                        }]
+                }]
+        },
+        @{
+            @"title":  @"scenePhase",
+            @"desc": @"active"
+        }
+    ];
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:0 error:&error];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     return jsonString;
 }
