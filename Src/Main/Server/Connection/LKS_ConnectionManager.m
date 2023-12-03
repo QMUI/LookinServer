@@ -57,6 +57,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         [[NSNotificationCenter defaultCenter] addObserverForName:@"Lookin_RelationSearch" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
             [[LKS_TraceManager sharedInstance] addSearchTarger:note.object];
         }];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleGetLookinInfo:) name:@"GetLookinInfo" object:nil];
         
         self.requestHandler = [LKS_RequestHandler new];
     }
@@ -229,6 +230,19 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     [rootViewController presentViewController:alertController animated:YES completion:nil];
     
     NSLog(@"LookinServer - Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
+}
+
+- (void)handleGetLookinInfo:(NSNotification *)note {
+    NSDictionary* userInfo = note.userInfo;
+    if (!userInfo) {
+        return;
+    }
+    NSMutableDictionary* infoWrapper = userInfo[@"infos"];
+    if (![infoWrapper isKindOfClass:[NSMutableDictionary class]]) {
+        NSLog(@"LookinServer - GetLookinInfo failed. Params invalid.");
+        return;
+    }
+    infoWrapper[@"lookinServerVersion"] = LOOKIN_SERVER_READABLE_VERSION;
 }
 
 @end
