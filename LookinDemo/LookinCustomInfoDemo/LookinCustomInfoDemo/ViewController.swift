@@ -51,8 +51,11 @@ class ViewController: UIViewController {
         let lookinInfos = NSMutableDictionary()
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "GetLookinInfo"), object: nil, userInfo: ["infos": lookinInfos])
         if let lookinServerVersion = lookinInfos["lookinServerVersion"] as? String {
+            // 这里是小数点分割的版本号，比如"1.2.5"
+            // Here is the version number separated by decimal points, such as "1.2.5"
             print("LookinServer version: \(lookinServerVersion)")
         } else {
+            // 当前环境中没有集成 LookinServer，或者 LookinServer 版本低于 1.2.5
             print("No LookinServer. Or LookinServer version is lower than 1.2.5")
         }
     }
