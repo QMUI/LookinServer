@@ -13,6 +13,7 @@ typedef void(^LKS_NumberSetter)(NSNumber *);
 typedef void(^LKS_BoolSetter)(BOOL);
 typedef void(^LKS_ColorSetter)(UIColor *);
 typedef void(^LKS_EnumSetter)(NSString *);
+typedef void(^LKS_IdSetter)(id);
 
 @interface LKS_CustomAttrSetterManager : NSObject
 
@@ -34,6 +35,9 @@ typedef void(^LKS_EnumSetter)(NSString *);
 
 - (void)saveEnumSetter:(LKS_EnumSetter)setter uniqueID:(NSString *)uniqueID;
 - (LKS_EnumSetter)getEnumSetterWithID:(NSString *)uniqueID;
+
+- (void)saveIdSetter:(LKS_IdSetter)setter uniqueID:(NSString *)uniqueID;
+- (LKS_IdSetter)getIdSetterWithID:(NSString *)uniqueID;
 
 @end
 

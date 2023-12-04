@@ -93,8 +93,14 @@
             return YES;
         }
             
-        default:
-            return NO;
+        default: {
+            LKS_IdSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getIdSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(modification.value);
+            return YES;
+        }
     }
 }
 
