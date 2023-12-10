@@ -15,6 +15,7 @@
 @property(nonatomic, strong) NSMutableDictionary *boolSetterMap;
 @property(nonatomic, strong) NSMutableDictionary *colorSetterMap;
 @property(nonatomic, strong) NSMutableDictionary *enumSetterMap;
+@property(nonatomic, strong) NSMutableDictionary *idSetterMap;
 
 @end
 
@@ -41,6 +42,7 @@
         self.boolSetterMap = [NSMutableDictionary new];
         self.colorSetterMap = [NSMutableDictionary new];
         self.enumSetterMap = [NSMutableDictionary new];
+        self.idSetterMap = [NSMutableDictionary new];
     }
     return self;
 }
@@ -51,6 +53,7 @@
     [self.boolSetterMap removeAllObjects];
     [self.colorSetterMap removeAllObjects];
     [self.enumSetterMap removeAllObjects];
+    [self.idSetterMap removeAllObjects];
 }
 
 - (void)saveStringSetter:(nonnull LKS_StringSetter)setter uniqueID:(nonnull NSString *)uniqueID {
@@ -91,6 +94,14 @@
 
 - (LKS_EnumSetter)getEnumSetterWithID:(NSString *)uniqueID {
     return self.enumSetterMap[uniqueID];
+}
+
+- (void)saveIdSetter:(LKS_IdSetter)setter uniqueID:(NSString *)uniqueID {
+    self.idSetterMap[uniqueID] = setter;
+}
+
+- (LKS_IdSetter)getIdSetterWithID:(NSString *)uniqueID {
+    return self.idSetterMap[uniqueID];
 }
 
 @end

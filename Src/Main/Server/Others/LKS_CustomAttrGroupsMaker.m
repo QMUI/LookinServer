@@ -134,6 +134,18 @@
     }
 }
 
++ (NSDictionary *)supportedNSValueType {
+    return @{
+        @"cgpoint":@(LookinAttrTypeCGPoint),
+        @"cgvector":@(LookinAttrTypeCGVector),
+        @"cgsize":@(LookinAttrTypeCGSize),
+        @"cgrect":@(LookinAttrTypeCGRect),
+        @"cgaffinetransform":@(LookinAttrTypeCGAffineTransform),
+        @"uiedgeinsets":@(LookinAttrTypeUIEdgeInsets),
+        @"uioffset":@(LookinAttrTypeUIOffset),
+    };
+}
+
 + (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict saveCustomSetter:(BOOL)saveCustomSetter groupTitle:(inout NSString **)inoutGroupTitle {
     LookinAttribute *attr = [LookinAttribute new];
     attr.identifier = LookinAttr_UserCustom;
@@ -258,6 +270,29 @@
         if ([allEnumCases isKindOfClass:[NSArray class]]) {
             attr.extraValue = allEnumCases;
         }
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_EnumSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveEnumSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    NSNumber *supportedValueType = [self supportedNSValueType][fixedType ?: @""];
+    if (supportedValueType) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = [supportedValueType integerValue];
+        attr.value = value;
         
         if (saveCustomSetter && dict[@"retainedSetter"]) {
             NSString *uniqueID = [[NSUUID new] UUIDString];
