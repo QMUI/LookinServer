@@ -24,7 +24,10 @@ class HorseLayer: CALayer {
             "properties": self.makeCustomProperties(),
             // 可选项。这些信息会在 Lookin 左侧图层结构中被展示。
             // Optional. This information will be displayed in the layer structure on the left side of Lookin.
-            "subviews": self.makeCustomSubviews()
+            "subviews": self.makeCustomSubviews(),
+            // 可选项。该 View 实例在 Lookin 左侧图层树中的名字。
+            // Optional. The name of the view instance in the hierarchy panel on the left side of Lookin.
+            "title": "CustomHorseLayer"
         ]
         return ret
     }

@@ -38,7 +38,10 @@
         @"properties": [self catView_makeCustomProperties],
         // 可选项。这些信息会在 Lookin 左侧图层结构中被展示。
         // Optional. This information will be displayed in the layer structure on the left side of Lookin.
-        @"subviews": [self catView_makeCustomSubviews]
+        @"subviews": [self catView_makeCustomSubviews],
+        // 可选项。该 View 实例在 Lookin 左侧图层树中的名字。
+        // Optional. The name of the view instance in the hierarchy panel on the left side of Lookin.
+        @"title": @"CustomCatView"
     };
     return ret;
 }
@@ -102,6 +105,65 @@
         }
     }];
     
+    // rect property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatRect",
+        @"value": [NSValue valueWithCGRect:CGRectMake(1, 2, 3, 4)],
+        @"valueType": @"rect",
+        @"retainedSetter": ^(CGRect newRect) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // size property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatSize",
+        @"value": [NSValue valueWithCGSize:CGSizeMake(5, 6)],
+        @"valueType": @"size",
+        @"retainedSetter": ^(CGSize newSize) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // point property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatPoint",
+        @"value": [NSValue valueWithCGPoint:CGPointMake(7, 8)],
+        @"valueType": @"point",
+        @"retainedSetter": ^(CGPoint newPoint) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // insets property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatInsets",
+        @"value": [NSValue valueWithUIEdgeInsets:UIEdgeInsetsMake(1, 2, 3, 4)],
+        @"valueType": @"insets",
+        @"retainedSetter": ^(UIEdgeInsets newInsets) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // shadow property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatShadow",
+        @"value": @{
+            @"opacity": @0.5,
+            @"offset": [NSValue valueWithCGSize:CGSizeMake(5, 10)],
+            @"radius": @2.5,
+            // 可选项，没有该项则表示颜色为 nil
+            // Optional. Do not set this item when the shadow color is nil.
+            @"color": UIColor.redColor
+        },
+        @"valueType": @"shadow"
+    }];
+    
     // enum property
     [properties addObject:@{
         @"section": @"Animal Info",
@@ -116,7 +178,13 @@
         }
     }];
     
-    
+    // json property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"CatJson",
+        @"value": [self createSomeJson],
+        @"valueType": @"json"
+    }];
     
     return [properties copy];
 }
@@ -163,6 +231,39 @@
     }];
     
     return [subviews copy];
+}
+
+- (NSString *)createSomeJson {
+    NSArray *arr = @[
+        @{
+            @"title":  @"allowedBehaviors",
+            @"desc": @"HostingControllerAllowedBehaviors",
+            @"details": @[
+                @{
+                    @"title":  @"rawValue",
+                    @"desc": @"0"
+                }, @{
+                    @"title":  @"contentScrollViewBridge",
+                    @"desc": @"UIKitContentScrollViewBridge",
+                    @"details": @[
+                        @{
+                            @"title":  @"bridgeSetEdges",
+                            @"desc": @"[:]"
+                        }, @{
+                            @"title":  @"pixelLength",
+                            @"desc": @"0.33333333"
+                        }]
+                }]
+        },
+        @{
+            @"title":  @"scenePhase",
+            @"desc": @"active"
+        }
+    ];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:0 error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
 }
 
 @end

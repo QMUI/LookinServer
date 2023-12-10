@@ -210,7 +210,9 @@
         
         NSString *version = modification.clientReadableVersion;
         if (version.length > 0 && [version lookin_numbericOSVersion] >= 10004) {
-            detail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
+            LKS_CustomAttrGroupsMaker *maker = [[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer];
+            [maker execute];
+            detail.customAttrGroupList = [maker getGroups];
         }
         
         detail.frameValue = [NSValue valueWithCGRect:layer.frame];
