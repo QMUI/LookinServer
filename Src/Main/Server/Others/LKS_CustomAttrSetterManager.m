@@ -113,13 +113,5 @@
     return self.settersMap[uniqueID];
 }
 
-- (void)saveIdSetter:(LKS_IdSetter)setter uniqueID:(NSString *)uniqueID {
-    self.idSetterMap[uniqueID] = setter;
-}
-
-- (LKS_IdSetter)getIdSetterWithID:(NSString *)uniqueID {
-    return self.idSetterMap[uniqueID];
-}
-
 @end
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

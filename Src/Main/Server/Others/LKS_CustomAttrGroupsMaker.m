@@ -143,18 +143,6 @@
     }
 }
 
-+ (NSDictionary *)supportedNSValueType {
-    return @{
-        @"cgpoint":@(LookinAttrTypeCGPoint),
-        @"cgvector":@(LookinAttrTypeCGVector),
-        @"cgsize":@(LookinAttrTypeCGSize),
-        @"cgrect":@(LookinAttrTypeCGRect),
-        @"cgaffinetransform":@(LookinAttrTypeCGAffineTransform),
-        @"uiedgeinsets":@(LookinAttrTypeUIEdgeInsets),
-        @"uioffset":@(LookinAttrTypeUIOffset),
-    };
-}
-
 + (LookinAttribute *)attrFromRawDict:(NSDictionary *)dict saveCustomSetter:(BOOL)saveCustomSetter groupTitle:(inout NSString **)inoutGroupTitle {
     LookinAttribute *attr = [LookinAttribute new];
     attr.identifier = LookinAttr_UserCustom;
