@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         
         getLookinVersion()
         
-        addManyViews()
+//        addManyViews()
     }
 
     private func getLookinVersion() {
