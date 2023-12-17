@@ -23,6 +23,7 @@
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<LookinAttribute *> *> *sectionAndAttrs;
 
 @property(nonatomic, copy) NSString *resolvedCustomDisplayTitle;
+@property(nonatomic, copy) NSString *resolvedDanceUISource;
 @property(nonatomic, strong) NSMutableArray *resolvedGroups;
 
 @property(nonatomic, weak) CALayer *layer;
@@ -120,6 +121,11 @@
     NSString *customTitle = rawData[@"title"];
     if (customTitle && [customTitle isKindOfClass:[NSString class]] && customTitle.length > 0) {
         self.resolvedCustomDisplayTitle = customTitle;
+    }
+    
+    NSString *danceSource = rawData[@"lookin_source"];
+    if (danceSource && [danceSource isKindOfClass:[NSString class]] && danceSource.length > 0) {
+        self.resolvedDanceUISource = danceSource;
     }
     
     [self makeAttrsFromRawProperties:rawProperties];
@@ -424,6 +430,10 @@
 
 - (NSString *)getCustomDisplayTitle {
     return self.resolvedCustomDisplayTitle;
+}
+
+- (NSString *)getDanceUISource {
+    return self.resolvedDanceUISource;
 }
 
 + (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties saveCustomSetter:(BOOL)saveCustomSetter {

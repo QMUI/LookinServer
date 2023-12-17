@@ -18,6 +18,7 @@
 
 - (NSArray<LookinAttributesGroup *> *)getGroups;
 - (NSString *)getCustomDisplayTitle;
+- (NSString *)getDanceUISource;
 
 + (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties saveCustomSetter:(BOOL)saveCustomSetter;
 

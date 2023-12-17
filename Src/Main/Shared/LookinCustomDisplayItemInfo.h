@@ -14,6 +14,7 @@
 @property(nonatomic, strong) NSValue *frameInWindow;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *subtitle;
+@property(nonatomic, copy) NSString *danceuiSource;
 
 @end
 

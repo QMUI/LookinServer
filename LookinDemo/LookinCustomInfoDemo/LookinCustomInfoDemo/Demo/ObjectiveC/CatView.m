@@ -41,7 +41,10 @@
         @"subviews": [self catView_makeCustomSubviews],
         // 可选项。该 View 实例在 Lookin 左侧图层树中的名字。
         // Optional. The name of the view instance in the hierarchy panel on the left side of Lookin.
-        @"title": @"CustomCatView"
+        @"title": @"CustomCatView",
+        // 可选项。为 DanceUI 项目组预留的字段，项目组之外的人请忽略
+        // Optional. Reserved fields for the DanceUI project team, please ignore if you are not part of the team.
+        @"lookin_source": [self createDanceUIJson],
     };
     return ret;
 }
@@ -222,6 +225,7 @@
 
     [subviews addObject:@{
         @"title": @"SomeConfig",
+        @"lookin_source": [self createDanceUIJson],
         // 可选项。你可以递归地添加你的虚拟 subview。
         // Optional. You can recursively add your virtual subview.
         @"subviews": @[
@@ -262,6 +266,18 @@
     ];
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:0 error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
+}
+
+- (NSString *)createDanceUIJson {
+    NSDictionary *dict = @{
+        @"type": @"DanceUIApp.ContentView",
+        @"method": @"body.get",
+        @"build_path": @"/Users/bytedance/Library/Developer/Xcode/DerivedData/DanceUIApp-ayaxbucdgzeouqefaavnvvhsjpvj/Build/Products/Debug-iphonesimulator/DanceUIApp.app/DanceUIApp"
+    };
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     return jsonString;
 }

@@ -67,6 +67,7 @@
     newDisplayItem.shouldCaptureImage = self.shouldCaptureImage;
     newDisplayItem.representedAsKeyWindow = self.representedAsKeyWindow;
     newDisplayItem.customDisplayTitle = self.customDisplayTitle;
+    newDisplayItem.danceuiSource = self.danceuiSource;
     [newDisplayItem _updateDisplayingInHierarchyProperty];
     return newDisplayItem;
 }
@@ -93,6 +94,7 @@
         [aCoder encodeObject:self.groupScreenshot forKey:@"groupScreenshot"];
     }
     [aCoder encodeObject:self.customDisplayTitle forKey:@"customDisplayTitle"];
+    [aCoder encodeObject:self.danceuiSource forKey:@"danceuiSource"];
 #if TARGET_OS_IPHONE
     [aCoder encodeCGRect:self.frame forKey:@"frame"];
     [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
@@ -144,6 +146,7 @@
         /// this property was added in LookinServer 1.1.3
         self.shouldCaptureImage = [aDecoder containsValueForKey:@"shouldCaptureImage"] ? [aDecoder decodeBoolForKey:@"shouldCaptureImage"] : YES;
         self.customDisplayTitle = [aDecoder decodeObjectForKey:@"customDisplayTitle"];
+        self.danceuiSource = [aDecoder decodeObjectForKey:@"danceuiSource"];
 #if TARGET_OS_IPHONE
         self.frame = [aDecoder decodeCGRectForKey:@"frame"];
         self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];

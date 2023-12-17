@@ -108,6 +108,10 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 可能为 nil
 @property(nonatomic, copy) NSString *customDisplayTitle;
 
+/// 为 DanceUI SDK 预留的内部字段，用于文件跳转
+/// 可能为 nil
+@property(nonatomic, copy) NSString *danceuiSource;
+
 #pragma mark - No Encode/Decode
 
 /// 该 item 在左侧 hierarchy 中显示的字符串，通常是类名

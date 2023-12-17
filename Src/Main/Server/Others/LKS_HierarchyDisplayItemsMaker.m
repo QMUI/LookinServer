@@ -69,6 +69,7 @@
         [maker execute];
         item.customAttrGroupList = [maker getGroups];
         item.customDisplayTitle = [maker getCustomDisplayTitle];
+        item.danceuiSource = [maker getDanceUISource];
     }
     
     item.isHidden = layer.isHidden;

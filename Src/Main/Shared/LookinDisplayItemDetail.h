@@ -32,6 +32,8 @@
 
 @property(nonatomic, copy) NSString *customDisplayTitle;
 
+@property(nonatomic, copy) NSString *danceUISource;
+
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *attributesGroupList;
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *customAttrGroupList;
 

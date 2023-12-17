@@ -115,6 +115,7 @@
                     [maker execute];
                     itemDetail.customAttrGroupList = [maker getGroups];
                     itemDetail.customDisplayTitle = [maker getCustomDisplayTitle];
+                    itemDetail.danceUISource = [maker getDanceUISource];
                 }
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
             }

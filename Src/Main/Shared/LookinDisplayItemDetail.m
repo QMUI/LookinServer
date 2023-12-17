@@ -28,6 +28,7 @@
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
     [aCoder encodeObject:self.customAttrGroupList forKey:@"customAttrGroupList"];
     [aCoder encodeObject:self.customDisplayTitle forKey:@"customDisplayTitle"];
+    [aCoder encodeObject:self.danceUISource forKey:@"danceUISource"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -42,6 +43,7 @@
         self.attributesGroupList = [aDecoder decodeObjectForKey:@"attributesGroupList"];
         self.customAttrGroupList = [aDecoder decodeObjectForKey:@"customAttrGroupList"];
         self.customDisplayTitle = [aDecoder decodeObjectForKey:@"customDisplayTitle"];
+        self.danceUISource = [aDecoder decodeObjectForKey:@"danceUISource"];
     }
     return self;
 }
