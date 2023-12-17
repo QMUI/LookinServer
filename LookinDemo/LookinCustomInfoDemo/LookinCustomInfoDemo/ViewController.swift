@@ -43,6 +43,8 @@ class ViewController: UIViewController {
         horseLayer.frame = CGRect(x: 20, y: 600, width: 100, height: 100)
         
         getLookinVersion()
+        
+        addManyViews()
     }
 
     private func getLookinVersion() {
@@ -57,6 +59,15 @@ class ViewController: UIViewController {
         } else {
             // 当前环境中没有集成 LookinServer，或者 LookinServer 版本低于 1.2.5
             print("No LookinServer. Or LookinServer version is lower than 1.2.5")
+        }
+    }
+    
+    private func addManyViews() {
+        for i in 0..<500 {
+            let v = UIView()
+            v.frame = CGRect(x: 0, y: i, width: 1, height: 1)
+            v.backgroundColor = UIColor.red
+            view.addSubview(v)
         }
     }
 }
