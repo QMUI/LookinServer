@@ -45,7 +45,7 @@
         self.frameInWindow = [aDecoder decodeObjectForKey:@"frameInWindow"];
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.subtitle = [aDecoder decodeObjectForKey:@"subtitle"];
-        self.subtitle = [aDecoder decodeObjectForKey:@"danceuiSource"];
+        self.danceuiSource = [aDecoder decodeObjectForKey:@"danceuiSource"];
     }
     return self;
 }
