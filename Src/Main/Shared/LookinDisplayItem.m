@@ -355,36 +355,6 @@
     }
 }
 
-- (void)enumerateSelfAndAncestors:(void (^)(LookinDisplayItem *, BOOL *))block {
-    if (!block) {
-        return;
-    }
-    LookinDisplayItem *item = self;
-    while (item) {
-        BOOL shouldStop = NO;
-        block(item, &shouldStop);
-        if (shouldStop) {
-            break;
-        }
-        item = item.superItem;
-    }
-}
-
-- (void)enumerateAncestors:(void (^)(LookinDisplayItem *, BOOL *))block {
-    [self.superItem enumerateSelfAndAncestors:block];
-}
-
-- (void)enumerateSelfAndChildren:(void (^)(LookinDisplayItem *item))block {
-    if (!block) {
-        return;
-    }
-    
-    block(self);
-    [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull subitem, NSUInteger idx, BOOL * _Nonnull stop) {
-        [subitem enumerateSelfAndChildren:block];
-    }];
-}
-
 + (NSArray<LookinDisplayItem *> *)flatItemsFromHierarchicalItems:(NSArray<LookinDisplayItem *> *)items {
     NSMutableArray *resultArray = [NSMutableArray array];
     
@@ -476,13 +446,6 @@
     } else {
         self.inNoPreviewHierarchy = NO;
     }
-}
-
-- (LookinImage *)appropriateScreenshot {
-    if (self.isExpandable && self.isExpanded) {
-        return self.soloScreenshot;
-    }
-    return self.groupScreenshot;
 }
 
 - (void)_notifyDelegatesWith:(LookinDisplayItemProperty)property {

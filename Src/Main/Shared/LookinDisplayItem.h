@@ -146,9 +146,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
  */
 @property(nonatomic, assign, readonly) BOOL inHiddenHierarchy;
 
-/// 返回 soloScreenshot 或 groupScreenshot
-- (LookinImage *)appropriateScreenshot;
-
 @property(nonatomic, assign) LookinDisplayItemImageEncodeType screenshotEncodeType;
 
 /// Whether to fetch screenshot and why. Default to LookinFetchScreenshotPermitted.
@@ -167,14 +164,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 /// 当小于 0 时表示未被设置
 @property(nonatomic, assign) NSInteger previewZIndex;
-
-/// 遍历自身和所有上级元素
-- (void)enumerateSelfAndAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
-
-- (void)enumerateAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
-
-/// 遍历自身后所有下级元素
-- (void)enumerateSelfAndChildren:(void (^)(LookinDisplayItem *item))block;
 
 @property(nonatomic, assign) BOOL preferToBeCollapsed;
 
