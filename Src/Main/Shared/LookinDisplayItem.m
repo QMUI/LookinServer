@@ -202,10 +202,6 @@
     }];
 }
 
-- (BOOL)representedForSystemClass {
-    return [self.title hasPrefix:@"UI"] || [self.title hasPrefix:@"CA"] || [self.title hasPrefix:@"_"];
-}
-
 - (BOOL)itemIsKindOfClassWithName:(NSString *)className {
     if (!className) {
         NSAssert(NO, @"");
@@ -406,7 +402,13 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"%@", self.title];
+    if (self.viewObject) {
+        return self.viewObject.rawClassName;
+    } else if (self.layerObject) {
+        return self.layerObject.rawClassName;
+    } else {
+        return [super description];
+    }
 }
 
 - (void)setPreviewItemDelegate:(id<LookinDisplayItemDelegate>)previewItemDelegate {
@@ -488,27 +490,6 @@
     [self.rowViewDelegate displayItem:self propertyDidChange:property];
 }
 
-- (BOOL)isMatchedWithSearchString:(NSString *)string {
-    if (string.length == 0) {
-        NSAssert(NO, @"");
-        return NO;
-    }
-    NSString *searchString = string.lowercaseString;
-    if ([self.title.lowercaseString containsString:searchString]) {
-        return YES;
-    }
-    if ([self.subtitle.lowercaseString containsString:searchString]) {
-        return YES;
-    }
-    if ([self.viewObject.memoryAddress containsString:searchString]) {
-        return YES;
-    }
-    if ([self.layerObject.memoryAddress containsString:searchString]) {
-        return YES;
-    }
-    return NO;
-}
-
 - (void)setIsInSearch:(BOOL)isInSearch {
     _isInSearch = isInSearch;
     [self _notifyDelegatesWith:LookinDisplayItemProperty_IsInSearch];
@@ -528,20 +509,6 @@
         [array addObjectsFromArray:self.customAttrGroupList];
     }
     return array;
-}
-
-- (NSString *)title {
-    if (self.customInfo) {
-        return self.customInfo.title;
-    } else if (self.customDisplayTitle.length > 0) {
-        return self.customDisplayTitle;
-    } else if (self.viewObject) {
-        return self.viewObject.rawClassName;
-    } else if (self.layerObject) {
-        return self.layerObject.rawClassName;
-    } else {
-        return nil;
-    }
 }
 
 - (NSString *)subtitle {
