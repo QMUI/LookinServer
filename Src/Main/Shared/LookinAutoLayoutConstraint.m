@@ -72,11 +72,11 @@
             
         case LookinConstraintItemTypeView:
         case LookinConstraintItemTypeLayoutGuide:
-            return detailed ? [NSString stringWithFormat:@"<%@: %@>", object.shortSelfClassName, object.memoryAddress] : [NSString stringWithFormat:@"(%@*)", object.shortSelfClassName];
+            return detailed ? [NSString stringWithFormat:@"<%@: %@>", object.rawClassName, object.memoryAddress] : [NSString stringWithFormat:@"(%@*)", object.rawClassName];
             
         default:
             NSAssert(NO, @"");
-            return detailed ? [NSString stringWithFormat:@"<%@: %@>", object.shortSelfClassName, object.memoryAddress] : [NSString stringWithFormat:@"(%@*)", object.shortSelfClassName];
+            return detailed ? [NSString stringWithFormat:@"<%@: %@>", object.rawClassName, object.memoryAddress] : [NSString stringWithFormat:@"(%@*)", object.rawClassName];
     }
 }
 

@@ -33,11 +33,8 @@
 
 @property(nonatomic, copy) NSArray<LookinIvarTrace *> *ivarTraces;
 
-#pragma mark - Non Coding
-
-/// 在 OC 中，completedSelfClassName 和 shortSelfClassName 返回值一样。在 Swift 中，completedSelfClassName 返回的是带命名空间的（比如 LBFM_Swift.LBFMHomeController 或 _TtC 11TestRuntime14ViewController），而 shortSelfClassName 返回的是没有命名空间的（比如 LBFMHomeController）
-@property(nonatomic, copy, readonly) NSString *completedSelfClassName;
-@property(nonatomic, copy, readonly) NSString *shortSelfClassName;
+/// 没有 demangle，会包含 Swift Module Name
+- (NSString *)rawClassName;
 
 @end
 

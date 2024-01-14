@@ -32,10 +32,9 @@
 + (void)lks_clearAllObjectsTraces;
 
 /**
- 获取当前对象的 Class 层级树，如 @[@"UIView", @"UIResponder", @"NSObject"]
- hasSwiftPrefix 决定了是否在 Swift 项目中显示类名前缀
+ 获取当前对象的 Class 层级树，如 @[@"UIView", @"UIResponder", @"NSObject"]。未 demangle，有 Swift Module Name
  */
-- (NSArray<NSString *> *)lks_classChainListWithSwiftPrefix:(BOOL)hasSwiftPrefix;
+- (NSArray<NSString *> *)lks_classChainList;
 
 @end
 

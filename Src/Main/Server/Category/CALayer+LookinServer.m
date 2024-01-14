@@ -162,7 +162,7 @@
 }
 
 + (NSArray<NSString *> *)lks_getClassListOfObject:(id)object endingClass:(NSString *)endingClass {
-    NSArray<NSString *> *completedList = [object lks_classChainListWithSwiftPrefix:NO];
+    NSArray<NSString *> *completedList = [object lks_classChainList];
     NSUInteger endingIdx = [completedList indexOfObject:endingClass];
     if (endingIdx != NSNotFound) {
         completedList = [completedList subarrayWithRange:NSMakeRange(0, endingIdx + 1)];

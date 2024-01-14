@@ -80,14 +80,12 @@
     return lks_allObjectsWithTraces;
 }
 
-- (NSArray<NSString *> *)lks_classChainListWithSwiftPrefix:(BOOL)hasSwiftPrefix {
+- (NSArray<NSString *> *)lks_classChainList {
     NSMutableArray<NSString *> *classChainList = [NSMutableArray array];
     Class currentClass = self.class;
     
     while (currentClass) {
-        NSString *rawClassName = NSStringFromClass(currentClass);
-        
-        NSString *currentClassName = hasSwiftPrefix ? rawClassName : [rawClassName lookin_shortClassNameString];
+        NSString *currentClassName = NSStringFromClass(currentClass);
         if (currentClassName) {
             [classChainList addObject:currentClassName];
         }

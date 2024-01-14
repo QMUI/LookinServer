@@ -89,15 +89,6 @@
     return nil;
 }
 
-- (NSString *)lookin_shortClassNameString {
-    if ([self containsString:@"."]) {
-        // Swift 中，class 可能会被加前缀，比如 Weread.AvatarView，此时返回后半部分即可
-        NSString *shortName = [self componentsSeparatedByString:@"."].lastObject;
-        return shortName;
-    }
-    return self;
-}
-
 - (NSInteger)lookin_numbericOSVersion {
     if (self.length == 0) {
         NSAssert(NO, @"");

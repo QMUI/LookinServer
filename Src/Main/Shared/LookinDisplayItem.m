@@ -536,9 +536,9 @@
     } else if (self.customDisplayTitle.length > 0) {
         return self.customDisplayTitle;
     } else if (self.viewObject) {
-        return self.viewObject.shortSelfClassName;
+        return self.viewObject.rawClassName;
     } else if (self.layerObject) {
-        return self.layerObject.shortSelfClassName;
+        return self.layerObject.rawClassName;
     } else {
         return nil;
     }
@@ -549,7 +549,7 @@
         return self.customInfo.subtitle;
     }
     
-    NSString *text = self.hostViewControllerObject.shortSelfClassName;
+    NSString *text = self.hostViewControllerObject.rawClassName;
     if (text.length) {
         return [NSString stringWithFormat:@"%@.view", text];
     }
