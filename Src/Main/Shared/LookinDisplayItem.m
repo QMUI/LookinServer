@@ -202,40 +202,6 @@
     }];
 }
 
-- (BOOL)itemIsKindOfClassWithName:(NSString *)className {
-    if (!className) {
-        NSAssert(NO, @"");
-        return NO;
-    }
-    return [self itemIsKindOfClassesWithNames:[NSSet setWithObject:className]];
-}
-
-- (BOOL)itemIsKindOfClassesWithNames:(NSSet<NSString *> *)targetClassNames {
-    if (!targetClassNames.count) {
-        return NO;
-    }
-    LookinObject *selfObj = self.viewObject ? : self.layerObject;
-    if (!selfObj) {
-        return NO;
-    }
-    
-    __block BOOL boolValue = NO;
-    [targetClassNames enumerateObjectsUsingBlock:^(NSString * _Nonnull targetClassName, BOOL * _Nonnull stop_outer) {
-        [selfObj.classChainList enumerateObjectsUsingBlock:^(NSString * _Nonnull selfClass, NSUInteger idx, BOOL * _Nonnull stop_inner) {
-            NSString *nonPrefixSelfClass = [selfClass componentsSeparatedByString:@"."].lastObject;
-            if ([nonPrefixSelfClass isEqualToString:targetClassName]) {
-                boolValue = YES;
-                *stop_inner = YES;
-            }
-        }];
-        if (boolValue) {
-            *stop_outer = YES;
-        }
-    }];
-    
-    return boolValue;
-}
-
 - (void)setSubitems:(NSArray<LookinDisplayItem *> *)subitems {
     [_subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.superItem = nil;

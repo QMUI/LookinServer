@@ -170,9 +170,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 - (void)notifySelectionChangeToDelegates;
 - (void)notifyHoverChangeToDelegates;
 
-- (BOOL)itemIsKindOfClassWithName:(NSString *)className;
-- (BOOL)itemIsKindOfClassesWithNames:(NSSet<NSString *> *)classNames;
-
 /// 根据 subItems 属性将 items 打平为一维数组
 + (NSArray<LookinDisplayItem *> *)flatItemsFromHierarchicalItems:(NSArray<LookinDisplayItem *> *)items;
 
