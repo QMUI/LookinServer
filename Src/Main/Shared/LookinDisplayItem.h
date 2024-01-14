@@ -114,8 +114,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 #pragma mark - No Encode/Decode
 
-- (NSString *)subtitle;
-
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
 

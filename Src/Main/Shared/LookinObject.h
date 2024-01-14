@@ -34,6 +34,7 @@
 @property(nonatomic, copy) NSArray<LookinIvarTrace *> *ivarTraces;
 
 /// 没有 demangle，会包含 Swift Module Name
+/// 在 Lookin 的展示中，绝大多数情况下应该使用 lk_demangledSwiftName
 - (NSString *)rawClassName;
 
 @end

@@ -44,11 +44,6 @@ typedef NS_ENUM(NSInteger, LookinConstraintItemType) {
 @property(nonatomic, assign) CGFloat priority;
 @property(nonatomic, copy) NSString *identifier;
 
-+ (NSString *)descriptionWithItemObject:(LookinObject *)object type:(LookinConstraintItemType)type detailed:(BOOL)detailed;
-+ (NSString *)descriptionWithAttribute:(NSLayoutAttribute)attribute;
-+ (NSString *)symbolWithRelation:(NSLayoutRelation)relation;
-+ (NSString *)descriptionWithRelation:(NSLayoutRelation)relation;
-
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
