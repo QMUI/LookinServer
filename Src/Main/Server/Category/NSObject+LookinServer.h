@@ -37,9 +37,6 @@
  */
 - (NSArray<NSString *> *)lks_classChainListWithSwiftPrefix:(BOOL)hasSwiftPrefix;
 
-/// 返回当前类名，Swift 项目下将返回不带前缀的名称
-- (NSString *)lks_shortClassName;
-
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

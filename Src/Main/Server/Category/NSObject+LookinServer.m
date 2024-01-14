@@ -96,12 +96,6 @@
     return classChainList.copy;
 }
 
-- (NSString *)lks_shortClassName {
-    NSString *rawName = NSStringFromClass([self class]);
-    NSString *shortName = [rawName lookin_shortClassNameString];
-    return shortName;
-}
-
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
