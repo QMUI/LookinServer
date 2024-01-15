@@ -37,19 +37,19 @@
     return instance;
 }
 
-- (void)setFirstAttribute:(NSLayoutAttribute)firstAttribute {
+- (void)setFirstAttribute:(NSInteger)firstAttribute {
     _firstAttribute = firstAttribute;
     [self _assertUnknownAttribute:firstAttribute];
 }
 
-- (void)setSecondAttribute:(NSLayoutAttribute)secondAttribute {
+- (void)setSecondAttribute:(NSInteger)secondAttribute {
     _secondAttribute = secondAttribute;
     [self _assertUnknownAttribute:secondAttribute];
 }
 
-- (void)_assertUnknownAttribute:(NSLayoutAttribute)attribute {
+- (void)_assertUnknownAttribute:(NSInteger)attribute {
     // 以下几个 assert 用来帮助发现那些系统私有的定义，正式发布时应该去掉这几个 assert
-    if (attribute > 21 && attribute < 32) {
+    if (attribute > 20 && attribute < 32) {
         NSAssert(NO, nil);
     }
     if (attribute > 37) {
