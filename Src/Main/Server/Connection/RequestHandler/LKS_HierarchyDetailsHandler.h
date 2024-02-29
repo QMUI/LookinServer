@@ -21,8 +21,6 @@ typedef void (^LKS_HierarchyDetailsHandler_Block)(NSArray<LookinDisplayItemDetai
 /// packages 会按照 idx 从大到小的顺序被执行
 - (void)startWithPackages:(NSArray<LookinStaticAsyncUpdateTasksPackage *> *)packages block:(LKS_HierarchyDetailsHandler_Block)block;
 
-- (void)bringForwardWithPackages:(NSArray<LookinStaticAsyncUpdateTasksPackage *> *)packages;
-
 /// 取消所有任务
 - (void)cancel;
 

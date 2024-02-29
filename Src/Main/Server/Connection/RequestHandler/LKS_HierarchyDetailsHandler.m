@@ -73,12 +73,6 @@
     [self _dequeueAndHandlePackage];
 }
 
-- (void)bringForwardWithPackages:(NSArray<LookinStaticAsyncUpdateTasksPackage *> *)packages {
-    NSLog(@"LookinServer - willBringForward");
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, packages.count)];
-    [self.taskPackages insertObjects:packages atIndexes:indexSet];
-}
-
 - (void)cancel {
     [self.taskPackages removeAllObjects];
 }

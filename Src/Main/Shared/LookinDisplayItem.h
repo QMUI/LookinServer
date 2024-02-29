@@ -101,7 +101,8 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 注意有一个缺点是，理论上应该像 screenshot 一样拆成 soloBackgroundColor 和 groupBackgroundColor，这里的 backgroundColor 实际上是 soloBackgroundColor，因此某些场景的显示会有瑕疵
 @property(nonatomic, strong) LookinColor *backgroundColor;
 
-/// Set as NO to avoid capture image of view to lift reload speed. Default to YES.
+/// 用户可以在 iOS 项目中添加 Lookin 自定义配置来显式地拒绝传输某些图层的图像，通常是屏蔽一些不重要的 View 以提升刷新速度。如果用户这么配置了，那么这个 shouldCaptureImage 就会被置为 NO
+/// 默认为 YES
 @property(nonatomic, assign) BOOL shouldCaptureImage;
 
 /// 用户通过重写 lookin_customDebugInfos 而自定义的该实例的名字
@@ -129,7 +130,7 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /**
  该项是否被展开
  @note 假如自己没有被折叠，但是 superItem 被折叠了，则自己仍然不会被看到，但是 self.isExpanded 值仍然为 NO
- @note 如果 item 没有 subitems，则该值没有意义
+ @note 如果 item 没有 subitems（也就是 isExpandable 为 NO），则该值没有意义。换句话说，在获取该值之前，必须先判断一下 isExpandable
  */
 @property(nonatomic, assign) BOOL isExpanded;
 

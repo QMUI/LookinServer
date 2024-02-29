@@ -50,8 +50,6 @@
                               @(LookinRequestTypeInvokeMethod),
                               @(LookinRequestTypeFetchImageViewImage),
                               @(LookinRequestTypeModifyRecognizerEnable),
-                              
-                              @(LookinPush_BringForwardScreenshotTask),
                               @(LookinPush_CanceHierarchyDetails),
                               nil];
     }
@@ -219,9 +217,6 @@
             [self _submitResponseWithError:LookinErrorMake(errMsg, @"") requestType:requestType tag:tag];
         }
         
-    } else if (requestType == LookinPush_BringForwardScreenshotTask) {
-        [[LKS_HierarchyDetailsHandler sharedInstance] bringForwardWithPackages:object];
-    
     } else if (requestType == LookinPush_CanceHierarchyDetails) {
         [[LKS_HierarchyDetailsHandler sharedInstance] cancel];
         
