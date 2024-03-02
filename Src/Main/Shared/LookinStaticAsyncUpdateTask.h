@@ -18,12 +18,26 @@ typedef NS_ENUM(NSInteger, LookinStaticAsyncUpdateTaskType) {
     LookinStaticAsyncUpdateTaskTypeGroupScreenshot
 };
 
+typedef NS_ENUM(NSInteger, LookinDetailUpdateTaskAttrRequest) {
+    /// 由 Server 端自己决定：同一批 task 里，server 端会保证同一个 layer 只会构造一次 attr
+    /// 在 Lookin turbo 模式下，由于同一个 layer 的 task 可能位于不同批的 task 里，因此这会导致冗余的 attr 构造行为、浪费一定时间
+    LookinDetailUpdateTaskAttrRequest_Automatic,
+    /// 需要返回 attr
+    LookinDetailUpdateTaskAttrRequest_Need,
+    /// 不需要返回 attr
+    LookinDetailUpdateTaskAttrRequest_NotNeed
+};
+
 /// 如果两个 Task 对象的 oid 和 taskType 均相同，则二者 equal
 @interface LookinStaticAsyncUpdateTask : NSObject <NSSecureCoding>
 
 @property(nonatomic, assign) unsigned long oid;
 
 @property(nonatomic, assign) LookinStaticAsyncUpdateTaskType taskType;
+
+/// 是否需要返回 attr 数据，默认为 Automatic
+/// Client 1.0.7 & Server 1.2.7 开始支持这个参数
+@property(nonatomic, assign) LookinDetailUpdateTaskAttrRequest attrRequest;
 
 /// Client 1.0.4 开始加入这个参数
 @property(nonatomic, copy) NSString *clientReadableVersion;

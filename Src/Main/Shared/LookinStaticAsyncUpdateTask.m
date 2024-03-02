@@ -18,6 +18,7 @@
     [aCoder encodeObject:@(self.oid) forKey:@"oid"];
     [aCoder encodeInteger:self.taskType forKey:@"taskType"];
     [aCoder encodeObject:self.clientReadableVersion forKey:@"clientReadableVersion"];
+    [aCoder encodeInteger:self.attrRequest forKey:@"attrRequest"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -25,6 +26,16 @@
         self.oid = [[aDecoder decodeObjectForKey:@"oid"] unsignedLongValue];
         self.taskType = [aDecoder decodeIntegerForKey:@"taskType"];
         self.clientReadableVersion = [aDecoder decodeObjectForKey:@"clientReadableVersion"];
+        if ([aDecoder containsValueForKey:@"attrRequest"]) {
+            NSInteger value = [aDecoder decodeIntegerForKey:@"attrRequest"];
+            if (value >= LookinDetailUpdateTaskAttrRequest_Automatic && value <= LookinDetailUpdateTaskAttrRequest_NotNeed) {
+                self.attrRequest = value;
+            } else {
+                self.attrRequest = LookinDetailUpdateTaskAttrRequest_Automatic;
+            }
+        } else {
+            self.attrRequest = LookinDetailUpdateTaskAttrRequest_Automatic;
+        }
     }
     return self;
 }

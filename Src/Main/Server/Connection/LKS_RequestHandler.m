@@ -29,6 +29,8 @@
 
 @interface LKS_RequestHandler ()
 
+@property(nonatomic, strong) NSMutableSet<LKS_HierarchyDetailsHandler *> *activeDetailHandlers;
+
 @end
 
 @implementation LKS_RequestHandler {
@@ -52,6 +54,8 @@
                               @(LookinRequestTypeModifyRecognizerEnable),
                               @(LookinPush_CanceHierarchyDetails),
                               nil];
+        
+        self.activeDetailHandlers = [NSMutableSet set];
     }
     return self;
 }
@@ -138,13 +142,18 @@
             return accumulator;
         } initialAccumlator:0];
         
-        [[LKS_HierarchyDetailsHandler sharedInstance] startWithPackages:packages block:^(NSArray<LookinDisplayItemDetail *> *details, NSError *error) {
+        LKS_HierarchyDetailsHandler *handler = [LKS_HierarchyDetailsHandler new];
+        [self.activeDetailHandlers addObject:handler];
+        
+        [handler startWithPackages:packages block:^(NSArray<LookinDisplayItemDetail *> *details) {
             LookinConnectionResponseAttachment *attachment = [LookinConnectionResponseAttachment new];
-            attachment.error = error;
             attachment.data = details;
             attachment.dataTotalCount = responsesDataTotalCount;
             attachment.currentDataCount = details.count;
             [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:LookinRequestTypeHierarchyDetails tag:tag];
+            
+        } finishedBlock:^{
+            [self.activeDetailHandlers removeObject:handler];
         }];
         
     } else if (requestType == LookinRequestTypeFetchObject) {
@@ -218,7 +227,10 @@
         }
         
     } else if (requestType == LookinPush_CanceHierarchyDetails) {
-        [[LKS_HierarchyDetailsHandler sharedInstance] cancel];
+        [self.activeDetailHandlers enumerateObjectsUsingBlock:^(LKS_HierarchyDetailsHandler * _Nonnull handler, BOOL * _Nonnull stop) {
+            [handler cancel];
+        }];
+        [self.activeDetailHandlers removeAllObjects];
         
     } else if (requestType == LookinRequestTypeFetchImageViewImage) {
         if (![object isKindOfClass:[NSNumber class]]) {
