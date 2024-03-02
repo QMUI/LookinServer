@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         dogLayer.backgroundColor = UIColor.blue.cgColor
         view.layer.addSublayer(dogLayer)
         dogLayer.frame = CGRect(x: 20, y: 20, width: 100, height: 100)
-
+        
         catView.backgroundColor = UIColor.green
         view.addSubview(catView)
         catView.frame = CGRect(x: 20, y: 200, width: 100, height: 100)
@@ -44,9 +44,10 @@ class ViewController: UIViewController {
         
         getLookinVersion()
         
-//        addManyViews()
+        //        addManyViews()
+//        addNestedViews(containerView: view, level: 0)
     }
-
+    
     private func getLookinVersion() {
         // NSMutableDictionary 是引用传递，而 Swift 原生字典是值传递，因此这里只能用 NSMutableDictionary
         // NSMutableDictionary is passed by reference, while Swift's native dictionary is passed by value, so here we can only use NSMutableDictionary.
@@ -69,6 +70,25 @@ class ViewController: UIViewController {
             v.backgroundColor = UIColor.red
             view.addSubview(v)
         }
+    }
+    
+    private func addNestedViews(containerView: UIView, level: Int) {
+        if level >= 10 {
+            return
+        }
+        let v = UIView()
+        v.frame = containerView.bounds
+        v.backgroundColor = UIColor.red
+        containerView.addSubview(v)
+        addNestedViews(containerView: v, level: level + 1)
+
+        for i in 0..<20 {
+            let label = UILabel(frame: containerView.bounds)
+            label.text = "fdjsoijfoisdjfioasdjiopfjsdaoijfoipsdjopifjasoipdjfoiapsjdopifjasdoipjfipjewijf9-wejf9ew8f9sd-fjdsai9jf-9adsf9ewf-9aw-f9js9-djf-9wejf-8jwe9-fae-9ejf-9sd-9fjsd-jf9-wejf-9jwe-"
+            label.textColor = .blue
+            containerView.addSubview(label)
+        }
+        
     }
 }
 
