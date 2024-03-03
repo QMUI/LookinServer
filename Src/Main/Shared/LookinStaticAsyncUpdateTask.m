@@ -19,7 +19,8 @@
     [aCoder encodeInteger:self.taskType forKey:@"taskType"];
     [aCoder encodeObject:self.clientReadableVersion forKey:@"clientReadableVersion"];
     [aCoder encodeInteger:self.attrRequest forKey:@"attrRequest"];
-    [aCoder encodeBool:self.needBasisInfo forKey:@"needBasisInfo"];
+    [aCoder encodeBool:self.needBasisVisualInfo forKey:@"needBasisVisualInfo"];
+    [aCoder encodeBool:self.needSubitems forKey:@"needSubitems"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -38,10 +39,16 @@
             self.attrRequest = LookinDetailUpdateTaskAttrRequest_Automatic;
         }
 
-        if ([aDecoder containsValueForKey:@"needBasisInfo"]) {
-            self.needBasisInfo = [aDecoder decodeBoolForKey:@"needBasisInfo"];
+        if ([aDecoder containsValueForKey:@"needBasisVisualInfo"]) {
+            self.needBasisVisualInfo = [aDecoder decodeBoolForKey:@"needBasisVisualInfo"];
         } else {
-            self.needBasisInfo = NO;
+            self.needBasisVisualInfo = NO;
+        }
+        
+        if ([aDecoder containsValueForKey:@"needSubitems"]) {
+            self.needSubitems = [aDecoder decodeBoolForKey:@"needSubitems"];
+        } else {
+            self.needSubitems = NO;
         }
         
     }
@@ -53,7 +60,7 @@
 }
 
 - (NSUInteger)hash {
-    return self.oid ^ self.taskType;
+    return self.oid ^ self.taskType ^ self.attrRequest ^ self.needBasisVisualInfo ^ self.needSubitems;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -64,7 +71,11 @@
         return NO;
     }
     LookinStaticAsyncUpdateTask *targetTask = object;
-    if (self.oid == targetTask.oid && self.taskType == targetTask.taskType) {
+    if (self.oid == targetTask.oid
+        && self.taskType == targetTask.taskType
+        && self.attrRequest == targetTask.attrRequest
+        && self.needBasisVisualInfo == targetTask.needBasisVisualInfo
+        && self.needSubitems == targetTask.needSubitems) {
         return YES;
     }
     return NO;

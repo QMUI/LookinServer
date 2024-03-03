@@ -23,6 +23,9 @@
 /// @param saveCustomSetter 是否要读取并保存用户给 attribute 配置的 custom setter
 + (NSArray<LookinDisplayItem *> *)itemsWithScreenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality readCustomInfo:(BOOL)readCustomInfo saveCustomSetter:(BOOL)saveCustomSetter;
 
+/// 把 layer 的 sublayers 转换为 displayItem 数组并返回
++ (NSArray<LookinDisplayItem *> *)subitemsOfLayer:(CALayer *)layer;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

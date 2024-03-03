@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, LookinDetailUpdateTaskAttrRequest) {
     LookinDetailUpdateTaskAttrRequest_NotNeed
 };
 
-/// 如果两个 Task 对象的 oid 和 taskType 均相同，则二者 equal
+/// 业务重写了 isEqual
 @interface LookinStaticAsyncUpdateTask : NSObject <NSSecureCoding>
 
 @property(nonatomic, assign) unsigned long oid;
@@ -42,7 +42,12 @@ typedef NS_ENUM(NSInteger, LookinDetailUpdateTaskAttrRequest) {
 /// 如果置为 YES，则 server 侧会返回这些基础信息：frameValue, boundsValue, hiddenValue, alphaValue
 /// 默认为 NO
 /// Client 1.0.7 & Server 1.2.7 开始支持这个参数
-@property(nonatomic, assign) BOOL needBasisInfo;
+@property(nonatomic, assign) BOOL needBasisVisualInfo;
+
+/// 如果置为 YES，则 server 侧会返回 subitems
+/// 默认为 NO
+/// Client 1.0.7 & Server 1.2.7 开始支持这个参数
+@property(nonatomic, assign) BOOL needSubitems;
 
 /// Client 1.0.4 开始加入这个参数
 @property(nonatomic, copy) NSString *clientReadableVersion;

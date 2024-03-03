@@ -440,6 +440,11 @@
     return array;
 }
 
+//- (void)dealloc
+//{
+//    NSLog(@"moss dealloc -%@", self);
+//}
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

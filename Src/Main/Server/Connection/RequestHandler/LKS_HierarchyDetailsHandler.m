@@ -15,6 +15,7 @@
 #import "LKS_ConnectionManager.h"
 #import "LookinServerDefines.h"
 #import "LKS_CustomAttrGroupsMaker.h"
+#import "LKS_HierarchyDisplayItemsMaker.h"
 
 @interface LKS_HierarchyDetailsHandler ()
 
@@ -103,11 +104,15 @@
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
             }
             
-            if (task.needBasisInfo) {
+            if (task.needBasisVisualInfo) {
                 itemDetail.frameValue = [NSValue valueWithCGRect:layer.frame];
                 itemDetail.boundsValue = [NSValue valueWithCGRect:layer.bounds];
                 itemDetail.hiddenValue = [NSNumber numberWithBool:layer.isHidden];
                 itemDetail.alphaValue = @(layer.opacity);
+            }
+            
+            if (task.needSubitems) {
+                itemDetail.subitems = [LKS_HierarchyDisplayItemsMaker subitemsOfLayer:layer];
             }
             
             return itemDetail;
