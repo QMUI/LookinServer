@@ -69,6 +69,3 @@ macOS 端软件：https://github.com/hughkli/Lookin/
 
 # 鸣谢
 https://qxh1ndiez2w.feishu.cn/docx/YIFjdE4gIolp3hxn1tGckiBxnWf
-
-# 工作机会
-如果你也是 iOS/Android 客户端开发，并且有换工作的意向，那么诚挚邀请你加入我的部门：https://bytedance.feishu.cn/docx/SAcgdoQuAouyXAxAqy8cmrT2n4b
