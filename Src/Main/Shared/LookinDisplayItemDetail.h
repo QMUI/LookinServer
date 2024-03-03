@@ -8,8 +8,6 @@
 //  https://lookin.work
 //
 
-
-
 #import "LookinDefines.h"
 
 @class LookinAttributesGroup;
@@ -36,6 +34,11 @@
 
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *attributesGroupList;
 @property(nonatomic, copy) NSArray<LookinAttributesGroup *> *customAttrGroupList;
+
+/// 当 Server 找不到 task 对应的图层时，会返回一个特殊的 LookinDisplayItemDetail 对象，这个对象会被设置 displayItemOid 和 failureCode，其中 failureCode 会被置为 -1
+/// Client 1.0.7 & Server 1.2.7 开始支持该属性
+/// 默认为 0
+@property(nonatomic, assign) NSInteger failureCode;
 
 @end
 

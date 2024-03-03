@@ -19,6 +19,7 @@
     [aCoder encodeInteger:self.taskType forKey:@"taskType"];
     [aCoder encodeObject:self.clientReadableVersion forKey:@"clientReadableVersion"];
     [aCoder encodeInteger:self.attrRequest forKey:@"attrRequest"];
+    [aCoder encodeBool:self.needBasisInfo forKey:@"needBasisInfo"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -36,6 +37,13 @@
         } else {
             self.attrRequest = LookinDetailUpdateTaskAttrRequest_Automatic;
         }
+
+        if ([aDecoder containsValueForKey:@"needBasisInfo"]) {
+            self.needBasisInfo = [aDecoder decodeBoolForKey:@"needBasisInfo"];
+        } else {
+            self.needBasisInfo = NO;
+        }
+        
     }
     return self;
 }

@@ -74,6 +74,7 @@
             
             id object = [NSObject lks_objectWithOid:task.oid];
             if (!object || ![object isKindOfClass:[CALayer class]]) {
+                itemDetail.failureCode = -1;
                 return itemDetail;
             }
             
@@ -100,6 +101,13 @@
                     itemDetail.danceUISource = [maker getDanceUISource];
                 }
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
+            }
+            
+            if (task.needBasisInfo) {
+                itemDetail.frameValue = [NSValue valueWithCGRect:layer.frame];
+                itemDetail.boundsValue = [NSValue valueWithCGRect:layer.bounds];
+                itemDetail.hiddenValue = [NSNumber numberWithBool:layer.isHidden];
+                itemDetail.alphaValue = @(layer.opacity);
             }
             
             return itemDetail;

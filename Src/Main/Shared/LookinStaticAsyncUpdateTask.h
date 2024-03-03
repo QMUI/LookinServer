@@ -39,6 +39,11 @@ typedef NS_ENUM(NSInteger, LookinDetailUpdateTaskAttrRequest) {
 /// Client 1.0.7 & Server 1.2.7 开始支持这个参数
 @property(nonatomic, assign) LookinDetailUpdateTaskAttrRequest attrRequest;
 
+/// 如果置为 YES，则 server 侧会返回这些基础信息：frameValue, boundsValue, hiddenValue, alphaValue
+/// 默认为 NO
+/// Client 1.0.7 & Server 1.2.7 开始支持这个参数
+@property(nonatomic, assign) BOOL needBasisInfo;
+
 /// Client 1.0.4 开始加入这个参数
 @property(nonatomic, copy) NSString *clientReadableVersion;
 
