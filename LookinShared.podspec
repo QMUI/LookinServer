@@ -27,7 +27,7 @@ Pod::Spec.new do |spec|
     ss.source_files = 'Src/Main/Shared/Channel/**/*'
     ss.dependency 'CocoaAsyncSocket'
     ss.pod_target_xcconfig = {
-      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_WIRELESS=1'
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) SHOULD_COMPILE_LOOKIN_SERVER=1 LOOKIN_SERVER_WIRELESS=1'
     }
   end
 end

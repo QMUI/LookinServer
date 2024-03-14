@@ -55,9 +55,8 @@ Pod::Spec.new do |spec|
     ss.dependency 'LookinServer/Core'
     ss.source_files = 'Src/Swift/**/*'
     ss.pod_target_xcconfig = {
-      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED=1 LOOKIN_SERVER_DISABLE_HOOK=1',
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED=1 LOOKIN_SERVER_DISABLE_HOOK=1 LOOKIN_SERVER_WIRELESS=1',
       'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) LOOKIN_SERVER_SWIFT_ENABLED',
-      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LOOKIN_SERVER_WIRELESS=1'
     }
   end
 
