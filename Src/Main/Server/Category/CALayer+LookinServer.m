@@ -76,7 +76,8 @@
     }
     
     CGSize contextSize = self.frame.size;
-    if (contextSize.width <= 0 || contextSize.height <= 0) {
+    if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+        NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
         return nil;
     }
     UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
@@ -122,7 +123,11 @@
         }];
         
         CGSize contextSize = self.frame.size;
-        NSAssert(contextSize.width > 0 && contextSize.height > 0, @"");
+        if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+            NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+            return nil;
+        }
+        
         UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {

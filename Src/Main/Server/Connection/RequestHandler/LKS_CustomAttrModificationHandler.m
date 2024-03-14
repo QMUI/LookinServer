@@ -93,6 +93,58 @@
             return YES;
         }
             
+        case LookinAttrTypeCGRect: {
+            NSValue *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSValue class]]) {
+                return NO;
+            }
+            LKS_RectSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getRectSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue.CGRectValue);
+            return YES;
+        }
+            
+        case LookinAttrTypeCGSize: {
+            NSValue *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSValue class]]) {
+                return NO;
+            }
+            LKS_SizeSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getSizeSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue.CGSizeValue);
+            return YES;
+        }
+            
+        case LookinAttrTypeCGPoint: {
+            NSValue *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSValue class]]) {
+                return NO;
+            }
+            LKS_PointSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getPointSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue.CGPointValue);
+            return YES;
+        }
+            
+        case LookinAttrTypeUIEdgeInsets: {
+            NSValue *newValue = modification.value;
+            if (![newValue isKindOfClass:[NSValue class]]) {
+                return NO;
+            }
+            LKS_InsetsSetter setter = [[LKS_CustomAttrSetterManager sharedInstance] getInsetsSetterWithID:modification.customSetterID];
+            if (!setter) {
+                return NO;
+            }
+            setter(newValue.UIEdgeInsetsValue);
+            return YES;
+        }
+            
         default:
             return NO;
     }

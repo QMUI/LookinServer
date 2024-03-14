@@ -23,7 +23,7 @@
 static const int LOOKIN_SERVER_VERSION = 7;
 
 /// current release version of LookinServer
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.4";
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.6";
 
 /// current connection protocol version of LookinClient
 static const int LOOKIN_CLIENT_VERSION = 7;

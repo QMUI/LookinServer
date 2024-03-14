@@ -111,7 +111,11 @@
                 
                 NSString *version = task.clientReadableVersion;
                 if (version.length > 0 && [version lookin_numbericOSVersion] >= 10004) {
-                    itemDetail.customAttrGroupList = [[[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer] make];
+                    LKS_CustomAttrGroupsMaker *maker = [[LKS_CustomAttrGroupsMaker alloc] initWithLayer:layer];
+                    [maker execute];
+                    itemDetail.customAttrGroupList = [maker getGroups];
+                    itemDetail.customDisplayTitle = [maker getCustomDisplayTitle];
+                    itemDetail.danceUISource = [maker getDanceUISource];
                 }
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
             }

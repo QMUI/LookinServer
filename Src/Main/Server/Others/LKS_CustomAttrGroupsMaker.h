@@ -14,7 +14,11 @@
 
 - (instancetype)initWithLayer:(CALayer *)layer;
 
-- (NSArray<LookinAttributesGroup *> *)make;
+- (void)execute;
+
+- (NSArray<LookinAttributesGroup *> *)getGroups;
+- (NSString *)getCustomDisplayTitle;
+- (NSString *)getDanceUISource;
 
 + (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties saveCustomSetter:(BOOL)saveCustomSetter;
 

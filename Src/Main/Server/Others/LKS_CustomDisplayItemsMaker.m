@@ -118,6 +118,7 @@
     NSValue *frameValue = dict[@"frameInWindow"];
     NSArray *properties = dict[@"properties"];
     NSArray *subviews = dict[@"subviews"];
+    NSString *danceSource = dict[@"lookin_source"];
     
     if (![title isKindOfClass:[NSString class]]) {
         return nil;
@@ -132,6 +133,7 @@
     newItem.customInfo.title = title;
     newItem.customInfo.subtitle = subtitle;
     newItem.customInfo.frameInWindow = frameValue;
+    newItem.customInfo.danceuiSource = danceSource;
     newItem.customAttrGroupList = [LKS_CustomAttrGroupsMaker makeGroupsFromRawProperties:properties saveCustomSetter:self.saveAttrSetter];
     
     return newItem;

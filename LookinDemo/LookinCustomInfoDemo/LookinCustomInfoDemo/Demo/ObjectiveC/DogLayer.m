@@ -86,6 +86,65 @@
         }
     }];
     
+    // rect property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"DogRect",
+        @"value": [NSValue valueWithCGRect:CGRectMake(1, 2, 3, 4)],
+        @"valueType": @"rect",
+        @"retainedSetter": ^(CGRect newRect) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // size property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"DogSize",
+        @"value": [NSValue valueWithCGSize:CGSizeMake(5, 6)],
+        @"valueType": @"size",
+        @"retainedSetter": ^(CGSize newSize) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // point property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"DogPoint",
+        @"value": [NSValue valueWithCGPoint:CGPointMake(7, 8)],
+        @"valueType": @"point",
+        @"retainedSetter": ^(CGPoint newPoint) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // insets property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"DogInsets",
+        @"value": [NSValue valueWithUIEdgeInsets:UIEdgeInsetsMake(1, 2, 3, 4)],
+        @"valueType": @"insets",
+        @"retainedSetter": ^(UIEdgeInsets newInsets) {
+            NSLog(@"Try to modify by Lookin.");
+        }
+    }];
+    
+    // shadow property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"DogShadow",
+        @"value": @{
+            @"opacity": @0.5,
+            @"offset": [NSValue valueWithCGSize:CGSizeMake(5, 10)],
+            @"radius": @2.5,
+            // 可选项，没有该项则表示颜色为 nil
+            // Optional. Do not set this item when the shadow color is nil.
+            @"color": UIColor.redColor
+        },
+        @"valueType": @"shadow"
+    }];
+    
     // enum property
     [properties addObject:@{
         @"section": @"Animal Info",
@@ -100,7 +159,53 @@
         }
     }];
     
+    // json property
+    [properties addObject:@{
+        @"section": @"Animal Info",
+        @"title": @"DogJson",
+        @"value": [self createSomeJson],
+        @"valueType": @"json"
+    }];
+    
     return [properties copy];;
+}
+
+/*
+ JSON 的结构要求：只能有 “title”、“desc”、“details” 3 种 Key，“title”和“desc”的值必须是字符串，“details”的值必须是数组。
+ 
+ The structure requirements of JSON are as follows. There are only three types of keys: "title", "desc", and "details". The value of "title" and "desc" must be a string, and the value of "details" must be an array.
+ */
+- (NSString *)createSomeJson {
+    NSArray *arr = @[
+        @{
+            @"title":  @"allowedBehaviors",
+            @"desc": @"HostingControllerAllowedBehaviors",
+            @"details": @[
+                @{
+                    @"title":  @"rawValue",
+                    @"desc": @"0"
+                }, @{
+                    @"title":  @"contentScrollViewBridge",
+                    @"desc": @"UIKitContentScrollViewBridge",
+                    @"details": @[
+                        @{
+                            @"title":  @"bridgeSetEdges",
+                            @"desc": @"[:]"
+                        }, @{
+                            @"title":  @"pixelLength",
+                            @"desc": @"0.33333333"
+                        }]
+                }]
+        },
+        @{
+            @"title":  @"scenePhase",
+            @"desc": @"active"
+        }
+    ];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:0 error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
 }
 
 @end

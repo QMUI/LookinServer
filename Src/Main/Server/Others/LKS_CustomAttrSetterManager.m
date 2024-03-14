@@ -10,11 +10,7 @@
 
 @interface LKS_CustomAttrSetterManager ()
 
-@property(nonatomic, strong) NSMutableDictionary *stringSetterMap;
-@property(nonatomic, strong) NSMutableDictionary *numberSetterMap;
-@property(nonatomic, strong) NSMutableDictionary *boolSetterMap;
-@property(nonatomic, strong) NSMutableDictionary *colorSetterMap;
-@property(nonatomic, strong) NSMutableDictionary *enumSetterMap;
+@property(nonatomic, strong) NSMutableDictionary *settersMap;
 
 @end
 
@@ -36,61 +32,85 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.stringSetterMap = [NSMutableDictionary new];
-        self.numberSetterMap = [NSMutableDictionary new];
-        self.boolSetterMap = [NSMutableDictionary new];
-        self.colorSetterMap = [NSMutableDictionary new];
-        self.enumSetterMap = [NSMutableDictionary new];
+        self.settersMap = [NSMutableDictionary new];
     }
     return self;
 }
 
 - (void)removeAll {
-    [self.stringSetterMap removeAllObjects];
-    [self.numberSetterMap removeAllObjects];
-    [self.boolSetterMap removeAllObjects];
-    [self.colorSetterMap removeAllObjects];
-    [self.enumSetterMap removeAllObjects];
+    [self.settersMap removeAllObjects];
 }
 
 - (void)saveStringSetter:(nonnull LKS_StringSetter)setter uniqueID:(nonnull NSString *)uniqueID {
-    self.stringSetterMap[uniqueID] = setter;
+    self.settersMap[uniqueID] = setter;
 }
 
 - (nullable LKS_StringSetter)getStringSetterWithID:(nonnull NSString *)uniqueID {
-    return self.stringSetterMap[uniqueID];
+    return self.settersMap[uniqueID];
 }
 
 - (void)saveNumberSetter:(LKS_NumberSetter)setter uniqueID:(NSString *)uniqueID {
-    self.numberSetterMap[uniqueID] = setter;
+    self.settersMap[uniqueID] = setter;
 }
 
 - (nullable LKS_NumberSetter)getNumberSetterWithID:(NSString *)uniqueID {
-    return self.numberSetterMap[uniqueID];
+    return self.settersMap[uniqueID];
 }
 
 - (void)saveBoolSetter:(LKS_BoolSetter)setter uniqueID:(NSString *)uniqueID {
-    self.boolSetterMap[uniqueID] = setter;
+    self.settersMap[uniqueID] = setter;
 }
 
 - (LKS_BoolSetter)getBoolSetterWithID:(NSString *)uniqueID {
-    return self.boolSetterMap[uniqueID];
+    return self.settersMap[uniqueID];
 }
 
 - (void)saveColorSetter:(LKS_ColorSetter)setter uniqueID:(NSString *)uniqueID {
-    self.colorSetterMap[uniqueID] = setter;
+    self.settersMap[uniqueID] = setter;
 }
 
 - (LKS_ColorSetter)getColorSetterWithID:(NSString *)uniqueID {
-    return self.colorSetterMap[uniqueID];
+    return self.settersMap[uniqueID];
 }
 
 - (void)saveEnumSetter:(LKS_EnumSetter)setter uniqueID:(NSString *)uniqueID {
-    self.enumSetterMap[uniqueID] = setter;
+    self.settersMap[uniqueID] = setter;
 }
 
 - (LKS_EnumSetter)getEnumSetterWithID:(NSString *)uniqueID {
-    return self.enumSetterMap[uniqueID];
+    return self.settersMap[uniqueID];
+}
+
+- (void)saveRectSetter:(LKS_RectSetter)setter uniqueID:(NSString *)uniqueID {
+    self.settersMap[uniqueID] = setter;
+}
+
+- (LKS_RectSetter)getRectSetterWithID:(NSString *)uniqueID {
+    return self.settersMap[uniqueID];
+}
+
+- (void)saveSizeSetter:(LKS_SizeSetter)setter uniqueID:(NSString *)uniqueID {
+    self.settersMap[uniqueID] = setter;
+}
+
+- (LKS_SizeSetter)getSizeSetterWithID:(NSString *)uniqueID {
+    return self.settersMap[uniqueID];
+}
+
+- (void)savePointSetter:(LKS_PointSetter)setter uniqueID:(NSString *)uniqueID {
+    self.settersMap[uniqueID] = setter;
+}
+
+- (LKS_PointSetter)getPointSetterWithID:(NSString *)uniqueID {
+    return self.settersMap[uniqueID];
+}
+
+- (void)saveInsetsSetter:(LKS_InsetsSetter)setter uniqueID:(NSString *)uniqueID {
+    self.settersMap[uniqueID] = setter;
+}
+
+- (LKS_InsetsSetter)getInsetsSetterWithID:(NSString *)uniqueID {
+    return self.settersMap[uniqueID];
 }
 
 @end

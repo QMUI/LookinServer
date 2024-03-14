@@ -13,6 +13,10 @@ typedef void(^LKS_NumberSetter)(NSNumber *);
 typedef void(^LKS_BoolSetter)(BOOL);
 typedef void(^LKS_ColorSetter)(UIColor *);
 typedef void(^LKS_EnumSetter)(NSString *);
+typedef void(^LKS_RectSetter)(CGRect);
+typedef void(^LKS_SizeSetter)(CGSize);
+typedef void(^LKS_PointSetter)(CGPoint);
+typedef void(^LKS_InsetsSetter)(UIEdgeInsets);
 
 @interface LKS_CustomAttrSetterManager : NSObject
 
@@ -34,6 +38,18 @@ typedef void(^LKS_EnumSetter)(NSString *);
 
 - (void)saveEnumSetter:(LKS_EnumSetter)setter uniqueID:(NSString *)uniqueID;
 - (LKS_EnumSetter)getEnumSetterWithID:(NSString *)uniqueID;
+
+- (void)saveRectSetter:(LKS_RectSetter)setter uniqueID:(NSString *)uniqueID;
+- (LKS_RectSetter)getRectSetterWithID:(NSString *)uniqueID;
+
+- (void)saveSizeSetter:(LKS_SizeSetter)setter uniqueID:(NSString *)uniqueID;
+- (LKS_SizeSetter)getSizeSetterWithID:(NSString *)uniqueID;
+
+- (void)savePointSetter:(LKS_PointSetter)setter uniqueID:(NSString *)uniqueID;
+- (LKS_PointSetter)getPointSetterWithID:(NSString *)uniqueID;
+
+- (void)saveInsetsSetter:(LKS_InsetsSetter)setter uniqueID:(NSString *)uniqueID;
+- (LKS_InsetsSetter)getInsetsSetterWithID:(NSString *)uniqueID;
 
 @end
 

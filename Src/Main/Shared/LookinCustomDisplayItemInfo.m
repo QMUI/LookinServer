@@ -28,6 +28,7 @@
     }
     newInstance.title = self.title;
     newInstance.subtitle = self.subtitle;
+    newInstance.danceuiSource = self.danceuiSource;
     
     return newInstance;
 }
@@ -36,6 +37,7 @@
     [aCoder encodeObject:self.frameInWindow forKey:@"frameInWindow"];
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.subtitle forKey:@"subtitle"];
+    [aCoder encodeObject:self.danceuiSource forKey:@"danceuiSource"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -43,6 +45,7 @@
         self.frameInWindow = [aDecoder decodeObjectForKey:@"frameInWindow"];
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.subtitle = [aDecoder decodeObjectForKey:@"subtitle"];
+        self.danceuiSource = [aDecoder decodeObjectForKey:@"danceuiSource"];
     }
     return self;
 }

@@ -22,6 +22,10 @@
 /// key 是 section title
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<LookinAttribute *> *> *sectionAndAttrs;
 
+@property(nonatomic, copy) NSString *resolvedCustomDisplayTitle;
+@property(nonatomic, copy) NSString *resolvedDanceUISource;
+@property(nonatomic, strong) NSMutableArray *resolvedGroups;
+
 @property(nonatomic, weak) CALayer *layer;
 
 @end
@@ -36,10 +40,10 @@
     return self;
 }
 
-- (NSArray<LookinAttributesGroup *> *)make {
+- (void)execute {
     if (!self.layer) {
         NSAssert(NO, @"");
-        return nil;
+        return;
     }
     NSMutableArray<NSString *> *selectors = [NSMutableArray array];
     [selectors addObject:@"lookin_customDebugInfos"];
@@ -57,7 +61,7 @@
     }
     
     if ([self.sectionAndAttrs count] == 0) {
-        return nil;
+        return;
     }
     NSMutableArray<LookinAttributesGroup *> *groups = [NSMutableArray array];
     [self.sectionAndAttrs enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull groupTitle, NSMutableArray<LookinAttribute *> * _Nonnull attrs, BOOL * _Nonnull stop) {
@@ -79,7 +83,8 @@
     [groups sortedArrayUsingComparator:^NSComparisonResult(LookinAttributesGroup *obj1, LookinAttributesGroup *obj2) {
         return [obj1.userCustomTitle compare:obj2.userCustomTitle];
     }];
-    return [groups copy];
+    
+    self.resolvedGroups = groups;
 }
 
 - (void)makeAttrsForViewOrLayer:(id)viewOrLayer selectorName:(NSString *)selectorName {
@@ -112,6 +117,16 @@
     
     NSDictionary<NSString *, id> *rawData = tempRawData;
     NSArray *rawProperties = rawData[@"properties"];
+    
+    NSString *customTitle = rawData[@"title"];
+    if (customTitle && [customTitle isKindOfClass:[NSString class]] && customTitle.length > 0) {
+        self.resolvedCustomDisplayTitle = customTitle;
+    }
+    
+    NSString *danceSource = rawData[@"lookin_source"];
+    if (danceSource && [danceSource isKindOfClass:[NSString class]] && danceSource.length > 0) {
+        self.resolvedDanceUISource = danceSource;
+    }
     
     [self makeAttrsFromRawProperties:rawProperties];
 }
@@ -242,6 +257,131 @@
         return attr;
     }
     
+    if ([fixedType isEqualToString:@"rect"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeCGRect;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_RectSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveRectSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    if ([fixedType isEqualToString:@"size"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeCGSize;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_SizeSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveSizeSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    if ([fixedType isEqualToString:@"point"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeCGPoint;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_PointSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] savePointSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    if ([fixedType isEqualToString:@"insets"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeUIEdgeInsets;
+        attr.value = value;
+        
+        if (saveCustomSetter && dict[@"retainedSetter"]) {
+            NSString *uniqueID = [[NSUUID new] UUIDString];
+            LKS_InsetsSetter setter = dict[@"retainedSetter"];
+            [[LKS_CustomAttrSetterManager sharedInstance] saveInsetsSetter:setter uniqueID:uniqueID];
+            attr.customSetterID = uniqueID;
+        }
+        
+        return attr;
+    }
+    
+    if ([fixedType isEqualToString:@"shadow"]) {
+        if (value == nil) {
+            NSLog(@"LookinServer - No value.");
+            return nil;
+        }
+        if (![value isKindOfClass:[NSDictionary class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        NSDictionary *shadowInfo = value;
+        if (![shadowInfo[@"offset"] isKindOfClass:[NSValue class]]) {
+            NSLog(@"LookinServer - Wrong value. No offset.");
+            return nil;
+        }
+        if (![shadowInfo[@"opacity"] isKindOfClass:[NSNumber class]]) {
+            NSLog(@"LookinServer - Wrong value. No opacity.");
+            return nil;
+        }
+        if (![shadowInfo[@"radius"] isKindOfClass:[NSNumber class]]) {
+            NSLog(@"LookinServer - Wrong value. No radius.");
+            return nil;
+        }
+        NSMutableDictionary *checkedShadowInfo = [@{
+            @"offset": shadowInfo[@"offset"],
+            @"opacity": shadowInfo[@"opacity"],
+            @"radius": shadowInfo[@"radius"]
+        } mutableCopy];
+        if ([shadowInfo[@"color"] isKindOfClass:[UIColor class]]) {
+            checkedShadowInfo[@"color"] = [(UIColor *)shadowInfo[@"color"] lks_rgbaComponents];
+        }
+        
+        attr.attrType = LookinAttrTypeShadow;
+        attr.value = checkedShadowInfo;
+        
+        return attr;
+    }
+    
     if ([fixedType isEqualToString:@"enum"]) {
         if (value == nil) {
             NSLog(@"LookinServer - No value.");
@@ -269,8 +409,31 @@
         return attr;
     }
     
+    if ([fixedType isEqualToString:@"json"]) {
+        if (![value isKindOfClass:[NSString class]]) {
+            NSLog(@"LookinServer - Wrong value type.");
+            return nil;
+        }
+        attr.attrType = LookinAttrTypeJson;
+        attr.value = value;
+        
+        return attr;
+    }
+    
     NSLog(@"LookinServer - Unsupported value type.");
     return nil;
+}
+
+- (NSArray<LookinAttributesGroup *> *)getGroups {
+    return self.resolvedGroups;
+}
+
+- (NSString *)getCustomDisplayTitle {
+    return self.resolvedCustomDisplayTitle;
+}
+
+- (NSString *)getDanceUISource {
+    return self.resolvedDanceUISource;
 }
 
 + (NSArray<LookinAttributesGroup *> *)makeGroupsFromRawProperties:(NSArray *)rawProperties saveCustomSetter:(BOOL)saveCustomSetter {

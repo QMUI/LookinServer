@@ -24,38 +24,17 @@ class HorseLayer: CALayer {
             "properties": self.makeCustomProperties(),
             // 可选项。这些信息会在 Lookin 左侧图层结构中被展示。
             // Optional. This information will be displayed in the layer structure on the left side of Lookin.
-            "subviews": self.makeCustomSubviews()
+            "subviews": self.makeCustomSubviews(),
+            // 可选项。该 View 实例在 Lookin 左侧图层树中的名字。
+            // Optional. The name of the view instance in the hierarchy panel on the left side of Lookin.
+            "title": "CustomHorseLayer"
         ]
         return ret
     }
     
     private func makeCustomProperties() -> [Any] {
-        // string property
-        var stringProperty: [String:Any] = [
-            /// 可选项。 在 Lookin 中展示的属性组的名称。
-            /// Optional. The name of the property group displayed in Lookin.
-            "section": "HorseInfo",
-            /// 必填项。在 Lookin 中展示的属性的名称。
-            /// Required. The name of the property displayed in Lookin.
-            "title": "Nickname",
-            /// 可选项。在 Lookin 中展示的属性的值。如果属性值为 nil 则不要设置该项，否则 NSDictionary 可能由于插入 nil 而 Crash。
-            /// Optional. The value of the property displayed in Lookin. If the property value is nil, do not set this item, otherwise Dictionary may crash due to inserting nil.
-            "value": "Jerry",
-            /// 必填项。告知 Lookin 以 String 格式解析和展示该属性。
-            /// Required. Specify the format in which Lookin should parse and display the property.
-            "valueType": "string",
-        ]
-        /// 可选项。如果配置了该字段，则用户可以在 Lookin 中实时修改该属性。
-        ///【警告】这个 block 会被 Lookin 始终持有，因此请万分注意内存管理。
-        /// Optional. If this field is configured, users can modify the property by Lookin.
-        /// [Warning] This block will be retained by Lookin indefinitely, so please be extremely careful with memory management.
-        let stringSetter: @convention(block)(String?) -> Void = { newString in
-            print("Try to modify by Lookin. \(String(describing: newString))")
-        }
-        stringProperty["retainedSetter"] = unsafeBitCast(stringSetter, to: AnyObject.self)
-        
-        
-        // number property
+        // 更多类型示例参加 BirdView.swift
+        // See BirdView.swift for more examples
         var numberProperty: [String:Any] = [
             "section": "HorseInfo",
             "title": "Age",
@@ -66,50 +45,8 @@ class HorseLayer: CALayer {
             print("Try to modify by Lookin. \(newNumber.doubleValue)")
         }
         numberProperty["retainedSetter"] = unsafeBitCast(numberSetter, to: AnyObject.self)
-        
-        
-        // bool property
-        var boolProperty: [String:Any] = [
-            "section": "Animal Info",
-            "title": "IsFriendly",
-            "value": false,
-            "valueType": "bool"
-        ]
-        let boolSetter: @convention(block)(Bool) -> Void = { newBool in
-            print("Try to modify by Lookin. \(newBool)")
-        }
-        boolProperty["retainedSetter"] = unsafeBitCast(boolSetter, to: AnyObject.self)
-        
-        
-        // color property
-        var colorProperty: [String:Any] = [
-            "section": "Animal Info",
-            "title": "SkinColor",
-            "value": UIColor.green,
-            "valueType": "color"
-        ]
-        let colorSetter: @convention(block)(UIColor?) -> Void = { newColor in
-            print("Try to modify by Lookin. \(String(describing: newColor))")
-        }
-        colorProperty["retainedSetter"] = unsafeBitCast(colorSetter, to: AnyObject.self)
-        
-        
-        // enum property
-        var enumProperty: [String:Any] = [
-            "section": "Animal Info",
-            "title": "Gender",
-            "value": "Female",
-            "valueType": "enum",
-            // 当 valueType 为 enum 时，必须设置该项，内容为所有可用的 enum 值。
-            // When valueType is "enum", this item must be set, with the content being all available enum cases.
-            "allEnumCases": ["Male", "Female"]
-        ]
-        let enumSetter: @convention(block)(String) -> Void = { newValue in
-            print("Try to modify by Lookin. \(newValue)")
-        }
-        enumProperty["retainedSetter"] = unsafeBitCast(enumSetter, to: AnyObject.self)
-        
-        return [stringProperty, numberProperty, boolProperty, colorProperty, enumProperty]
+
+        return [numberProperty]
     }
     
     func makeCustomSubviews() -> [Any] {
