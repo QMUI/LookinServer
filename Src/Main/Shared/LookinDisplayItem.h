@@ -101,7 +101,8 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 注意有一个缺点是，理论上应该像 screenshot 一样拆成 soloBackgroundColor 和 groupBackgroundColor，这里的 backgroundColor 实际上是 soloBackgroundColor，因此某些场景的显示会有瑕疵
 @property(nonatomic, strong) LookinColor *backgroundColor;
 
-/// Set as NO to avoid capture image of view to lift reload speed. Default to YES.
+/// 用户可以在 iOS 项目中添加 Lookin 自定义配置来显式地拒绝传输某些图层的图像，通常是屏蔽一些不重要的 View 以提升刷新速度。如果用户这么配置了，那么这个 shouldCaptureImage 就会被置为 NO
+/// 默认为 YES
 @property(nonatomic, assign) BOOL shouldCaptureImage;
 
 /// 用户通过重写 lookin_customDebugInfos 而自定义的该实例的名字
@@ -113,10 +114,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 @property(nonatomic, copy) NSString *danceuiSource;
 
 #pragma mark - No Encode/Decode
-
-/// 该 item 在左侧 hierarchy 中显示的字符串，通常是类名
-- (NSString *)title;
-- (NSString *)subtitle;
 
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
@@ -130,13 +127,10 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 在 hierarchy 中的层级，比如顶层的 UIWindow.indentLevel 为 0，UIWindow 的 subitem 的 indentLevel 为 1
 - (NSInteger)indentLevel;
 
-/// className 以 “UI”、“CA” 等开头时认为是系统类，该属性将返回 YES
-@property(nonatomic, assign, readonly) BOOL representedForSystemClass;
-
 /**
  该项是否被展开
  @note 假如自己没有被折叠，但是 superItem 被折叠了，则自己仍然不会被看到，但是 self.isExpanded 值仍然为 NO
- @note 如果 item 没有 subitems，则该值没有意义
+ @note 如果 item 没有 subitems（也就是 isExpandable 为 NO），则该值没有意义。换句话说，在获取该值之前，必须先判断一下 isExpandable
  */
 @property(nonatomic, assign) BOOL isExpanded;
 
@@ -152,9 +146,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
  如果自身或任意一个上层元素的 isHidden 为 YES 或 alpha 为 0，则该属性返回 YES
  */
 @property(nonatomic, assign, readonly) BOOL inHiddenHierarchy;
-
-/// 返回 soloScreenshot 或 groupScreenshot
-- (LookinImage *)appropriateScreenshot;
 
 @property(nonatomic, assign) LookinDisplayItemImageEncodeType screenshotEncodeType;
 
@@ -175,30 +166,15 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 当小于 0 时表示未被设置
 @property(nonatomic, assign) NSInteger previewZIndex;
 
-/// 遍历自身和所有上级元素
-- (void)enumerateSelfAndAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
-
-- (void)enumerateAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
-
-/// 遍历自身后所有下级元素
-- (void)enumerateSelfAndChildren:(void (^)(LookinDisplayItem *item))block;
-
 @property(nonatomic, assign) BOOL preferToBeCollapsed;
 
 - (void)notifySelectionChangeToDelegates;
 - (void)notifyHoverChangeToDelegates;
 
-- (BOOL)itemIsKindOfClassWithName:(NSString *)className;
-- (BOOL)itemIsKindOfClassesWithNames:(NSSet<NSString *> *)classNames;
-
 /// 根据 subItems 属性将 items 打平为一维数组
 + (NSArray<LookinDisplayItem *> *)flatItemsFromHierarchicalItems:(NSArray<LookinDisplayItem *> *)items;
 
 @property(nonatomic, assign) BOOL hasDeterminedExpansion;
-
-/// 在 string 这个搜索词下，如果该 displayItem 应该被搜索到，则该方法返回 YES。
-/// string 字段不能为 nil 或空字符串
-- (BOOL)isMatchedWithSearchString:(NSString *)string;
 
 /// 设置当前是否处于搜索状态
 @property(nonatomic, assign) BOOL isInSearch;

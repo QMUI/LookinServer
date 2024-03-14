@@ -54,7 +54,7 @@
     NSArray<LookinEventHandler *> *handlers = [view.gestureRecognizers lookin_map:^id(NSUInteger idx, __kindof UIGestureRecognizer *recognizer) {
         LookinEventHandler *handler = [LookinEventHandler new];
         handler.handlerType = LookinEventHandlerTypeGesture;
-        handler.eventName = [recognizer lks_shortClassName];
+        handler.eventName = NSStringFromClass([recognizer class]);
         
         NSArray<LookinTwoTuple *> *targetActionInfos = [LKS_GestureTargetActionsSearcher getTargetActionsFromRecognizer:recognizer];
         handler.targetActions = [targetActionInfos lookin_map:^id(NSUInteger idx, LookinTwoTuple *rawTuple) {

@@ -34,9 +34,6 @@
 
 - (NSString *)lookin_safeInitWithUTF8String:(const char *)string;
 
-/// 在 swift 中，类名可能会被加前缀，比如 MyApp.MyView 或 _TtC5MyApp8TestView 这种，该方法会返回简化后的末尾的类名，比如 MyView
-- (NSString *)lookin_shortClassNameString;
-
 /// 把 1.2.3 这种 String 版本号转换成数字，可用于大小比较，如 110205 代表 11.2.5 版本
 - (NSInteger)lookin_numbericOSVersion;
 

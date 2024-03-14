@@ -202,44 +202,6 @@
     }];
 }
 
-- (BOOL)representedForSystemClass {
-    return [self.title hasPrefix:@"UI"] || [self.title hasPrefix:@"CA"] || [self.title hasPrefix:@"_"];
-}
-
-- (BOOL)itemIsKindOfClassWithName:(NSString *)className {
-    if (!className) {
-        NSAssert(NO, @"");
-        return NO;
-    }
-    return [self itemIsKindOfClassesWithNames:[NSSet setWithObject:className]];
-}
-
-- (BOOL)itemIsKindOfClassesWithNames:(NSSet<NSString *> *)targetClassNames {
-    if (!targetClassNames.count) {
-        return NO;
-    }
-    LookinObject *selfObj = self.viewObject ? : self.layerObject;
-    if (!selfObj) {
-        return NO;
-    }
-    
-    __block BOOL boolValue = NO;
-    [targetClassNames enumerateObjectsUsingBlock:^(NSString * _Nonnull targetClassName, BOOL * _Nonnull stop_outer) {
-        [selfObj.classChainList enumerateObjectsUsingBlock:^(NSString * _Nonnull selfClass, NSUInteger idx, BOOL * _Nonnull stop_inner) {
-            NSString *nonPrefixSelfClass = [selfClass componentsSeparatedByString:@"."].lastObject;
-            if ([nonPrefixSelfClass isEqualToString:targetClassName]) {
-                boolValue = YES;
-                *stop_inner = YES;
-            }
-        }];
-        if (boolValue) {
-            *stop_outer = YES;
-        }
-    }];
-    
-    return boolValue;
-}
-
 - (void)setSubitems:(NSArray<LookinDisplayItem *> *)subitems {
     [_subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.superItem = nil;
@@ -359,36 +321,6 @@
     }
 }
 
-- (void)enumerateSelfAndAncestors:(void (^)(LookinDisplayItem *, BOOL *))block {
-    if (!block) {
-        return;
-    }
-    LookinDisplayItem *item = self;
-    while (item) {
-        BOOL shouldStop = NO;
-        block(item, &shouldStop);
-        if (shouldStop) {
-            break;
-        }
-        item = item.superItem;
-    }
-}
-
-- (void)enumerateAncestors:(void (^)(LookinDisplayItem *, BOOL *))block {
-    [self.superItem enumerateSelfAndAncestors:block];
-}
-
-- (void)enumerateSelfAndChildren:(void (^)(LookinDisplayItem *item))block {
-    if (!block) {
-        return;
-    }
-    
-    block(self);
-    [self.subitems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull subitem, NSUInteger idx, BOOL * _Nonnull stop) {
-        [subitem enumerateSelfAndChildren:block];
-    }];
-}
-
 + (NSArray<LookinDisplayItem *> *)flatItemsFromHierarchicalItems:(NSArray<LookinDisplayItem *> *)items {
     NSMutableArray *resultArray = [NSMutableArray array];
     
@@ -406,7 +338,13 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"%@", self.title];
+    if (self.viewObject) {
+        return self.viewObject.rawClassName;
+    } else if (self.layerObject) {
+        return self.layerObject.rawClassName;
+    } else {
+        return [super description];
+    }
 }
 
 - (void)setPreviewItemDelegate:(id<LookinDisplayItemDelegate>)previewItemDelegate {
@@ -476,37 +414,9 @@
     }
 }
 
-- (LookinImage *)appropriateScreenshot {
-    if (self.isExpandable && self.isExpanded) {
-        return self.soloScreenshot;
-    }
-    return self.groupScreenshot;
-}
-
 - (void)_notifyDelegatesWith:(LookinDisplayItemProperty)property {
     [self.previewItemDelegate displayItem:self propertyDidChange:property];
     [self.rowViewDelegate displayItem:self propertyDidChange:property];
-}
-
-- (BOOL)isMatchedWithSearchString:(NSString *)string {
-    if (string.length == 0) {
-        NSAssert(NO, @"");
-        return NO;
-    }
-    NSString *searchString = string.lowercaseString;
-    if ([self.title.lowercaseString containsString:searchString]) {
-        return YES;
-    }
-    if ([self.subtitle.lowercaseString containsString:searchString]) {
-        return YES;
-    }
-    if ([self.viewObject.memoryAddress containsString:searchString]) {
-        return YES;
-    }
-    if ([self.layerObject.memoryAddress containsString:searchString]) {
-        return YES;
-    }
-    return NO;
 }
 
 - (void)setIsInSearch:(BOOL)isInSearch {
@@ -530,44 +440,10 @@
     return array;
 }
 
-- (NSString *)title {
-    if (self.customInfo) {
-        return self.customInfo.title;
-    } else if (self.customDisplayTitle.length > 0) {
-        return self.customDisplayTitle;
-    } else if (self.viewObject) {
-        return self.viewObject.shortSelfClassName;
-    } else if (self.layerObject) {
-        return self.layerObject.shortSelfClassName;
-    } else {
-        return nil;
-    }
-}
-
-- (NSString *)subtitle {
-    if (self.customInfo) {
-        return self.customInfo.subtitle;
-    }
-    
-    NSString *text = self.hostViewControllerObject.shortSelfClassName;
-    if (text.length) {
-        return [NSString stringWithFormat:@"%@.view", text];
-    }
-    
-    LookinObject *representedObject = self.viewObject ? : self.layerObject;
-    if (representedObject.specialTrace.length) {
-        return representedObject.specialTrace;
-        
-    }
-    if (representedObject.ivarTraces.count) {
-        NSArray<NSString *> *ivarNameList = [representedObject.ivarTraces lookin_map:^id(NSUInteger idx, LookinIvarTrace *value) {
-            return value.ivarName;
-        }];
-        return [[[NSSet setWithArray:ivarNameList] allObjects] componentsJoinedByString:@"   "];
-    }
-    
-    return nil;
-}
+//- (void)dealloc
+//{
+//    NSLog(@"moss dealloc -%@", self);
+//}
 
 @end
 

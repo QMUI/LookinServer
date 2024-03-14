@@ -17,13 +17,7 @@
     if (!object) {
         return @"nil";
     }
-    NSString *className;
-    if ([object respondsToSelector:@selector(lks_shortClassName)]) {
-        className = [object lks_shortClassName];
-    } else {
-        className = NSStringFromClass([object class]);
-    }
-    
+    NSString *className = NSStringFromClass([object class]);
     return [NSString stringWithFormat:@"(%@ *)", className];
 }
 

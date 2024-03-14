@@ -196,7 +196,8 @@
         }
     }
     
-    if ([[item lks_shortClassName] isEqualToString:@"_UILayoutGuide"]) {
+    NSString *className = NSStringFromClass([item class]);
+    if ([className hasSuffix:@"_UILayoutGuide"]) {
         return LookinConstraintItemTypeLayoutGuide;
     }
     

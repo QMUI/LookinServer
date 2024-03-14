@@ -18,6 +18,9 @@
     [aCoder encodeObject:@(self.oid) forKey:@"oid"];
     [aCoder encodeInteger:self.taskType forKey:@"taskType"];
     [aCoder encodeObject:self.clientReadableVersion forKey:@"clientReadableVersion"];
+    [aCoder encodeInteger:self.attrRequest forKey:@"attrRequest"];
+    [aCoder encodeBool:self.needBasisVisualInfo forKey:@"needBasisVisualInfo"];
+    [aCoder encodeBool:self.needSubitems forKey:@"needSubitems"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -25,6 +28,29 @@
         self.oid = [[aDecoder decodeObjectForKey:@"oid"] unsignedLongValue];
         self.taskType = [aDecoder decodeIntegerForKey:@"taskType"];
         self.clientReadableVersion = [aDecoder decodeObjectForKey:@"clientReadableVersion"];
+        if ([aDecoder containsValueForKey:@"attrRequest"]) {
+            NSInteger value = [aDecoder decodeIntegerForKey:@"attrRequest"];
+            if (value >= LookinDetailUpdateTaskAttrRequest_Automatic && value <= LookinDetailUpdateTaskAttrRequest_NotNeed) {
+                self.attrRequest = value;
+            } else {
+                self.attrRequest = LookinDetailUpdateTaskAttrRequest_Automatic;
+            }
+        } else {
+            self.attrRequest = LookinDetailUpdateTaskAttrRequest_Automatic;
+        }
+
+        if ([aDecoder containsValueForKey:@"needBasisVisualInfo"]) {
+            self.needBasisVisualInfo = [aDecoder decodeBoolForKey:@"needBasisVisualInfo"];
+        } else {
+            self.needBasisVisualInfo = NO;
+        }
+        
+        if ([aDecoder containsValueForKey:@"needSubitems"]) {
+            self.needSubitems = [aDecoder decodeBoolForKey:@"needSubitems"];
+        } else {
+            self.needSubitems = NO;
+        }
+        
     }
     return self;
 }
@@ -34,7 +60,7 @@
 }
 
 - (NSUInteger)hash {
-    return self.oid ^ self.taskType;
+    return self.oid ^ self.taskType ^ self.attrRequest ^ self.needBasisVisualInfo ^ self.needSubitems;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -45,7 +71,11 @@
         return NO;
     }
     LookinStaticAsyncUpdateTask *targetTask = object;
-    if (self.oid == targetTask.oid && self.taskType == targetTask.taskType) {
+    if (self.oid == targetTask.oid
+        && self.taskType == targetTask.taskType
+        && self.attrRequest == targetTask.attrRequest
+        && self.needBasisVisualInfo == targetTask.needBasisVisualInfo
+        && self.needSubitems == targetTask.needSubitems) {
         return YES;
     }
     return NO;

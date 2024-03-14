@@ -23,7 +23,7 @@
 static const int LOOKIN_SERVER_VERSION = 7;
 
 /// current release version of LookinServer
-static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.6";
+static NSString * const LOOKIN_SERVER_READABLE_VERSION = @"1.2.7";
 
 /// current connection protocol version of LookinClient
 static const int LOOKIN_CLIENT_VERSION = 7;
@@ -88,7 +88,9 @@ enum {
     /// 请求修改某个自定义 Attribute 的值
     LookinRequestTypeCustomAttrModification = 214,
     
+    /// 从 LookinServer 1.2.7 & Lookin 1.0.7 开始，该属性被废弃、不再使用
     LookinPush_BringForwardScreenshotTask = 303,
+    
     // 用户在 Lookin 客户端取消了之前 HierarchyDetails 的拉取
     LookinPush_CanceHierarchyDetails = 304,
 };

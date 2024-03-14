@@ -116,6 +116,30 @@
     return item;
 }
 
++ (NSArray<LookinDisplayItem *> *)subitemsOfLayer:(CALayer *)layer {
+    if (!layer || layer.sublayers.count == 0) {
+        return @[];
+    }
+    [[LKS_TraceManager sharedInstance] reload];
+    
+    NSMutableArray<LookinDisplayItem *> *resultSubitems = [NSMutableArray array];
+
+    NSArray<CALayer *> *sublayers = [layer.sublayers copy];
+    [sublayers enumerateObjectsUsingBlock:^(__kindof CALayer * _Nonnull sublayer, NSUInteger idx, BOOL * _Nonnull stop) {
+        LookinDisplayItem *sublayer_item = [self _displayItemWithLayer:sublayer screenshots:NO attrList:NO lowImageQuality:NO readCustomInfo:YES saveCustomSetter:YES];
+        if (sublayer_item) {
+            [resultSubitems addObject:sublayer_item];
+        }
+    }];
+
+    NSArray<LookinDisplayItem *> *customSubitems = [[[LKS_CustomDisplayItemsMaker alloc] initWithLayer:layer saveAttrSetter:YES] make];
+    if (customSubitems.count > 0) {
+        [resultSubitems addObjectsFromArray:customSubitems];
+    }
+    
+    return resultSubitems;
+}
+
 + (BOOL)validateFrame:(CGRect)frame {
     return !CGRectIsNull(frame) && !CGRectIsInfinite(frame) && ![self cgRectIsNaN:frame] && ![self cgRectIsInf:frame] && ![self cgRectIsUnreasonable:frame];
 }
