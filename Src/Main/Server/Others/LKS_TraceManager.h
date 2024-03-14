@@ -20,6 +20,8 @@
 
 - (void)reload;
 
+- (void)addSearchTarger:(id)target;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

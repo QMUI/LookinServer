@@ -26,6 +26,13 @@
     [aCoder encodeObject:self.hiddenValue forKey:@"hiddenValue"];
     [aCoder encodeObject:self.alphaValue forKey:@"alphaValue"];
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
+    [aCoder encodeObject:self.customAttrGroupList forKey:@"customAttrGroupList"];
+    [aCoder encodeObject:self.customDisplayTitle forKey:@"customDisplayTitle"];
+    [aCoder encodeObject:self.danceUISource forKey:@"danceUISource"];
+    [aCoder encodeInteger:self.failureCode forKey:@"failureCode"];
+    if (self.subitems) {
+        [aCoder encodeObject:self.subitems forKey:@"subitems"];
+    }
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -38,6 +45,19 @@
         self.hiddenValue = [aDecoder decodeObjectForKey:@"hiddenValue"];
         self.alphaValue = [aDecoder decodeObjectForKey:@"alphaValue"];
         self.attributesGroupList = [aDecoder decodeObjectForKey:@"attributesGroupList"];
+        self.customAttrGroupList = [aDecoder decodeObjectForKey:@"customAttrGroupList"];
+        self.customDisplayTitle = [aDecoder decodeObjectForKey:@"customDisplayTitle"];
+        self.danceUISource = [aDecoder decodeObjectForKey:@"danceUISource"];
+        
+        if ([aDecoder containsValueForKey:@"failureCode"]) {
+            self.failureCode = [aDecoder decodeIntegerForKey:@"failureCode"];
+        } else {
+            self.failureCode = 0;
+        }
+        
+        if ([aDecoder containsValueForKey:@"subitems"]) {
+            self.subitems = [aDecoder decodeObjectForKey:@"subitems"];
+        }
     }
     return self;
 }

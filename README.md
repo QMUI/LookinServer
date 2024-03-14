@@ -16,6 +16,21 @@ Never integrate LookinServer in Release building configuration.
 `pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']`
 ### Objective-C Project
 `pod 'LookinServer', :configurations => ['Debug']`
+
+### [Optianal] Wireless Connection
+`pod 'LookinServer/Wireless', :configurations => ['Debug']`
+
+And you need to add follow content to Info.plist. The name of `NSBonjourServices` **MUST** be `_Lookin._tcp`.
+
+```plist
+<key>NSLocalNetworkUsageDescription</key>
+<string>Local Network Usage Description</string>
+<key>NSBonjourServices</key>
+<array>
+	<string>_Lookin._tcp</string>
+</array>
+```
+
 ## via Swift Package Manager:
 `https://github.com/QMUI/LookinServer/`
 
@@ -25,10 +40,13 @@ LookinServer: https://github.com/QMUI/LookinServer
 macOS app: https://github.com/hughkli/Lookin/
 
 # Tips
-You can create configs in your iOS project to reduce reload time or optimize your user experience of Lookin: https://lookin.work/faq/config-file/
+- How to display custom information in Lookin: https://bytedance.larkoffice.com/docx/TRridRXeUoErMTxs94bcnGchnlb
+- How to display more member variables in Lookin: https://bytedance.larkoffice.com/docx/CKRndHqdeoub11xSqUZcMlFhnWe
+- How to turn on Swift optimization for Lookin: https://bytedance.larkoffice.com/docx/GFRLdzpeKoakeyxvwgCcZ5XdnTb
+- Documentation Collection: https://bytedance.larkoffice.com/docx/Yvv1d57XQoe5l0xZ0ZRc0ILfnWb
 
-# Development
-It's hard for me to spend much time on this free open-source side project. The feature developlment or bugfix may be really slow.
+# Acknowledgements
+https://qxh1ndiez2w.feishu.cn/docx/YIFjdE4gIolp3hxn1tGckiBxnWf
 
 ---
 # 简介
@@ -59,10 +77,10 @@ iOS 端 LookinServer：https://github.com/QMUI/LookinServer
 macOS 端软件：https://github.com/hughkli/Lookin/
 
 # 技巧
-你可以在你的 iOS 项目中实现一些 Delegate 方法，从而优化 Lookin 的刷新速度或使用体验: https://lookin.work/faq/config-file/
+- 如何在 Lookin 中展示自定义信息: https://bytedance.larkoffice.com/docx/TRridRXeUoErMTxs94bcnGchnlb
+- 如何在 Lookin 中展示更多成员变量: https://bytedance.larkoffice.com/docx/CKRndHqdeoub11xSqUZcMlFhnWe
+- 如何为 Lookin 开启 Swift 优化: https://bytedance.larkoffice.com/docx/GFRLdzpeKoakeyxvwgCcZ5XdnTb
+- 文档汇总：https://bytedance.larkoffice.com/docx/Yvv1d57XQoe5l0xZ0ZRc0ILfnWb
 
-# 开发节奏
-由于 Lookin 仅是我正职工作之外的业余项目，因此其 Bugfix 和功能迭代可能会非常慢。
-
-# 工作机会
-如果你也是 iOS/Android 客户端开发，并且有换工作的意向，那么诚挚邀请你加入我的部门：https://bytedance.feishu.cn/docx/SAcgdoQuAouyXAxAqy8cmrT2n4b
+# 鸣谢
+https://qxh1ndiez2w.feishu.cn/docx/YIFjdE4gIolp3hxn1tGckiBxnWf

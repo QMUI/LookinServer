@@ -8,8 +8,7 @@
 //  https://lookin.work
 //
 
-
-
+/// 注意：新属性只能加到末尾，否则新旧版本搭配时可能有兼容问题
 typedef NS_ENUM(NSInteger, LookinAttrType) {
     LookinAttrTypeNone,
     LookinAttrTypeVoid,
@@ -42,6 +41,10 @@ typedef NS_ENUM(NSInteger, LookinAttrType) {
     LookinAttrTypeUIColor,
     /// 业务需要根据具体的 AttrIdentifier 来解析
     LookinAttrTypeCustomObj,
+    
+    LookinAttrTypeEnumString,
+    LookinAttrTypeShadow,
+    LookinAttrTypeJson
 };
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

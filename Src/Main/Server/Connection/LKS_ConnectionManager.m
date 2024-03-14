@@ -12,10 +12,14 @@
 #import "Lookin_PTChannel.h"
 #import "LKS_RequestHandler.h"
 #import "LookinConnectionResponseAttachment.h"
-#import "LKS_LocalInspectManager.h"
 #import "LKS_ExportManager.h"
-#import "LKS_PerspectiveManager.h"
 #import "LookinServerDefines.h"
+#import "LKS_TraceManager.h"
+#import "ECOChannelManager.h"
+
+#if LOOKIN_SERVER_WIRELESS
+@import CocoaAsyncSocket;
+#endif
 
 NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNotificationName";
 
@@ -24,6 +28,11 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 @property(nonatomic, weak) Lookin_PTChannel *peerChannel_;
 
 @property(nonatomic, strong) LKS_RequestHandler *requestHandler;
+
+@property(nonatomic, strong) ECOChannelManager *wirelessChannel;
+@property(nonatomic, strong) ECOChannelDeviceInfo *wirelessDevice;
+
+@property BOOL hasStartWirelessConnnection;
 
 @end
 
@@ -50,28 +59,131 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleApplicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleWillResignActiveNotification) name:UIApplicationWillResignActiveNotification object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspect:) name:@"Lookin_2D" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspect:) name:@"Lookin_3D" object:nil];
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspectIn2D:) name:@"Lookin_2D" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleLocalInspectIn3D:) name:@"Lookin_3D" object:nil];
+#if LOOKIN_SERVER_WIRELESS
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startWirelessConnection) name:@"Lookin_startWirelessConnection" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endWirelessConnection) name:@"Lookin_endWirelessConnection" object:nil];
+#endif
         [[NSNotificationCenter defaultCenter] addObserverForName:@"Lookin_Export" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
             [[LKS_ExportManager sharedInstance] exportAndShare];
         }];
+        [[NSNotificationCenter defaultCenter] addObserverForName:@"Lookin_RelationSearch" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+            [[LKS_TraceManager sharedInstance] addSearchTarger:note.object];
+        }];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleGetLookinInfo:) name:@"GetLookinInfo" object:nil];
         
         self.requestHandler = [LKS_RequestHandler new];
     }
     return self;
 }
 
+#if LOOKIN_SERVER_WIRELESS
+- (void)startWirelessConnection {
+	self.hasStartWirelessConnnection = YES;
+	if (!self.wirelessChannel) {
+#if TARGET_OS_IPHONE
+		self.wirelessChannel = ECOChannelManager.new;
+		__weak __typeof(self) weakSelf = self;
+		// 接收到数据回调
+		self.wirelessChannel.receivedBlock = ^(ECOChannelDeviceInfo *device, NSData *data, NSDictionary *extraInfo) {
+			NSLog(@"🚀 Lookin receivedBlock device:%@", device);
+			NSNumber *type = extraInfo[@"type"];
+			NSNumber *tag = extraInfo[@"tag"];
+			id object = nil;
+			id unarchivedObject = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+			if ([unarchivedObject isKindOfClass:[LookinConnectionAttachment class]]) {
+				LookinConnectionAttachment *attachment = (LookinConnectionAttachment *)unarchivedObject;
+				object = attachment.data;
+			} else {
+				object = unarchivedObject;
+			}
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[weakSelf.requestHandler handleRequestType:type.intValue tag:tag.intValue object:object];
+			});
+		};
+		// 设备连接变更
+		self.wirelessChannel.deviceBlock = ^(ECOChannelDeviceInfo *device, BOOL isConnected) {
+			NSLog(@"🚀 Lookin deviceBlock device:%@", device);
+			if ([device isEqual:weakSelf.wirelessDevice] && !isConnected) {
+				weakSelf.wirelessDevice = nil;
+			}
+		};
+		// 授权状态变更回调
+		self.wirelessChannel.authStateChangedBlock = ^(ECOChannelDeviceInfo *device, ECOAuthorizeResponseType authState) {
+			NSLog(@"🚀 Lookin authStateChangedBlock device:%@ authState:%ld", device, authState);
+			if (authState == ECOAuthorizeResponseType_AllowAlways) {
+				weakSelf.wirelessDevice = device;
+			}
+		};
+		// 请求授权状态认证回调
+		self.wirelessChannel.requestAuthBlock = ^(ECOChannelDeviceInfo *device, ECOAuthorizeResponseType authState) {
+			NSLog(@"🚀 Lookin requestAuthBlock device:%@ authState:%ld", device, authState);
+			NSString *title = @"Lookin 连接请求";
+			NSString *message = [NSString stringWithFormat:@"%@ 的Lookin想要连接你的设备，如果你想启用调试功能，请选择允许", device.hostName ?: device.ipAddress];
+			UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+			UIAlertAction *denyAction = [UIAlertAction actionWithTitle:@"拒绝" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+				[weakSelf.wirelessChannel sendAuthorizationMessageToDevice:device state:ECOAuthorizeResponseType_Deny showAuthAlert:NO];
+			}];
+			UIAlertAction *allowOnceAction = [UIAlertAction actionWithTitle:@"允许一次" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				[weakSelf.wirelessChannel sendAuthorizationMessageToDevice:device state:ECOAuthorizeResponseType_AllowOnce showAuthAlert:NO];
+				weakSelf.wirelessDevice = device;
+			}];
+			UIAlertAction *allowAlwaysAction = [UIAlertAction actionWithTitle:@"始终允许" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				[weakSelf.wirelessChannel sendAuthorizationMessageToDevice:device state:ECOAuthorizeResponseType_AllowAlways showAuthAlert:NO];
+				weakSelf.wirelessDevice = device;
+			}];
+			[alertController addAction:denyAction];
+			[alertController addAction:allowOnceAction];
+			[alertController addAction:allowAlwaysAction];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+				[rootVC presentViewController:alertController animated:YES completion:nil];
+			});
+		};
+#endif
+	}
+}
+
+- (void)endWirelessConnection {
+	self.hasStartWirelessConnnection = NO;
+	GCDAsyncSocket *asyncSocket = [self.wirelessChannel valueForKeyPath:@"socketChannel.cSocket"];
+	if (asyncSocket) {
+		[asyncSocket setDelegate:nil];
+		[asyncSocket disconnect];
+		[self.wirelessChannel setValue:nil forKeyPath:@"socketChannel.cSocket"];
+	}
+	self.wirelessChannel = nil;
+}
+#endif
+
 - (void)_handleWillResignActiveNotification {
     self.applicationIsActive = NO;
+    
+    if (self.peerChannel_ && ![self.peerChannel_ isConnected]) {
+        [self.peerChannel_ close];
+        self.peerChannel_ = nil;
+    }
 }
 
 - (void)_handleApplicationDidBecomeActive {
-//    NSLog(@"LookinServer(0.8.0) - UIApplicationDidBecomeActiveNotification");
     self.applicationIsActive = YES;
-    if (self.peerChannel_ && (self.peerChannel_.isConnected || self.peerChannel_.isListening)) {
+    [self searchPortToListenIfNoConnection];
+}
+
+- (void)searchPortToListenIfNoConnection {
+    if ([self.peerChannel_ isConnected]) {
+        NSLog(@"LookinServer - Abort to search ports. Already has connected channel.");
         return;
     }
-    NSLog(@"LookinServer - Trying to connect ...");
+    NSLog(@"LookinServer - Searching port to listen...");
+    [self.peerChannel_ close];
+    self.peerChannel_ = nil;
+    
     if ([self isiOSAppOnMac]) {
         [self _tryToListenOnPortFrom:LookinSimulatorIPv4PortNumberStart to:LookinSimulatorIPv4PortNumberEnd current:LookinSimulatorIPv4PortNumberStart];
     } else {
@@ -82,7 +194,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 - (BOOL)isiOSAppOnMac {
 #if TARGET_OS_SIMULATOR
     return YES;
-#endif
+#else
     if (@available(iOS 14.0, *)) {
         return [NSProcessInfo processInfo].isiOSAppOnMac || [NSProcessInfo processInfo].isMacCatalystApp;
     }
@@ -90,10 +202,12 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         return [NSProcessInfo processInfo].isMacCatalystApp;
     }
     return NO;
+#endif
 }
 
 - (void)_tryToListenOnPortFrom:(int)fromPort to:(int)toPort current:(int)currentPort  {
     Lookin_PTChannel *channel = [Lookin_PTChannel channelWithDelegate:self];
+    channel.targetPort = currentPort;
     [channel listenOnPort:currentPort IPv4Address:INADDR_LOOPBACK callback:^(NSError *error) {
         if (error) {
             if (error.code == 48) {
@@ -109,15 +223,14 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
             } else {
                 // 所有端口都尝试完毕，全部失败
                 NSLog(@"LookinServer - 127.0.0.1:%d is unavailable(%@).", currentPort, error);
-                NSLog(@"LookinServer - Connect failed in the end. Ask for help: lookin@lookin.work");
+                NSLog(@"LookinServer - Connect failed in the end.");
             }
             
         } else {
             // 成功
             NSLog(@"LookinServer - Connected successfully on 127.0.0.1:%d", currentPort);
-        
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@", @(currentPort)] message:nil preferredStyle:UIAlertControllerStyleAlert];
-//            [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+            // 此时 peerChannel_ 状态为 listening
+            self.peerChannel_ = channel;
         }
     }];
 }
@@ -130,8 +243,18 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 - (BOOL)isConnected {
-    return self.peerChannel_ && self.peerChannel_.isConnected;
+#if LOOKIN_SERVER_WIRELESS
+    return self.isWirelessConnnect || (self.peerChannel_ && self.peerChannel_.isConnected);
+#else
+	return self.peerChannel_ && self.peerChannel_.isConnected;
+#endif
 }
+
+#if LOOKIN_SERVER_WIRELESS
+- (BOOL)isWirelessConnnect {
+	return self.wirelessChannel.isConnected;
+}
+#endif
 
 - (void)respond:(LookinConnectionResponseAttachment *)data requestType:(uint32_t)requestType tag:(uint32_t)tag {
     [self _sendData:data frameOfType:requestType tag:tag];
@@ -142,15 +265,17 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 - (void)_sendData:(NSObject *)data frameOfType:(uint32_t)frameOfType tag:(uint32_t)tag {
+	NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:data];
     if (self.peerChannel_) {
-        NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:data];
         dispatch_data_t payload = [archivedData createReferencingDispatchData];
         
         [self.peerChannel_ sendFrameOfType:frameOfType tag:tag withPayload:payload callback:^(NSError *error) {
             if (error) {
             }
         }];
-    }
+	} else if (self.wirelessDevice.isConnected) {
+		[self.wirelessChannel sendPacket:archivedData extraInfo:@{@"tag": @(tag), @"type": @(frameOfType)} toDevice:self.wirelessDevice];
+	}
 }
 
 #pragma mark - Lookin_PTChannelDelegate
@@ -180,96 +305,57 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     [self.requestHandler handleRequestType:type tag:tag object:object];
 }
 
-/// 当连接过 Lookin 客户端，然后 Lookin 客户端又被关闭时，会走到这里
-- (void)ioFrameChannel:(Lookin_PTChannel*)channel didEndWithError:(NSError*)error {
-    [[NSNotificationCenter defaultCenter] postNotificationName:LKS_ConnectionDidEndNotificationName object:self];
+/// 当 Client 端链接成功时，该方法会被调用，然后 channel 的状态会变成 connected
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didAcceptConnection:(Lookin_PTChannel*)otherChannel fromAddress:(Lookin_PTAddress*)address {
+    NSLog(@"LookinServer - channel:%@, acceptConnection:%@", channel.debugTag, otherChannel.debugTag);
+
+    Lookin_PTChannel *previousChannel = self.peerChannel_;
+    
+    otherChannel.targetPort = address.port;
+    self.peerChannel_ = otherChannel;
+    
+    [previousChannel cancel];
 }
 
-- (void)ioFrameChannel:(Lookin_PTChannel*)channel didAcceptConnection:(Lookin_PTChannel*)otherChannel fromAddress:(Lookin_PTAddress*)address {
-    if (self.peerChannel_) {
-        [self.peerChannel_ cancel];
+/// 当连接过 Lookin 客户端，然后 Lookin 客户端又被关闭时，会走到这里
+- (void)ioFrameChannel:(Lookin_PTChannel*)channel didEndWithError:(NSError*)error {
+    if (self.peerChannel_ != channel) {
+        // Client 端第一次连接上时，之前 listen 的 port 会被 Peertalk 内部 cancel（并在 didAcceptConnection 方法里给业务抛一个新建的 connected 状态的 channel），那个被 cancel 的 channel 会走到这里
+        NSLog(@"LookinServer - Ignore channel%@ end.", channel.debugTag);
+        return;
     }
+    // Client 端关闭时，会走到这里
+    NSLog(@"LookinServer - channel%@ DidEndWithError:%@", channel.debugTag, error);
     
-    self.peerChannel_ = otherChannel;
-    self.peerChannel_.userInfo = address;
+    [[NSNotificationCenter defaultCenter] postNotificationName:LKS_ConnectionDidEndNotificationName object:self];
+    [self searchPortToListenIfNoConnection];
 }
 
 #pragma mark - Handler
 
-- (void)_handleLocalInspectIn2D:(NSNotification *)note {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSArray<UIWindow *> *includedWindows = nil;
-        NSArray<UIWindow *> *excludedWindows = nil;
-        [self parseUserInfo:note.userInfo toIncludedWindows:&includedWindows excludedWindows:&excludedWindows];
-
-        [[LKS_LocalInspectManager sharedInstance] startLocalInspectWithIncludedWindows:includedWindows excludedWindows:excludedWindows];
-    });
+- (void)_handleLocalInspect:(NSNotification *)note {
+    UIAlertController  *alertController = [UIAlertController  alertControllerWithTitle:@"Lookin" message:@"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality."  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okAction];
+    UIApplication *app = [UIApplication  sharedApplication];
+    UIWindow *keyWindow = [app keyWindow];
+    UIViewController *rootViewController = [keyWindow rootViewController];
+    [rootViewController presentViewController:alertController animated:YES completion:nil];
+    
+    NSLog(@"LookinServer - Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.");
 }
 
-- (void)_handleLocalInspectIn3D:(NSNotification *)note {
-    NSArray<UIWindow *> *includedWindows = nil;
-    NSArray<UIWindow *> *excludedWindows = nil;
-    [self parseUserInfo:note.userInfo toIncludedWindows:&includedWindows excludedWindows:&excludedWindows];
-    
-    [[LKS_PerspectiveManager sharedInstance] showWithIncludedWindows:includedWindows excludedWindows:excludedWindows];
-}
-
-- (void)parseUserInfo:(NSDictionary *)info toIncludedWindows:(NSArray<UIWindow *> **)includedWindowsPtr excludedWindows:(NSArray<UIWindow *> **)excludedWindowsPtr {
-    if (info[@"includedWindows"] && info[@"excludedWindows"]) {
-        NSLog(@"LookinServer - Do not pass 'includedWindows' and 'excludedWindows' in the same time. Learn more: https://lookin.work/faq/lookin-ios/");
+- (void)handleGetLookinInfo:(NSNotification *)note {
+    NSDictionary* userInfo = note.userInfo;
+    if (!userInfo) {
+        return;
     }
-    
-    [info enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        if ([key isEqual:@"includedWindows"] || [key isEqual:@"excludedWindows"]) {
-            return;
-        }
-        NSLog(@"LookinServer - The key '%@' you passed is not valid. Learn more: https://lookin.work/faq/lookin-ios/", key);
-    }];
-    
-    NSArray<UIWindow *> *includedWindows = [info objectForKey:@"includedWindows"];
-    if (includedWindows) {
-        if ([includedWindows isKindOfClass:[NSArray class]]) {
-            includedWindows = [includedWindows lookin_filter:^BOOL(UIWindow *obj) {
-                if ([obj isKindOfClass:[UIWindow class]]) {
-                    return YES;
-                }
-                NSLog(@"LookinServer - Error. The class of element in 'includedWindows' array must be UIWindow, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass(obj.class));
-                return NO;
-            }];
-            
-        } else {
-            NSLog(@"LookinServer - Error. The 'includedWindows' must be a NSArray, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass([includedWindows class]));
-            includedWindows = nil;
-        }
+    NSMutableDictionary* infoWrapper = userInfo[@"infos"];
+    if (![infoWrapper isKindOfClass:[NSMutableDictionary class]]) {
+        NSLog(@"LookinServer - GetLookinInfo failed. Params invalid.");
+        return;
     }
-    
-    NSArray<UIWindow *> *excludedWindows = nil;
-    // 只有当 includedWindows 无效时，才会应用 excludedWindows
-    if (includedWindows.count == 0) {
-        excludedWindows = [info objectForKey:@"excludedWindows"];
-        if (excludedWindows) {
-            if ([excludedWindows isKindOfClass:[NSArray class]]) {
-                excludedWindows = [excludedWindows lookin_filter:^BOOL(UIWindow *obj) {
-                    if ([obj isKindOfClass:[UIWindow class]]) {
-                        return YES;
-                    }
-                    NSLog(@"LookinServer - Error. The class of element in 'excludedWindows' array must be UIWindow, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass(obj.class));
-                    return NO;
-                }];
-                
-            } else {
-                NSLog(@"LookinServer - Error. The 'excludedWindows' must be a NSArray, but you've passed '%@'. Learn more: https://lookin.work/faq/lookin-ios/", NSStringFromClass([excludedWindows class]));
-                excludedWindows = nil;
-            }
-        }
-    }
-    
-    if (includedWindowsPtr) {
-        *includedWindowsPtr = includedWindows;
-    }
-    if (excludedWindowsPtr) {
-        *excludedWindowsPtr = excludedWindows;
-    }
+    infoWrapper[@"lookinServerVersion"] = LOOKIN_SERVER_READABLE_VERSION;
 }
 
 @end

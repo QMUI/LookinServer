@@ -11,6 +11,9 @@
 
 
 #import "LookinAppInfo.h"
+#if TARGET_OS_IPHONE
+#import "LKS_ConnectionManager.h"
+#endif
 
 static NSString * const CodingKey_AppIcon = @"1";
 static NSString * const CodingKey_Screenshot = @"2";
@@ -35,6 +38,9 @@ static NSString * const CodingKey_DeviceType = @"8";
     newAppInfo.screenHeight = self.screenHeight;
     newAppInfo.screenScale = self.screenScale;
     newAppInfo.appInfoIdentifier = self.appInfoIdentifier;
+#if LOOKIN_SERVER_WIRELESS
+	newAppInfo.isWireless = self.isWireless;
+#endif
     return newAppInfo;
 }
 
@@ -42,7 +48,8 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (self = [super init]) {
         
         self.serverVersion = [aDecoder decodeIntForKey:@"serverVersion"];
-
+        self.serverReadableVersion = [aDecoder decodeObjectForKey:@"serverReadableVersion"];
+        self.swiftEnabledInLookinServer = [aDecoder decodeIntForKey:@"swiftEnabledInLookinServer"];
         NSData *screenshotData = [aDecoder decodeObjectForKey:CodingKey_Screenshot];
         self.screenshot = [[LookinImage alloc] initWithData:screenshotData];
         
@@ -60,12 +67,17 @@ static NSString * const CodingKey_DeviceType = @"8";
         self.screenScale = [aDecoder decodeDoubleForKey:@"screenScale"];
         self.appInfoIdentifier = [aDecoder decodeIntegerForKey:@"appInfoIdentifier"];
         self.shouldUseCache = [aDecoder decodeBoolForKey:@"shouldUseCache"];
+#if LOOKIN_SERVER_WIRELESS
+		self.isWireless = [aDecoder decodeBoolForKey:@"isWireless"];
+#endif
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInt:self.serverVersion forKey:@"serverVersion"];
+    [aCoder encodeObject:self.serverReadableVersion forKey:@"serverReadableVersion"];
+    [aCoder encodeInt:self.swiftEnabledInLookinServer forKey:@"swiftEnabledInLookinServer"];
     
 #if TARGET_OS_IPHONE
     NSData *screenshotData = UIImagePNGRepresentation(self.screenshot);
@@ -92,6 +104,9 @@ static NSString * const CodingKey_DeviceType = @"8";
     [aCoder encodeDouble:self.screenScale forKey:@"screenScale"];
     [aCoder encodeInteger:self.appInfoIdentifier forKey:@"appInfoIdentifier"];
     [aCoder encodeBool:self.shouldUseCache forKey:@"shouldUseCache"];
+#if LOOKIN_SERVER_WIRELESS
+	[aCoder encodeBool:self.isWireless forKey:@"isWireless"];
+#endif
 }
 
 + (BOOL)supportsSecureCoding {
@@ -137,6 +152,12 @@ static NSString * const CodingKey_DeviceType = @"8";
     }
     
     LookinAppInfo *info = [[LookinAppInfo alloc] init];
+    info.serverReadableVersion = LOOKIN_SERVER_READABLE_VERSION;
+#ifdef LOOKIN_SERVER_SWIFT_ENABLED
+    info.swiftEnabledInLookinServer = 1;
+#else
+    info.swiftEnabledInLookinServer = -1;
+#endif
     info.appInfoIdentifier = selfIdentifier;
     info.appName = [self appName];
     info.deviceDescription = [UIDevice currentDevice].name;
@@ -165,6 +186,12 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (hasIcon) {
         info.appIcon = [self appIcon];
     }
+#if LOOKIN_SERVER_WIRELESS
+	info.isWireless = LKS_ConnectionManager.sharedInstance.isWirelessConnnect;
+	if (info.isWireless) {
+		info.deviceDescription = [NSString stringWithFormat:@"ᯤ %@", info.deviceDescription];
+	}
+#endif
     
     return info;
 }
@@ -194,7 +221,14 @@ static NSString * const CodingKey_DeviceType = @"8";
     if (!window) {
         return nil;
     }
-    UIGraphicsBeginImageContextWithOptions(window.bounds.size, YES, 0.4);
+    CGSize size = window.bounds.size;
+    if (size.width <= 0 || size.height <= 0) {
+        // *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UIGraphicsBeginImageContext() failed to allocate CGBitampContext: size={0, 0}, scale=3.000000, bitmapInfo=0x2002. Use UIGraphicsImageRenderer to avoid this assert.'
+
+        // https://github.com/hughkli/Lookin/issues/21
+        return nil;
+    }
+    UIGraphicsBeginImageContextWithOptions(size, YES, 0.4);
     [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

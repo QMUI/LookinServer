@@ -40,9 +40,6 @@
     }
     
     UIView *targetView = [self.subviews lookin_lastFiltered:^BOOL(__kindof UIView *obj) {
-        if (obj.layer.lks_isLookinPrivateLayer) {
-            return NO;
-        }
         if (obj.hidden || obj.alpha <= 0.01) {
             return NO;
         }
@@ -199,7 +196,8 @@
         }
     }
     
-    if ([[item lks_shortClassName] isEqualToString:@"_UILayoutGuide"]) {
+    NSString *className = NSStringFromClass([item class]);
+    if ([className hasSuffix:@"_UILayoutGuide"]) {
         return LookinConstraintItemTypeLayoutGuide;
     }
     

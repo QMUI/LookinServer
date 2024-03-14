@@ -11,7 +11,6 @@
 #import "CALayer+LookinServer.h"
 #import "LKS_HierarchyDisplayItemsMaker.h"
 #import "LookinDisplayItem.h"
-#import "LKS_LocalInspectManager.h"
 #import <objc/runtime.h>
 #import "LKS_ConnectionManager.h"
 #import "LookinIvarTrace.h"
@@ -19,14 +18,6 @@
 #import "UIColor+LookinServer.h"
 
 @implementation CALayer (LookinServer)
-
-- (void)setLks_isLookinPrivateLayer:(BOOL)lks_isLookinPrivateLayer {
-    [self lookin_bindBOOL:lks_isLookinPrivateLayer forKey:@"lks_isLookinPrivateLayer"];
-}
-
-- (BOOL)lks_isLookinPrivateLayer {
-    return [self lookin_getBindBOOLForKey:@"lks_isLookinPrivateLayer"];
-}
 
 - (UIWindow *)lks_window {
     CALayer *layer = self;
@@ -42,19 +33,6 @@
     return nil;
 }
 
-- (BOOL)lks_inLookinPrivateHierarchy {
-    BOOL boolValue = NO;
-    CALayer *layer = self;
-    while (layer) {
-        if (layer.lks_isLookinPrivateLayer) {
-            boolValue = YES;
-            break;
-        }
-        layer = layer.superlayer;
-    }
-    return boolValue;
-}
-
 - (CGRect)lks_frameInWindow:(UIWindow *)window {
     UIWindow *selfWindow = [self lks_window];
     if (!selfWindow) {
@@ -64,14 +42,6 @@
     CGRect rectInSelfWindow = [selfWindow.layer convertRect:self.frame fromLayer:self.superlayer];
     CGRect rectInWindow = [window convertRect:rectInSelfWindow fromWindow:selfWindow];
     return rectInWindow;
-}
-
-- (void)setLks_avoidCapturing:(BOOL)lks_avoidCapturing {
-    [self lookin_bindBOOL:lks_avoidCapturing forKey:@"lks_avoidCapturing"];
-}
-
-- (BOOL)lks_avoidCapturing {
-    return [self lookin_getBindBOOLForKey:@"lks_avoidCapturing"];
 }
 
 #pragma mark - Host View
@@ -91,8 +61,8 @@
 - (UIImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
     
     CGFloat screenScale = [UIScreen mainScreen].scale;
-    CGFloat pixelWidth = self.bounds.size.width * screenScale;
-    CGFloat pixelHeight = self.bounds.size.height * screenScale;
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
     if (pixelWidth <= 0 || pixelHeight <= 0) {
         return nil;
     }
@@ -105,7 +75,12 @@
         renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
     }
     
-    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, renderScale);
+    CGSize contextSize = self.frame.size;
+    if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+        NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+        return nil;
+    }
+    UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
         [self.lks_hostView drawViewHierarchyInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) afterScreenUpdates:YES];
@@ -123,8 +98,8 @@
     }
     
     CGFloat screenScale = [UIScreen mainScreen].scale;
-    CGFloat pixelWidth = self.bounds.size.width * screenScale;
-    CGFloat pixelHeight = self.bounds.size.height * screenScale;
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
     if (pixelWidth <= 0 || pixelHeight <= 0) {
         return nil;
     }
@@ -147,7 +122,13 @@
             }
         }];
         
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, renderScale);
+        CGSize contextSize = self.frame.size;
+        if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+            NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+            return nil;
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
             [self.lks_hostView drawViewHierarchyInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) afterScreenUpdates:YES];
@@ -181,7 +162,7 @@
 }
 
 + (NSArray<NSString *> *)lks_getClassListOfObject:(id)object endingClass:(NSString *)endingClass {
-    NSArray<NSString *> *completedList = [object lks_classChainListWithSwiftPrefix:NO];
+    NSArray<NSString *> *completedList = [object lks_classChainList];
     NSUInteger endingIdx = [completedList indexOfObject:endingClass];
     if (endingIdx != NSNotFound) {
         completedList = [completedList subarrayWithRange:NSMakeRange(0, endingIdx + 1)];

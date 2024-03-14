@@ -31,13 +31,17 @@ extern LookinAttrGroupIdentifier const LookinAttrGroup_UITableView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UITextView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UITextField;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView;
+extern LookinAttrGroupIdentifier const LookinAttrGroup_UIStackView;
 
+extern LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom;
 
 #pragma mark - Section
 
 typedef NSString * LookinAttrSectionIdentifier;
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_None;
+
+extern LookinAttrSectionIdentifier const LookinAttrSec_UserCustom;
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_Class_Class;
 
@@ -123,11 +127,19 @@ extern LookinAttrSectionIdentifier const LookinAttrSec_UITextField_ClearButtonMo
 extern LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_Style;
 extern LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_QMUIForegroundColor;
 
+extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Axis;
+extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Distribution;
+extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Alignment;
+extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Spacing;
+
 #pragma mark - Attr
 
 typedef NSString * LookinAttrIdentifier;
 
 extern LookinAttrIdentifier const LookinAttr_None;
+
+/// 用户自定义的
+extern LookinAttrIdentifier const LookinAttr_UserCustom;
 
 extern LookinAttrIdentifier const LookinAttr_Class_Class_Class;
 
@@ -236,5 +248,10 @@ extern LookinAttrIdentifier const LookinAttr_UITextField_ClearButtonMode_Mode;
 
 extern LookinAttrIdentifier const LookinAttr_UIVisualEffectView_Style_Style;
 extern LookinAttrIdentifier const LookinAttr_UIVisualEffectView_QMUIForegroundColor_Color;
+
+extern LookinAttrIdentifier const LookinAttr_UIStackView_Axis_Axis;
+extern LookinAttrIdentifier const LookinAttr_UIStackView_Distribution_Distribution;
+extern LookinAttrIdentifier const LookinAttr_UIStackView_Alignment_Alignment;
+extern LookinAttrIdentifier const LookinAttr_UIStackView_Spacing_Spacing;
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

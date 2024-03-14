@@ -29,6 +29,9 @@
 #define kDelegateFlagImplements_ioFrameChannel_didAcceptConnection_fromAddress 4
 
 
+static int ChannelInstanceCount = 0;
+static int ChannelUniqueID = 0;
+
 #pragma mark -
 // Note: We are careful about the size of this struct as each connected peer
 // implies one allocation of this struct.
@@ -75,6 +78,9 @@ static const uint8_t kUserInfoKey;
   if (!(self = [super init])) return nil;
   protocol_ = protocol;
   self.delegate = delegate;
+    
+    [self didInit];
+    
   return self;
 }
 
@@ -82,16 +88,29 @@ static const uint8_t kUserInfoKey;
 - (id)initWithProtocol:(Lookin_PTProtocol*)protocol {
   if (!(self = [super init])) return nil;
   protocol_ = protocol;
+    
+    [self didInit];
+    
   return self;
 }
 
 
 - (id)init {
+    [self didInit];
+    
   return [self initWithProtocol:[Lookin_PTProtocol sharedProtocolForQueue:dispatch_get_main_queue()]];
 }
 
+- (void)didInit {
+    ChannelUniqueID++;
+    ChannelInstanceCount++;
+    self.uniqueID = ChannelUniqueID;
+//    NSLog(@"LookinServer - Init channel(ID: %@). Total count: %@", @(self.uniqueID), @(ChannelInstanceCount));
+}
 
 - (void)dealloc {
+    ChannelInstanceCount--;
+//    NSLog(@"LookinServer - Dealloc channel%@. Still lives count: %@", self.debugTag, @(ChannelInstanceCount));
 #if PT_DISPATCH_RETAIN_RELEASE
   if (dispatchObj_channel_) dispatch_release(dispatchObj_channel_);
   else if (dispatchObj_source_) dispatch_release(dispatchObj_source_);
@@ -178,6 +197,22 @@ static const uint8_t kUserInfoKey;
   if (delegate_ && [delegate respondsToSelector:@selector(ioFrameChannel:didAcceptConnection:fromAddress:)]) {
     delegateFlags_ |= kDelegateFlagImplements_ioFrameChannel_didAcceptConnection_fromAddress;
   }
+}
+
+- (NSString *)debugTag {
+    NSString *state = @"";
+    if (connState_ == kConnStateNone) {
+        state = @"None";
+    } else if (connState_ == kConnStateConnecting) {
+        state = @"Connecting";
+    } else if (connState_ == kConnStateConnected) {
+        state = @"Connected";
+    } else if (connState_ == kConnStateListening) {
+        state = @"Listening";
+    } else {
+        state = @"Undefined";
+    }
+    return [NSString stringWithFormat:@"[%@-%@,%@]", @(self.uniqueID), @(self.targetPort), state];
 }
 
 
@@ -411,7 +446,7 @@ static const uint8_t kUserInfoKey;
     
     NSError *err = nil;
     if (![peerChannel startReadingFromConnectedChannel:dispatchChannel error:&err]) {
-      NSLog(@"startReadingFromConnectedChannel failed in accept: %@", err);
+//      NSLog(@"startReadingFromConnectedChannel failed in accept: %@", err);
     }
   } else {
     close(clientSocketFD);
@@ -424,6 +459,8 @@ static const uint8_t kUserInfoKey;
 
 
 - (void)close {
+//    NSLog(@"LookinServer - Will close chanel: %@", self.debugTag);
+
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, DISPATCH_IO_STOP);
     [self setDispatchChannel:NULL];
@@ -432,8 +469,10 @@ static const uint8_t kUserInfoKey;
   }
 }
 
-
+/// 曾经连接上 Client，然后 Client 端关闭时，Peertalk 内部会对之前 connect 的 channel 调用该方法
 - (void)cancel {
+//    NSLog(@"LookinServer - Will cancel chanel: %@", self.debugTag);
+    
   if ((connState_ == kConnStateConnecting || connState_ == kConnStateConnected) && dispatchObj_channel_) {
     dispatch_io_close(dispatchObj_channel_, 0);
     [self setDispatchChannel:NULL];

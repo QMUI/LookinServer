@@ -8,8 +8,6 @@
 //  https://lookin.work
 //
 
-
-
 #import "LookinAttributeModification.h"
 
 @implementation LookinAttributeModification
@@ -19,6 +17,7 @@
     [aCoder encodeObject:NSStringFromSelector(self.setterSelector) forKey:@"setterSelector"];
     [aCoder encodeInteger:self.attrType forKey:@"attrType"];
     [aCoder encodeObject:self.value forKey:@"value"];
+    [aCoder encodeObject:self.clientReadableVersion forKey:@"clientReadableVersion"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -27,6 +26,7 @@
         self.setterSelector = NSSelectorFromString([aDecoder decodeObjectForKey:@"setterSelector"]);
         self.attrType = [aDecoder decodeIntegerForKey:@"attrType"];
         self.value = [aDecoder decodeObjectForKey:@"value"];
+        self.clientReadableVersion = [aDecoder decodeObjectForKey:@"clientReadableVersion"];
     }
     return self;
 }

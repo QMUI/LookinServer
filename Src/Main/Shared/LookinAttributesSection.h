@@ -28,6 +28,8 @@ typedef NS_ENUM (NSInteger, LookinAttributesSectionStyle) {
 
 @property(nonatomic, copy) NSArray<LookinAttribute *> *attributes;
 
+- (BOOL)isUserCustom;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -34,20 +34,17 @@ typedef NS_ENUM(NSInteger, LookinConstraintItemType) {
 @property(nonatomic, assign) BOOL shouldBeArchived;
 @property(nonatomic, strong) LookinObject *firstItem;
 @property(nonatomic, assign) LookinConstraintItemType firstItemType;
-@property(nonatomic, assign) NSLayoutAttribute firstAttribute;
+/// iOS 里的 NSLayoutAttribute，注意 iOS 和 macOS 虽然都有 NSLayoutAttribute 但是 value 非常不同，因此这里使用 NSInteger 避免混淆
+@property(nonatomic, assign) NSInteger firstAttribute;
 @property(nonatomic, assign) NSLayoutRelation relation;
 @property(nonatomic, strong) LookinObject *secondItem;
 @property(nonatomic, assign) LookinConstraintItemType secondItemType;
-@property(nonatomic, assign) NSLayoutAttribute secondAttribute;
+/// iOS 里的 NSLayoutAttribute，注意 iOS 和 macOS 虽然都有 NSLayoutAttribute 但是 value 非常不同，因此这里使用 NSInteger 避免混淆
+@property(nonatomic, assign) NSInteger secondAttribute;
 @property(nonatomic, assign) CGFloat multiplier;
 @property(nonatomic, assign) CGFloat constant;
 @property(nonatomic, assign) CGFloat priority;
 @property(nonatomic, copy) NSString *identifier;
-
-+ (NSString *)descriptionWithItemObject:(LookinObject *)object type:(LookinConstraintItemType)type detailed:(BOOL)detailed;
-+ (NSString *)descriptionWithAttribute:(NSLayoutAttribute)attribute;
-+ (NSString *)symbolWithRelation:(NSLayoutRelation)relation;
-+ (NSString *)descriptionWithRelation:(NSLayoutRelation)relation;
 
 @end
 
