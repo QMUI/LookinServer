@@ -64,7 +64,6 @@
     if ([_validRequestTypes containsObject:@(requestType)]) {
         return YES;
     }
-    NSAssert(NO, @"");
     return NO;
 }
 
