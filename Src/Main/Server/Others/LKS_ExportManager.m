@@ -95,7 +95,7 @@
 @property(nonatomic, strong) UIDocumentInteractionController *documentController;
 #endif
 
-@property(nonatomic, strong) LKS_ExportManagerMaskView *maskView;
+@property(nonatomic, strong) LKS_ExportManagerMaskView *lks_maskView;
 
 @end
 
@@ -129,11 +129,11 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Lookin_WillExport" object:nil];
     
-    if (!self.maskView) {
-        self.maskView = [LKS_ExportManagerMaskView new];
+    if (!self.lks_maskView) {
+        self.lks_maskView = [LKS_ExportManagerMaskView new];
     }
-    [visibleVc.view.window addSubview:self.maskView];
-    self.maskView.frame = visibleVc.view.window.bounds;
+    [visibleVc.view.window addSubview:self.lks_maskView];
+    self.lks_maskView.frame = visibleVc.view.window.bounds;
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         LookinHierarchyInfo *info = [LookinHierarchyInfo exportedInfo];
@@ -165,7 +165,7 @@
         NSString *path = [NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), fileName];
         [data writeToFile:path atomically:YES];
         
-        [self.maskView removeFromSuperview];
+        [self.lks_maskView removeFromSuperview];
         
         if (!self.documentController) {
             self.documentController = [UIDocumentInteractionController new];
