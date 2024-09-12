@@ -1,4 +1,4 @@
-#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER
 
 //
 //  LookinServer.m
@@ -39,8 +39,12 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 }
 
 + (void)load {
-    // 触发 init 方法
-    [LKS_ConnectionManager sharedInstance];
+    if (NSProcessInfo.processInfo.environment[@"XCODE_RUNNING_FOR_PREVIEWS"]) {
+
+    } else {
+        // 触发 init 方法
+        [LKS_ConnectionManager sharedInstance];
+    }
 }
 
 - (instancetype)init {
