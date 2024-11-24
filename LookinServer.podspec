@@ -6,12 +6,16 @@ Pod::Spec.new do |spec|
   spec.homepage     = "https://lookin.work"
   spec.license      = "GPL-3.0"
   spec.author       = { "Li Kai" => "lookin@lookin.work" }
+  spec.macos.deployment_target  = "11.0"
   spec.ios.deployment_target  = "9.0"
   spec.tvos.deployment_target  = '9.0'
   spec.visionos.deployment_target = "1.0"
   spec.default_subspecs = 'Core'
   spec.source       = { :git => "https://github.com/QMUI/LookinServer.git", :tag => "1.2.8"}
-  spec.framework  = "UIKit"
+  spec.macos.framework  = "AppKit"
+  spec.ios.framework  = "UIKit"
+  spec.tvos.framework  = "UIKit"
+  spec.visionos.framework  = "UIKit"
   spec.requires_arc = true
     
   spec.subspec 'Core' do |ss|

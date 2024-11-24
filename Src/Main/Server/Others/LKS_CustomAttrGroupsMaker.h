@@ -13,7 +13,9 @@
 @interface LKS_CustomAttrGroupsMaker : NSObject
 
 - (instancetype)initWithLayer:(CALayer *)layer;
-
+#if TARGET_OS_OSX
+- (instancetype)initWithView:(NSView *)view;
+#endif
 - (void)execute;
 
 - (NSArray<LookinAttributesGroup *> *)getGroups;

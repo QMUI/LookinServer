@@ -14,14 +14,31 @@
 #import "LKS_CustomAttrGroupsMaker.h"
 
 @interface LKS_CustomDisplayItemsMaker ()
-
+#if TARGET_OS_OSX
+@property(nonatomic, weak) NSView *view;
+#endif
 @property(nonatomic, weak) CALayer *layer;
 @property(nonatomic, assign) BOOL saveAttrSetter;
 @property(nonatomic, strong) NSMutableArray *allSubitems;
 
 @end
 
+
+
 @implementation LKS_CustomDisplayItemsMaker
+
+
+
+#if TARGET_OS_OSX
+- (instancetype)initWithView:(NSView *)view saveAttrSetter:(BOOL)saveAttrSetter {
+    if (self = [super init]) {
+        self.view = view;
+        self.saveAttrSetter = saveAttrSetter;
+        self.allSubitems = [NSMutableArray array];
+    }
+    return self;
+}
+#endif
 
 - (instancetype)initWithLayer:(CALayer *)layer saveAttrSetter:(BOOL)saveAttrSetter {
     if (self = [super init]) {
@@ -33,6 +50,30 @@
 }
 
 - (NSArray<LookinDisplayItem *> *)make {
+#if TARGET_OS_OSX
+    if (self.view && !self.view.layer) {
+        NSMutableArray<NSString *> *selectors = [NSMutableArray array];
+        [selectors addObject:@"lookin_customDebugInfos"];
+        for (int i = 0; i < 5; i++) {
+            [selectors addObject:[NSString stringWithFormat:@"lookin_customDebugInfos_%@", @(i)]];
+        }
+        
+        for (NSString *name in selectors) {
+            [self makeSubitemsForViewOrLayer:self.view selectorName:name];
+            
+            CALayer *layer = self.view.layer;
+            if (layer) {
+                [self makeSubitemsForViewOrLayer:layer selectorName:name];
+            }
+        }
+        
+        if (self.allSubitems.count) {
+            return self.allSubitems;
+        } else {
+            return nil;
+        }
+    }
+#endif
     if (!self.layer) {
         NSAssert(NO, @"");
         return nil;
@@ -46,7 +87,7 @@
     for (NSString *name in selectors) {
         [self makeSubitemsForViewOrLayer:self.layer selectorName:name];
         
-        UIView *view = self.layer.lks_hostView;
+        LookinView *view = self.layer.lks_hostView;
         if (view) {
             [self makeSubitemsForViewOrLayer:view selectorName:name];
         }
@@ -63,7 +104,7 @@
     if (!viewOrLayer || !selectorName.length) {
         return;
     }
-    if (![viewOrLayer isKindOfClass:[UIView class]] && ![viewOrLayer isKindOfClass:[CALayer class]]) {
+    if (![viewOrLayer isKindOfClass:[LookinView class]] && ![viewOrLayer isKindOfClass:[CALayer class]]) {
         return;
     }
     SEL selector = NSSelectorFromString(selectorName);

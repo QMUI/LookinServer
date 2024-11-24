@@ -16,7 +16,7 @@
 #import "LookinStaticAsyncUpdateTask.h"
 #import "LookinServerDefines.h"
 #import "LKS_CustomAttrGroupsMaker.h"
-
+#import "NSValue+Lookin.h"
 @implementation LKS_InbuiltAttrModificationHandler
 
 + (void)handleModification:(LookinAttributeModification *)modification completion:(void (^)(LookinDisplayItemDetail *data, NSError *error))completion {
@@ -154,15 +154,17 @@
             break;
         }
         case LookinAttrTypeUIEdgeInsets: {
-            UIEdgeInsets expectedValue = [(NSValue *)modification.value UIEdgeInsetsValue];
+            LookinInsets expectedValue = [(NSValue *)modification.value InsetsValue];
             [setterInvocation setArgument:&expectedValue atIndex:2];
             break;
         }
+#if !TARGET_OS_OSX
         case LookinAttrTypeUIOffset: {
             UIOffset expectedValue = [(NSValue *)modification.value UIOffsetValue];
             [setterInvocation setArgument:&expectedValue atIndex:2];
             break;
         }
+#endif
         case LookinAttrTypeCustomObj:
         case LookinAttrTypeNSString: {
             NSObject *expectedValue = modification.value;
@@ -172,7 +174,7 @@
         }
         case LookinAttrTypeUIColor: {
             NSArray<NSNumber *> *rgba = modification.value;
-            UIColor *expectedValue = [UIColor lks_colorFromRGBAComponents:rgba];
+            LookinColor *expectedValue = [LookinColor lks_colorFromRGBAComponents:rgba];
             [setterInvocation setArgument:&expectedValue atIndex:2];
             [setterInvocation retainArguments];
             break;
@@ -197,8 +199,8 @@
         CALayer *layer = nil;
         if ([receiver isKindOfClass:[CALayer class]]) {
             layer = (CALayer *)receiver;
-        } else if ([receiver isKindOfClass:[UIView class]]) {
-            layer = ((UIView *)receiver).layer;
+        } else if ([receiver isKindOfClass:[LookinView class]]) {
+            layer = ((LookinView *)receiver).layer;
         } else {
             completion(nil, LookinErr_ObjNotFound);
             return;
@@ -219,6 +221,7 @@
         detail.boundsValue = [NSValue valueWithCGRect:layer.bounds];
         detail.hiddenValue = [NSNumber numberWithBool:layer.isHidden];
         detail.alphaValue = @(layer.opacity);
+        
         completion(detail, error);
     });
 }
@@ -233,6 +236,23 @@
         LookinDisplayItemDetail *itemDetail = [LookinDisplayItemDetail new];
         itemDetail.displayItemOid = task.oid;
         id object = [NSObject lks_objectWithOid:task.oid];
+        
+#if TARGET_OS_OSX
+        NSView *view = object;
+        if (view && [view isKindOfClass:[NSView class]] && !view.layer) {
+            if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
+                LookinImage *image = [view lks_soloScreenshotWithLowQuality:NO];
+                itemDetail.soloScreenshot = image;
+            } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
+                LookinImage *image = [view lks_groupScreenshotWithLowQuality:NO];
+                itemDetail.groupScreenshot = image;
+            }
+            block(itemDetail);
+            return;
+        }
+#endif
+        
+        
         if (!object || ![object isKindOfClass:[CALayer class]]) {
             block(itemDetail);
             return;
@@ -240,10 +260,10 @@
         
         CALayer *layer = object;
         if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
-            UIImage *image = [layer lks_soloScreenshotWithLowQuality:NO];
+            LookinImage *image = [layer lks_soloScreenshotWithLowQuality:NO];
             itemDetail.soloScreenshot = image;
         } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
-            UIImage *image = [layer lks_groupScreenshotWithLowQuality:NO];
+            LookinImage *image = [layer lks_groupScreenshotWithLowQuality:NO];
             itemDetail.groupScreenshot = image;
         }
         block(itemDetail);

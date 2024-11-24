@@ -16,9 +16,6 @@
 
 @interface LookinObject : NSObject <NSSecureCoding, NSCopying>
 
-#if TARGET_OS_IPHONE
-+ (instancetype)instanceWithObject:(NSObject *)object;
-#endif
 
 @property(nonatomic, assign) unsigned long oid;
 

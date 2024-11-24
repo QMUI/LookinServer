@@ -13,26 +13,8 @@
 #import "NSArray+Lookin.h"
 #import "NSString+Lookin.h"
 
-#if TARGET_OS_IPHONE
-#import "NSObject+LookinServer.h"
-#endif
-
 @implementation LookinObject
 
-#if TARGET_OS_IPHONE
-+ (instancetype)instanceWithObject:(NSObject *)object {
-    LookinObject *lookinObj = [LookinObject new];
-    lookinObj.oid = [object lks_registerOid];
-    
-    lookinObj.memoryAddress = [NSString stringWithFormat:@"%p", object];
-    lookinObj.classChainList = [object lks_classChainList];
-    
-    lookinObj.specialTrace = object.lks_specialTrace;
-    lookinObj.ivarTraces = object.lks_ivarTraces;
-    
-    return lookinObj;
-}
-#endif
 
 #pragma mark - <NSCopying>
 

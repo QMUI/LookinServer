@@ -11,6 +11,7 @@
 #import "UITableView+LookinServer.h"
 #import "LookinServerDefines.h"
 
+#if TARGET_OS_IPHONE
 @implementation UITableView (LookinServer)
 
 - (NSArray<NSNumber *> *)lks_numberOfRows {
@@ -25,5 +26,9 @@
 }
 
 @end
+#endif
+
+#if TARGET_OS_OSX
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

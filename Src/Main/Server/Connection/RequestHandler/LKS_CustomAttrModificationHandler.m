@@ -9,7 +9,7 @@
 #import "LKS_CustomAttrModificationHandler.h"
 #import "LKS_CustomAttrSetterManager.h"
 #import "UIColor+LookinServer.h"
-
+#import "NSValue+Lookin.h"
 @implementation LKS_CustomAttrModificationHandler
 
 + (BOOL)handleModification:(LookinCustomAttrModification *)modification {
@@ -72,7 +72,7 @@
             if (![newValue isKindOfClass:[NSArray class]]) {
                 return NO;
             }
-            UIColor *color = [UIColor lks_colorFromRGBAComponents:newValue];
+            LookinColor *color = [LookinColor lks_colorFromRGBAComponents:newValue];
             if (!color) {
                 return NO;
             }
@@ -141,7 +141,7 @@
             if (!setter) {
                 return NO;
             }
-            setter(newValue.UIEdgeInsetsValue);
+            setter(newValue.InsetsValue);
             return YES;
         }
             

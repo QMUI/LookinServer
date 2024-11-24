@@ -8,9 +8,9 @@
 //  https://lookin.work
 //
 
-#import <UIKit/UIKit.h>
+#import "LookinDefines.h"
 
-@interface UIImageView (LookinServer)
+@interface LookinImageView (LookinServer)
 
 - (NSString *)lks_imageSourceName;
 - (NSNumber *)lks_imageViewOidIfHasImage;

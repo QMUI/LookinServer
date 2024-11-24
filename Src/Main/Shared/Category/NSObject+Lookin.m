@@ -12,6 +12,7 @@
 #import <objc/runtime.h>
 #import "TargetConditionals.h"
 #import "LookinWeakContainer.h"
+#import "Image+Lookin.h"
 
 @implementation NSObject (Lookin)
 
@@ -117,7 +118,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
 - (void)lookin_bindPoint:(CGPoint)pointValue forKey:(NSString *)key {
 #if TARGET_OS_IPHONE
     [self lookin_bindObject:[NSValue valueWithCGPoint:pointValue] forKey:key];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
     NSPoint nsPoint = NSMakePoint(pointValue.x, pointValue.y);
     [self lookin_bindObject:[NSValue valueWithPoint:nsPoint] forKey:key];
 #endif
@@ -128,7 +129,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
     if ([object isKindOfClass:[NSValue class]]) {
 #if TARGET_OS_IPHONE
         CGPoint pointValue = [(NSValue *)object CGPointValue];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
         NSPoint nsPointValue = [(NSValue *)object pointValue];
         CGPoint pointValue = CGPointMake(nsPointValue.x, nsPointValue.y);
 #endif
@@ -165,7 +166,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
                 b = 0;
                 a = 0;
             }
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
             NSColor *color = [((NSColor *)self) colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
             [color getRed:&r green:&g blue:&b alpha:&a];
 #endif
@@ -187,10 +188,10 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
             NSAssert(NO, @"");
             return nil;
         }
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
         if ([self isKindOfClass:[NSImage class]]) {
             NSImage *image = (NSImage *)self;
-            return [image TIFFRepresentation];
+            return [image lookin_data];
             
         } else {
             NSAssert(NO, @"");

@@ -64,7 +64,7 @@
     
 #if TARGET_OS_IPHONE
     UIColor *rgbColor = color;
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
     NSColor *rgbColor = [color colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
 #endif
     

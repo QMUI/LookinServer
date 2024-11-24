@@ -77,7 +77,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     
     NSData *appIconData = UIImagePNGRepresentation(self.appIcon);
     [aCoder encodeObject:appIconData forKey:CodingKey_AppIcon];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
     NSData *screenshotData = [self.screenshot TIFFRepresentation];
     [aCoder encodeObject:screenshotData forKey:CodingKey_Screenshot];
     
@@ -129,7 +129,6 @@ static NSString * const CodingKey_DeviceType = @"8";
     return NO;
 }
 
-#if TARGET_OS_IPHONE
 
 + (LookinAppInfo *)currentInfoWithScreenshot:(BOOL)hasScreenshot icon:(BOOL)hasIcon localIdentifiers:(NSArray<NSNumber *> *)localIdentifiers {
     NSInteger selfIdentifier = [self getAppInfoIdentifier];
@@ -149,20 +148,38 @@ static NSString * const CodingKey_DeviceType = @"8";
 #endif
     info.appInfoIdentifier = selfIdentifier;
     info.appName = [self appName];
+#if TARGET_OS_IPHONE
     info.deviceDescription = [UIDevice currentDevice].name;
+#endif
+    
+#if TARGET_OS_OSX
+    info.deviceDescription = [NSHost currentHost].localizedName;
+#endif
     info.appBundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([self isSimulator]) {
         info.deviceType = LookinAppInfoDeviceSimulator;
     } else if ([LKS_MultiplatformAdapter isiPad]) {
         info.deviceType = LookinAppInfoDeviceIPad;
+    } else if ([LKS_MultiplatformAdapter isMac]) {
+        info.deviceType = LookinAppInfoDeviceMac;
     } else {
         info.deviceType = LookinAppInfoDeviceOthers;
     }
     
-    info.osDescription = [UIDevice currentDevice].systemVersion;
-    
+#if TARGET_OS_IPHONE
+    info.osDescription = [NSString stringWithFormat:@"iOS %@", [UIDevice currentDevice].systemVersion];
     NSString *mainVersionStr = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."].firstObject;
     info.osMainVersion = [mainVersionStr integerValue];
+#elif TARGET_OS_OSX
+    NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+    if (operatingSystemVersion.patchVersion) {
+        info.osDescription = [NSString stringWithFormat:@"macOS %ld.%ld.%ld", operatingSystemVersion.majorVersion, operatingSystemVersion.minorVersion, operatingSystemVersion.patchVersion];
+    } else {
+        info.osDescription = [NSString stringWithFormat:@"macOS %ld.%ld", operatingSystemVersion.majorVersion, operatingSystemVersion.minorVersion];
+    }
+    info.osMainVersion = operatingSystemVersion.majorVersion;
+#endif
+
     
     CGSize screenSize = [LKS_MultiplatformAdapter mainScreenBounds].size;
     info.screenWidth = screenSize.width;
@@ -186,10 +203,10 @@ static NSString * const CodingKey_DeviceType = @"8";
     return displayName.length ? displayName : name;
 }
 
-+ (UIImage *)appIcon {
++ (LookinImage *)appIcon {
 #if TARGET_OS_TV
     return nil;
-#else
+#elif TARGET_OS_IPHONE
     NSString *imageName;
     id CFBundleIcons = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"];
     if ([CFBundleIcons respondsToSelector:@selector(objectForKey:)]) {
@@ -205,14 +222,17 @@ static NSString * const CodingKey_DeviceType = @"8";
         return nil;
     }
     return [UIImage imageNamed:imageName];
+#elif TARGET_OS_OSX
+    return [[NSApplication sharedApplication] applicationIconImage];
 #endif
 }
 
-+ (UIImage *)screenshotImage {
-    UIWindow *window = [LKS_MultiplatformAdapter keyWindow];
++ (LookinImage *)screenshotImage {
+    LookinWindow *window = [LKS_MultiplatformAdapter keyWindow];
     if (!window) {
         return nil;
     }
+#if TARGET_OS_IPHONE
     CGSize size = window.bounds.size;
     if (size.width <= 0 || size.height <= 0) {
         // *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UIGraphicsBeginImageContext() failed to allocate CGBitampContext: size={0, 0}, scale=3.000000, bitmapInfo=0x2002. Use UIGraphicsImageRenderer to avoid this assert.'
@@ -224,6 +244,14 @@ static NSString * const CodingKey_DeviceType = @"8";
     [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+#elif TARGET_OS_OSX
+    if (!window) {
+        return nil;
+    }
+    CGImageRef cgImage = CGWindowListCreateImage(CGRectZero, kCGWindowListOptionIncludingWindow, (int)window.windowNumber, kCGWindowImageBoundsIgnoreFraming);
+    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:window.frame.size];
+    CGImageRelease(cgImage);
+#endif
     
     return image;
 }
@@ -235,7 +263,6 @@ static NSString * const CodingKey_DeviceType = @"8";
     return NO;
 }
 
-#endif
 
 + (NSInteger)getAppInfoIdentifier {
     static dispatch_once_t onceToken;

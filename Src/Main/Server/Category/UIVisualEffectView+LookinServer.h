@@ -8,6 +8,9 @@
 //  https://lookin.work
 //
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 
 @interface UIVisualEffectView (LookinServer)
@@ -17,5 +20,6 @@
 - (NSNumber *)lks_blurEffectStyleNumber;
 
 @end
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

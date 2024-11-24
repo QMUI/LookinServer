@@ -1,4 +1,4 @@
-#ifdef SHOULD_COMPILE_LOOKIN_SERVER 
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER
 
 //
 //  LKS_HierarchyDetailsHandler.m
@@ -16,7 +16,7 @@
 #import "LookinServerDefines.h"
 #import "LKS_CustomAttrGroupsMaker.h"
 #import "LKS_HierarchyDisplayItemsMaker.h"
-
+#import "NSValue+Lookin.h"
 @interface LKS_HierarchyDetailsHandler ()
 
 @property(nonatomic, strong) NSMutableArray<LookinStaticAsyncUpdateTasksPackage *> *taskPackages;
@@ -52,7 +52,7 @@
     self.progressBlock = progressBlock;
     self.finishBlock = finishBlock;
     
-    [UIView lks_rebuildGlobalInvolvedRawConstraints];
+    [LookinView lks_rebuildGlobalInvolvedRawConstraints];
     
     [self _dequeueAndHandlePackage];
 }
@@ -74,18 +74,58 @@
             itemDetail.displayItemOid = task.oid;
             
             id object = [NSObject lks_objectWithOid:task.oid];
+            
+#if TARGET_OS_OSX
+            NSView *view = object;
+            if (view && [view isKindOfClass:[NSView class]] && !view.layer) {
+                if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
+                    LookinImage *image = [view lks_soloScreenshotWithLowQuality:NO];
+                    itemDetail.soloScreenshot = image;
+                } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
+                    LookinImage *image = [view lks_groupScreenshotWithLowQuality:NO];
+                    itemDetail.groupScreenshot = image;
+                }
+                
+                BOOL shouldMakeAttr = [self queryIfShouldMakeAttrsFromTask:task];
+                if (shouldMakeAttr) {
+                    itemDetail.attributesGroupList = [LKS_AttrGroupsMaker attrGroupsForView:view];
+                    
+                    NSString *version = task.clientReadableVersion;
+                    if (version.length > 0 && [version lookin_numbericOSVersion] >= 10004) {
+                        LKS_CustomAttrGroupsMaker *maker = [[LKS_CustomAttrGroupsMaker alloc] initWithView:view];
+                        [maker execute];
+                        itemDetail.customAttrGroupList = [maker getGroups];
+                        itemDetail.customDisplayTitle = [maker getCustomDisplayTitle];
+                        itemDetail.danceUISource = [maker getDanceUISource];
+                    }
+                    [self.attrGroupsSyncedOids addObject:@(task.oid)];
+                }
+                if (task.needBasisVisualInfo) {
+                    itemDetail.frameValue = [NSValue valueWithCGRect:view.frame];
+                    itemDetail.boundsValue = [NSValue valueWithCGRect:view.bounds];
+                    itemDetail.hiddenValue = [NSNumber numberWithBool:view.isHidden];
+                    itemDetail.alphaValue = @(view.alphaValue);
+                }
+                
+                if (task.needSubitems) {
+                    itemDetail.subitems = [LKS_HierarchyDisplayItemsMaker subitemsOfView:view];
+                }
+                
+                return itemDetail;
+            }
+#endif
             if (!object || ![object isKindOfClass:[CALayer class]]) {
                 itemDetail.failureCode = -1;
                 return itemDetail;
             }
             
             CALayer *layer = object;
-
+            
             if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
-                UIImage *image = [layer lks_soloScreenshotWithLowQuality:NO];
+                LookinImage *image = [layer lks_soloScreenshotWithLowQuality:NO];
                 itemDetail.soloScreenshot = image;
             } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
-                UIImage *image = [layer lks_groupScreenshotWithLowQuality:NO];
+                LookinImage *image = [layer lks_groupScreenshotWithLowQuality:NO];
                 itemDetail.groupScreenshot = image;
             }
             
@@ -103,7 +143,6 @@
                 }
                 [self.attrGroupsSyncedOids addObject:@(task.oid)];
             }
-            
             if (task.needBasisVisualInfo) {
                 itemDetail.frameValue = [NSValue valueWithCGRect:layer.frame];
                 itemDetail.boundsValue = [NSValue valueWithCGRect:layer.bounds];

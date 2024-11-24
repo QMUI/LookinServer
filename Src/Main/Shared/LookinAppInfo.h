@@ -15,7 +15,8 @@
 typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
     LookinAppInfoDeviceSimulator,   // 模拟器
     LookinAppInfoDeviceIPad,    // iPad 真机
-    LookinAppInfoDeviceOthers   // 应该视为 iPhone 真机
+    LookinAppInfoDeviceOthers,   // 应该视为 iPhone 真机
+    LookinAppInfoDeviceMac, // 使用AppKit的Mac应用（非 Catalyst）
 };
 
 @interface LookinAppInfo : NSObject <NSSecureCoding, NSCopying>
@@ -57,15 +58,9 @@ typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
 
 - (BOOL)isEqualToAppInfo:(LookinAppInfo *)info;
 
-#if TARGET_OS_IPHONE
-
 + (LookinAppInfo *)currentInfoWithScreenshot:(BOOL)hasScreenshot icon:(BOOL)hasIcon localIdentifiers:(NSArray<NSNumber *> *)localIdentifiers;
 
-#else
-
 @property(nonatomic, assign) NSTimeInterval cachedTimestamp;
-
-#endif
 
 @end
 

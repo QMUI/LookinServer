@@ -26,6 +26,9 @@
 #import "LKS_AttrModificationPatchHandler.h"
 #import "LKS_HierarchyDetailsHandler.h"
 #import "LookinStaticAsyncUpdateTask.h"
+#import "NSValue+Lookin.h"
+#import "LookinHierarchyInfo+LookinServer.h"
+#import "LookinObject+LookinServer.h"
 
 @interface LKS_RequestHandler ()
 
@@ -249,16 +252,16 @@
             return;
         }
         unsigned long imageViewOid = [(NSNumber *)object unsignedLongValue];
-        UIImageView *imageView = (UIImageView *)[NSObject lks_objectWithOid:imageViewOid];
+        LookinImageView *imageView = (LookinImageView *)[NSObject lks_objectWithOid:imageViewOid];
         if (!imageView) {
             [self _submitResponseWithError:LookinErr_ObjNotFound requestType:requestType tag:tag];
             return;
         }
-        if (![imageView isKindOfClass:[UIImageView class]]) {
+        if (![imageView isKindOfClass:[LookinImageView class]]) {
             [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
             return;
         }
-        UIImage *image = imageView.image;
+        LookinImage *image = imageView.image;
         NSData *imageData = [image lookin_data];
         [self _submitResponseWithData:imageData requestType:requestType tag:tag];
     
@@ -271,12 +274,12 @@
         unsigned long recognizerOid = ((NSNumber *)params[@"oid"]).unsignedLongValue;
         BOOL shouldBeEnabled = ((NSNumber *)params[@"enable"]).boolValue;
         
-        UIGestureRecognizer *recognizer = (UIGestureRecognizer *)[NSObject lks_objectWithOid:recognizerOid];
+        LookinGestureRecognizer *recognizer = (LookinGestureRecognizer *)[NSObject lks_objectWithOid:recognizerOid];
         if (!recognizer) {
             [self _submitResponseWithError:LookinErr_ObjNotFound requestType:requestType tag:tag];
             return;
         }
-        if (![recognizer isKindOfClass:[UIGestureRecognizer class]]) {
+        if (![recognizer isKindOfClass:[LookinGestureRecognizer class]]) {
             [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
             return;
         }
@@ -502,18 +505,18 @@
         [invocation getReturnValue:&rectValue];
         *description = NSStringFromCGAffineTransform(rectValue);
         
-    } else if (strcmp(returnType, @encode(UIEdgeInsets)) == 0) {
-        UIEdgeInsets targetValue;
+    } else if (strcmp(returnType, @encode(LookinInsets)) == 0) {
+        LookinInsets targetValue;
         [invocation getReturnValue:&targetValue];
-        *description = NSStringFromUIEdgeInsets(targetValue);
-        
+        *description = NSStringFromInsets(targetValue);
+#if !TARGET_OS_OSX
     } else if (strcmp(returnType, @encode(UIOffset)) == 0) {
         UIOffset targetValue;
         [invocation getReturnValue:&targetValue];
         *description = NSStringFromUIOffset(targetValue);
-        
+#endif
     } else {
-        if (@available(iOS 11.0, tvOS 11.0, *)) {
+        if (@available(iOS 11.0, tvOS 11.0, macOS 10.15, *)) {
             if (strcmp(returnType, @encode(NSDirectionalEdgeInsets)) == 0) {
                 NSDirectionalEdgeInsets targetValue;
                 [invocation getReturnValue:&targetValue];

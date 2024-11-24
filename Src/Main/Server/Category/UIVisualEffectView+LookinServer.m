@@ -11,6 +11,7 @@
 #import "UIVisualEffectView+LookinServer.h"
 #import "UIBlurEffect+LookinServer.h"
 
+#if TARGET_OS_IPHONE
 @implementation UIVisualEffectView (LookinServer)
 
 - (void)setLks_blurEffectStyleNumber:(NSNumber *)lks_blurEffectStyleNumber {
@@ -29,5 +30,9 @@
 }
 
 @end
+#endif
+
+#if TARGET_OS_OSX
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

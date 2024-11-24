@@ -17,39 +17,47 @@
 #import "LookinServerDefines.h"
 #import "UIColor+LookinServer.h"
 #import "LKS_MultiplatformAdapter.h"
+#import "NSWindow+LookinServer.h"
 
 @implementation CALayer (LookinServer)
 
-- (UIWindow *)lks_window {
+- (LookinWindow *)lks_window {
     CALayer *layer = self;
     while (layer) {
-        UIView *hostView = layer.lks_hostView;
+        LookinView *hostView = layer.lks_hostView;
         if (hostView.window) {
             return hostView.window;
-        } else if ([hostView isKindOfClass:[UIWindow class]]) {
-            return (UIWindow *)hostView;
+#if !TARGET_OS_OSX
+        } else if ([hostView isKindOfClass:[LookinWindow class]]) {
+            return (LookinWindow *)hostView;
+#endif
         }
         layer = layer.superlayer;
     }
     return nil;
 }
 
-- (CGRect)lks_frameInWindow:(UIWindow *)window {
-    UIWindow *selfWindow = [self lks_window];
+- (CGRect)lks_frameInWindow:(LookinWindow *)window {
+    LookinWindow *selfWindow = [self lks_window];
     if (!selfWindow) {
         return CGRectZero;
     }
     
+#if TARGET_OS_IPHONE
     CGRect rectInSelfWindow = [selfWindow.layer convertRect:self.frame fromLayer:self.superlayer];
     CGRect rectInWindow = [window convertRect:rectInSelfWindow fromWindow:selfWindow];
+#elif TARGET_OS_OSX
+    CGRect rectInSelfWindow = [selfWindow.lks_rootView.layer convertRect:self.frame fromLayer:self.superlayer];
+    CGRect rectInWindow = [window.lks_rootView convertRect:rectInSelfWindow fromView:selfWindow.lks_rootView];
+#endif
     return rectInWindow;
 }
 
 #pragma mark - Host View
 
-- (UIView *)lks_hostView {
-    if (self.delegate && [self.delegate isKindOfClass:UIView.class]) {
-        UIView *view = (UIView *)self.delegate;
+- (LookinView *)lks_hostView {
+    if (self.delegate && [self.delegate isKindOfClass:LookinView.class]) {
+        LookinView *view = (LookinView *)self.delegate;
         if (view.layer == self) {
             return view;
         }
@@ -59,7 +67,7 @@
 
 #pragma mark - Screenshot
 
-- (UIImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
+- (LookinImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
     
     CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
     CGFloat pixelWidth = self.frame.size.width * screenScale;
@@ -81,6 +89,7 @@
         NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
         return nil;
     }
+#if TARGET_OS_IPHONE
     UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
@@ -91,9 +100,31 @@
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+#elif TARGET_OS_OSX
+    NSImage *image = nil;
+    NSView *view = self.lks_hostView;
+    if (view) {
+        NSBitmapImageRep *representation = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+        if (!representation) {
+            return nil;
+        }
+        [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
+        image = [[NSImage alloc] initWithSize:representation.size];
+        [image addRepresentation:representation];
+        return image;
+        
+    } else {
+        image = [[NSImage alloc] initWithSize:contextSize];
+        [image lockFocusFlipped:self.isGeometryFlipped];
+        CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+        [self renderInContext:context];
+        [image unlockFocus];
+    }
+    return image;
+#endif
 }
 
-- (UIImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality {
+- (LookinImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality {
     if (!self.sublayers.count) {
         return nil;
     }
@@ -112,7 +143,11 @@
         // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
         renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
     }
-    
+    CGSize contextSize = self.frame.size;
+    if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+        NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+        return nil;
+    }
     if (self.sublayers.count) {
         NSArray<CALayer *> *sublayers = [self.sublayers copy];
         NSMutableArray<CALayer *> *visibleSublayers = [NSMutableArray arrayWithCapacity:sublayers.count];
@@ -122,13 +157,7 @@
                 [visibleSublayers addObject:sublayer];
             }
         }];
-        
-        CGSize contextSize = self.frame.size;
-        if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
-            NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
-            return nil;
-        }
-        
+#if TARGET_OS_IPHONE
         UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
@@ -139,10 +168,29 @@
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
+        
+#elif TARGET_OS_OSX
+        NSImage *image = nil;
+        NSView *view = self.lks_hostView;
+        if (view) {
+            NSBitmapImageRep *representation = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+            if (!representation) {
+                return nil;
+            }
+            [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
+            image = [[NSImage alloc] initWithSize:representation.size];
+            [image addRepresentation:representation];
+        } else {
+            image = [[NSImage alloc] initWithSize:contextSize];
+            [image lockFocusFlipped:self.isGeometryFlipped];
+            CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+            [self renderInContext:context];
+            [image unlockFocus];
+        }
+#endif
         [visibleSublayers enumerateObjectsUsingBlock:^(CALayer * _Nonnull sublayer, NSUInteger idx, BOOL * _Nonnull stop) {
             sublayer.hidden = NO;
         }];
-        
         return image;
     }
     return nil;
@@ -151,10 +199,10 @@
 - (NSArray<NSArray<NSString *> *> *)lks_relatedClassChainList {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
     if (self.lks_hostView) {
-        [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:@"UIView"]];
-        UIViewController* vc = [self.lks_hostView lks_findHostViewController];
+        [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:LookinViewString]];
+        NSViewController* vc = [self.lks_hostView lks_findHostViewController];
         if (vc) {
-            [array addObject:[CALayer lks_getClassListOfObject:vc endingClass:@"UIViewController"]];
+            [array addObject:[CALayer lks_getClassListOfObject:vc endingClass:LookinViewControllerString]];
         }
     } else {
         [array addObject:[CALayer lks_getClassListOfObject:self endingClass:@"CALayer"]];
@@ -175,7 +223,7 @@
     NSMutableArray *array = [NSMutableArray array];
     NSMutableArray<LookinIvarTrace *> *ivarTraces = [NSMutableArray array];
     if (self.lks_hostView) {
-        UIViewController* vc = [self.lks_hostView lks_findHostViewController];
+        LookinViewController* vc = [self.lks_hostView lks_findHostViewController];
         if (vc) {
             [array addObject:[NSString stringWithFormat:@"(%@ *).view", NSStringFromClass(vc.class)]];
             
@@ -193,24 +241,24 @@
     return array.count ? array.copy : nil;
 }
 
-- (UIColor *)lks_backgroundColor {
-    return [UIColor lks_colorWithCGColor:self.backgroundColor];
+- (LookinColor *)lks_backgroundColor {
+    return [LookinColor lks_colorWithCGColor:self.backgroundColor];
 }
-- (void)setLks_backgroundColor:(UIColor *)lks_backgroundColor {
+- (void)setLks_backgroundColor:(LookinColor *)lks_backgroundColor {
     self.backgroundColor = lks_backgroundColor.CGColor;
 }
 
-- (UIColor *)lks_borderColor {
-    return [UIColor lks_colorWithCGColor:self.borderColor];
+- (LookinColor *)lks_borderColor {
+    return [LookinColor lks_colorWithCGColor:self.borderColor];
 }
-- (void)setLks_borderColor:(UIColor *)lks_borderColor {
+- (void)setLks_borderColor:(LookinColor *)lks_borderColor {
     self.borderColor = lks_borderColor.CGColor;
 }
 
-- (UIColor *)lks_shadowColor {
-    return [UIColor lks_colorWithCGColor:self.shadowColor];
+- (LookinColor *)lks_shadowColor {
+    return [LookinColor lks_colorWithCGColor:self.shadowColor];
 }
-- (void)setLks_shadowColor:(UIColor *)lks_shadowColor {
+- (void)setLks_shadowColor:(LookinColor *)lks_shadowColor {
     self.shadowColor = lks_shadowColor.CGColor;
 }
 

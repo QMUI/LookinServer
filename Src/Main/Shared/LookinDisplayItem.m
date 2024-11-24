@@ -22,7 +22,7 @@
 #if TARGET_OS_IPHONE
 #import "UIColor+LookinServer.h"
 #import "UIImage+LookinServer.h"
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
 #endif
 
 @interface LookinDisplayItem ()
@@ -50,10 +50,14 @@
     newDisplayItem.alpha = self.alpha;
     newDisplayItem.frame = self.frame;
     newDisplayItem.bounds = self.bounds;
+#if TARGET_OS_OSX
+    newDisplayItem.flipped = self.isFlipped;
+#endif
     newDisplayItem.soloScreenshot = self.soloScreenshot;
     newDisplayItem.groupScreenshot = self.groupScreenshot;
     newDisplayItem.viewObject = self.viewObject.copy;
     newDisplayItem.layerObject = self.layerObject.copy;
+    newDisplayItem.windowObject = self.windowObject.copy;
     newDisplayItem.hostViewControllerObject = self.hostViewControllerObject.copy;
     newDisplayItem.attributesGroupList = [self.attributesGroupList lookin_map:^id(NSUInteger idx, LookinAttributesGroup *value) {
         return value.copy;
@@ -78,8 +82,12 @@
     [aCoder encodeObject:self.subitems forKey:@"subitems"];
     [aCoder encodeBool:self.isHidden forKey:@"hidden"];
     [aCoder encodeFloat:self.alpha forKey:@"alpha"];
+#if TARGET_OS_OSX
+    [aCoder encodeBool:self.isFlipped forKey:@"isFlipped"];
+#endif
     [aCoder encodeObject:self.viewObject forKey:@"viewObject"];
     [aCoder encodeObject:self.layerObject forKey:@"layerObject"];
+    [aCoder encodeObject:self.windowObject forKey:@"windowObject"];
     [aCoder encodeObject:self.hostViewControllerObject forKey:@"hostViewControllerObject"];
     [aCoder encodeObject:self.attributesGroupList forKey:@"attributesGroupList"];
     [aCoder encodeObject:self.customAttrGroupList forKey:@"customAttrGroupList"];
@@ -99,8 +107,7 @@
     [aCoder encodeCGRect:self.frame forKey:@"frame"];
     [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
     [aCoder encodeObject:self.backgroundColor.lks_rgbaComponents forKey:@"backgroundColor"];
-    
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
     [aCoder encodeRect:self.frame forKey:@"frame"];
     [aCoder encodeRect:self.bounds forKey:@"bounds"];
     [aCoder encodeObject:self.backgroundColor.lookin_rgbaComponents forKey:@"backgroundColor"];
@@ -113,6 +120,10 @@
         self.subitems = [aDecoder decodeObjectForKey:@"subitems"];
         self.isHidden = [aDecoder decodeBoolForKey:@"hidden"];
         self.alpha = [aDecoder decodeFloatForKey:@"alpha"];
+#if TARGET_OS_OSX
+        self.flipped = [aDecoder decodeBoolForKey:@"isFlipped"];
+#endif
+        self.windowObject = [aDecoder decodeObjectForKey:@"windowObject"];
         self.viewObject = [aDecoder decodeObjectForKey:@"viewObject"];
         self.layerObject = [aDecoder decodeObjectForKey:@"layerObject"];
         self.hostViewControllerObject = [aDecoder decodeObjectForKey:@"hostViewControllerObject"];
@@ -151,7 +162,7 @@
         self.frame = [aDecoder decodeCGRectForKey:@"frame"];
         self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
         self.backgroundColor = [UIColor lks_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
         self.frame = [aDecoder decodeRectForKey:@"frame"];
         self.bounds = [aDecoder decodeRectForKey:@"bounds"];
         self.backgroundColor = [NSColor lookin_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
@@ -175,7 +186,7 @@
 }
 
 - (LookinObject *)displayingObject {
-    return self.viewObject ? : self.layerObject;
+    return self.windowObject ? : self.viewObject ? : self.layerObject;
 }
 
 - (void)setAttributesGroupList:(NSArray<LookinAttributesGroup *> *)attributesGroupList {
@@ -342,6 +353,8 @@
         return self.viewObject.rawClassName;
     } else if (self.layerObject) {
         return self.layerObject.rawClassName;
+    } else if (self.windowObject) {
+        return self.windowObject.rawClassName;
     } else {
         return [super description];
     }
@@ -444,6 +457,15 @@
 //{
 //    NSLog(@"moss dealloc -%@", self);
 //}
+
+
+#if TARGET_OS_IPHONE
+- (void)setFlipped:(BOOL)flipped {}
+
+- (BOOL)isFlipped {
+    return NO;
+}
+#endif
 
 @end
 

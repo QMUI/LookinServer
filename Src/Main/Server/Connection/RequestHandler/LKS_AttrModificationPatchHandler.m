@@ -29,7 +29,22 @@
         LookinDisplayItemDetail *detail = [LookinDisplayItemDetail new];
         detail.displayItemOid = oid;
         
-        CALayer *layer = (CALayer *)[NSObject lks_objectWithOid:oid];
+        id object = [NSObject lks_objectWithOid:oid];
+#if TARGET_OS_OSX
+        NSView *view = object;
+        if (view && [view isKindOfClass:[NSView class]] && !view.layer) {
+            if (idx == 0) {
+                detail.soloScreenshot = [view lks_soloScreenshotWithLowQuality:lowImageQuality];
+                detail.groupScreenshot = [view lks_groupScreenshotWithLowQuality:lowImageQuality];
+            } else {
+                detail.groupScreenshot = [view lks_groupScreenshotWithLowQuality:lowImageQuality];
+            }
+            block(detail, oids.count, nil);
+            return;
+        }
+#endif
+        
+        CALayer *layer = object;
         if (![layer isKindOfClass:[CALayer class]]) {
             block(nil, idx + 1, LookinErr_ObjNotFound);
             *stop = YES;

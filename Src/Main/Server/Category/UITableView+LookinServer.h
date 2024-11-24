@@ -8,6 +8,9 @@
 //  https://lookin.work
 //
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 
 @interface UITableView (LookinServer)
@@ -15,5 +18,6 @@
 - (NSArray<NSNumber *> *)lks_numberOfRows;
 
 @end
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

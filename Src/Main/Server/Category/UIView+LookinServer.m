@@ -14,25 +14,51 @@
 #import "LookinAutoLayoutConstraint.h"
 #import "LookinServerDefines.h"
 #import "LKS_MultiplatformAdapter.h"
+#import "LookinAutoLayoutConstraint+LookinServer.h"
+#import "NSWindow+LookinServer.h"
+@implementation LookinView (LookinServer)
 
-@implementation UIView (LookinServer)
+#if TARGET_OS_OSX
+- (CGFloat)alpha {
+    return self.alphaValue;
+}
+- (void)setContentCompressionResistancePriority:(NSLayoutPriority)priority
+                                        forAxis:(NSLayoutConstraintOrientation)axis {
+    [self setContentCompressionResistancePriority:priority forOrientation:axis];
+}
+- (void)setContentHuggingPriority:(NSLayoutPriority)priority
+                          forAxis:(NSLayoutConstraintOrientation)axis {
+    [self setContentHuggingPriority:priority forOrientation:axis];
+}
 
-- (UIViewController *)lks_findHostViewController {
-    UIResponder *responder = [self nextResponder];
+- (float)contentHuggingPriorityForAxis:(NSLayoutConstraintOrientation)axis {
+    return [self contentHuggingPriorityForOrientation:axis];
+}
+
+- (float)contentCompressionResistancePriorityForAxis:(NSLayoutConstraintOrientation)axis {
+    return [self contentCompressionResistancePriorityForOrientation:axis];
+}
+- (NSArray<NSLayoutConstraint *> *)constraintsAffectingLayoutForAxis:(NSLayoutConstraintOrientation)orientation {
+    return [self constraintsAffectingLayoutForOrientation:orientation];
+}
+#endif
+
+- (LookinViewController *)lks_findHostViewController {
+    LookinResponder *responder = [self nextResponder];
     if (!responder) {
         return nil;
     }
-    if (![responder isKindOfClass:[UIViewController class]]) {
+    if (![responder isKindOfClass:[LookinViewController class]]) {
         return nil;
     }
-    UIViewController *viewController = (UIViewController *)responder;
+    LookinViewController *viewController = (LookinViewController *)responder;
     if (viewController.view != self) {
         return nil;
     }
     return viewController;
 }
 
-- (UIView *)lks_subviewAtPoint:(CGPoint)point preferredClasses:(NSArray<Class> *)preferredClasses {
+- (LookinView *)lks_subviewAtPoint:(CGPoint)point preferredClasses:(NSArray<Class> *)preferredClasses {
     BOOL isPreferredClassForSelf = [preferredClasses lookin_any:^BOOL(Class obj) {
         return [self isKindOfClass:obj];
     }];
@@ -40,7 +66,7 @@
         return self;
     }
     
-    UIView *targetView = [self.subviews lookin_lastFiltered:^BOOL(__kindof UIView *obj) {
+    LookinView *targetView = [self.subviews lookin_lastFiltered:^BOOL(__kindof LookinView *obj) {
         if (obj.hidden || obj.alpha <= 0.01) {
             return NO;
         }
@@ -58,7 +84,15 @@
 }
 
 - (CGSize)lks_bestSize {
+#if TARGET_OS_IPHONE
     return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+#elif TARGET_OS_OSX
+    if ([self isKindOfClass:[NSControl class]]) {
+        return [((NSControl *)self) sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+    } else {
+        return self.fittingSize;
+    }
+#endif
 }
 
 - (CGFloat)lks_bestWidth {
@@ -77,54 +111,62 @@
 }
 
 - (void)setLks_verticalContentHuggingPriority:(float)lks_verticalContentHuggingPriority {
-    [self setContentHuggingPriority:lks_verticalContentHuggingPriority forAxis:UILayoutConstraintAxisVertical];
+    [self setContentHuggingPriority:lks_verticalContentHuggingPriority forAxis:LookinLayoutConstraintAxisVertical];
 }
 - (float)lks_verticalContentHuggingPriority {
-    return [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical];
+    return [self contentHuggingPriorityForAxis:LookinLayoutConstraintAxisVertical];
 }
 
 - (void)setLks_horizontalContentHuggingPriority:(float)lks_horizontalContentHuggingPriority {
-    [self setContentHuggingPriority:lks_horizontalContentHuggingPriority forAxis:UILayoutConstraintAxisHorizontal];
+    [self setContentHuggingPriority:lks_horizontalContentHuggingPriority forAxis:LookinLayoutConstraintAxisHorizontal];
 }
 - (float)lks_horizontalContentHuggingPriority {
-    return [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal];
+    return [self contentHuggingPriorityForAxis:LookinLayoutConstraintAxisHorizontal];
 }
 
 - (void)setLks_verticalContentCompressionResistancePriority:(float)lks_verticalContentCompressionResistancePriority {
-    [self setContentCompressionResistancePriority:lks_verticalContentCompressionResistancePriority forAxis:UILayoutConstraintAxisVertical];
+    [self setContentCompressionResistancePriority:lks_verticalContentCompressionResistancePriority forAxis:LookinLayoutConstraintAxisVertical];
 }
 - (float)lks_verticalContentCompressionResistancePriority {
-    return [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical];
+    return [self contentCompressionResistancePriorityForAxis:LookinLayoutConstraintAxisVertical];
 }
 
 - (void)setLks_horizontalContentCompressionResistancePriority:(float)lks_horizontalContentCompressionResistancePriority {
-    [self setContentCompressionResistancePriority:lks_horizontalContentCompressionResistancePriority forAxis:UILayoutConstraintAxisHorizontal];
+    [self setContentCompressionResistancePriority:lks_horizontalContentCompressionResistancePriority forAxis:LookinLayoutConstraintAxisHorizontal];
 }
 - (float)lks_horizontalContentCompressionResistancePriority {
-    return [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal];
+    return [self contentCompressionResistancePriorityForAxis:LookinLayoutConstraintAxisHorizontal];
 }
 
 + (void)lks_rebuildGlobalInvolvedRawConstraints {
-    [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof LookinWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+#if TARGET_OS_IPHONE
         [self lks_removeInvolvedRawConstraintsForViewsRootedByView:window];
+#elif TARGET_OS_OSX
+        [self lks_removeInvolvedRawConstraintsForViewsRootedByView:window.lks_rootView];
+#endif
     }];
-    [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof LookinWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+#if TARGET_OS_IPHONE
         [self lks_addInvolvedRawConstraintsForViewsRootedByView:window];
+#elif TARGET_OS_OSX
+        [self lks_addInvolvedRawConstraintsForViewsRootedByView:window.lks_rootView];
+#endif
     }];
 }
 
-+ (void)lks_addInvolvedRawConstraintsForViewsRootedByView:(UIView *)rootView {
++ (void)lks_addInvolvedRawConstraintsForViewsRootedByView:(LookinView *)rootView {
     [rootView.constraints enumerateObjectsUsingBlock:^(__kindof NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-        UIView *firstView = constraint.firstItem;
-        if ([firstView isKindOfClass:[UIView class]] && ![firstView.lks_involvedRawConstraints containsObject:constraint]) {
+        LookinView *firstView = constraint.firstItem;
+        if ([firstView isKindOfClass:[LookinView class]] && ![firstView.lks_involvedRawConstraints containsObject:constraint]) {
             if (!firstView.lks_involvedRawConstraints) {
                 firstView.lks_involvedRawConstraints = [NSMutableArray array];
             }
             [firstView.lks_involvedRawConstraints addObject:constraint];
         }
         
-        UIView *secondView = constraint.secondItem;
-        if ([secondView isKindOfClass:[UIView class]] && ![secondView.lks_involvedRawConstraints containsObject:constraint]) {
+        LookinView *secondView = constraint.secondItem;
+        if ([secondView isKindOfClass:[LookinView class]] && ![secondView.lks_involvedRawConstraints containsObject:constraint]) {
             if (!secondView.lks_involvedRawConstraints) {
                 secondView.lks_involvedRawConstraints = [NSMutableArray array];
             }
@@ -132,14 +174,14 @@
         }
     }];
     
-    [rootView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
+    [rootView.subviews enumerateObjectsUsingBlock:^(__kindof LookinView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
         [self lks_addInvolvedRawConstraintsForViewsRootedByView:subview];
     }];
 }
 
-+ (void)lks_removeInvolvedRawConstraintsForViewsRootedByView:(UIView *)rootView {
++ (void)lks_removeInvolvedRawConstraintsForViewsRootedByView:(LookinView *)rootView {
     [rootView.lks_involvedRawConstraints removeAllObjects];
-    [rootView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
+    [rootView.subviews enumerateObjectsUsingBlock:^(__kindof LookinView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
         [self lks_removeInvolvedRawConstraintsForViewsRootedByView:subview];
     }];
 }
@@ -161,8 +203,8 @@
         · 如果设置了 View1 的 center 和 superview 的 center 保持一致，则 superview 的 width 和 height 也会出现在 effectiveConstraints 里，但不会出现在 lks_involvedRawConstraints 里（这点可以理解，毕竟这种场景下 superview 的 width 和 height 确实会影响到 View1）
      */
     NSMutableArray<NSLayoutConstraint *> *effectiveConstraints = [NSMutableArray array];
-    [effectiveConstraints addObjectsFromArray:[self constraintsAffectingLayoutForAxis:UILayoutConstraintAxisHorizontal]];
-    [effectiveConstraints addObjectsFromArray:[self constraintsAffectingLayoutForAxis:UILayoutConstraintAxisVertical]];
+    [effectiveConstraints addObjectsFromArray:[self constraintsAffectingLayoutForAxis:LookinLayoutConstraintAxisHorizontal]];
+    [effectiveConstraints addObjectsFromArray:[self constraintsAffectingLayoutForAxis:LookinLayoutConstraintAxisVertical]];
     
     NSArray<LookinAutoLayoutConstraint *> *lookinConstraints = [self.lks_involvedRawConstraints lookin_map:^id(NSUInteger idx, __kindof NSLayoutConstraint *constraint) {
         BOOL isEffective = [effectiveConstraints containsObject:constraint];
@@ -192,23 +234,119 @@
     
     // 在 runtime 时，这里会遇到的 UILayoutGuide 和 _UILayoutGuide 居然是 UIView 的子类，不知道是看错了还是有什么玄机，所以在判断是否是 UIView 之前要先判断这个
     if (@available(iOS 9.0, *)) {
-        if ([item isKindOfClass:[UILayoutGuide class]]) {
+        if ([item isKindOfClass:[LookinLayoutGuide class]]) {
             return LookinConstraintItemTypeLayoutGuide;
         }
     }
     
+    
+#if TARGET_OS_IPHONE
     NSString *className = NSStringFromClass([item class]);
     if ([className hasSuffix:@"_UILayoutGuide"]) {
         return LookinConstraintItemTypeLayoutGuide;
     }
+#endif
     
-    if ([item isKindOfClass:[UIView class]]) {
+    if ([item isKindOfClass:[LookinView class]]) {
         return LookinConstraintItemTypeView;
     }
     
     NSAssert(NO, @"");
     return LookinConstraintItemTypeUnknown;
 }
+
+#pragma mark - Screenshot
+
+#if TARGET_OS_OSX
+- (LookinImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
+    
+    CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
+    if (pixelWidth <= 0 || pixelHeight <= 0) {
+        return nil;
+    }
+    
+    CGFloat renderScale = lowQuality ? 1 : 0;
+    CGFloat maxLength = MAX(pixelWidth, pixelHeight);
+    if (maxLength > LookinNodeImageMaxLengthInPx) {
+        // 确保最终绘制出的图片长和宽都不能超过 LookinNodeImageMaxLengthInPx
+        // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
+        renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
+    }
+    
+    CGSize contextSize = self.frame.size;
+    if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+        NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+        return nil;
+    }
+    
+    NSBitmapImageRep *rep = [self bitmapImageRepForCachingDisplayInRect:self.bounds];
+    if (!rep) {
+        return nil;
+    }
+    [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
+    
+    NSImage *image = [[NSImage alloc] initWithSize:rep.size];
+    
+    [image addRepresentation:rep];
+    
+    return image;
+}
+
+- (LookinImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality {
+    if (!self.subviews.count) {
+        return nil;
+    }
+    
+    CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
+    if (pixelWidth <= 0 || pixelHeight <= 0) {
+        return nil;
+    }
+    
+    CGFloat renderScale = lowQuality ? 1 : 0;
+    CGFloat maxLength = MAX(pixelWidth, pixelHeight);
+    if (maxLength > LookinNodeImageMaxLengthInPx) {
+        // 确保最终绘制出的图片长和宽都不能超过 LookinNodeImageMaxLengthInPx
+        // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
+        renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
+    }
+    
+    if (self.subviews.count) {
+        NSArray<NSView *> *subviews = [self.subviews copy];
+        NSMutableArray<NSView *> *visibleSubviews = [NSMutableArray arrayWithCapacity:subviews.count];
+        [subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!subview.hidden) {
+                subview.hidden = YES;
+                [visibleSubviews addObject:subview];
+            }
+        }];
+        
+        CGSize contextSize = self.frame.size;
+        if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+            NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+            return nil;
+        }
+
+        NSBitmapImageRep *rep = [self bitmapImageRepForCachingDisplayInRect:self.bounds];
+        if (!rep) {
+            return nil;
+        }
+        [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
+        
+        NSImage *image = [[NSImage alloc] initWithSize:rep.size];
+        
+        [image addRepresentation:rep];
+        [visibleSubviews enumerateObjectsUsingBlock:^(NSView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
+            subview.hidden = NO;
+        }];
+        return image;
+    }
+    return nil;
+}
+#endif
 
 @end
 

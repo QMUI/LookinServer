@@ -8,9 +8,9 @@
 //  https://lookin.work
 //
 
-#import <UIKit/UIKit.h>
+#import "LookinDefines.h"
 
-@interface UIImage (LookinServer)
+@interface LookinImage (LookinServer)
 
 /// 该方法的实现需要 Hook，因此若定义了 LOOKIN_SERVER_DISABLE_HOOK 宏，则属性会返回 nil
 @property(nonatomic, copy) NSString *lks_imageSourceName;

@@ -8,14 +8,15 @@
 //  https://lookin.work
 //
 
-#import <UIKit/UIKit.h>
+#import "LookinDefines.h"
 
-@interface UITextField (LookinServer)
+@interface LookinTextField (LookinServer)
 
 @property(nonatomic, assign) CGFloat lks_fontSize;
 
 - (NSString *)lks_fontName;
 
 @end
+
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

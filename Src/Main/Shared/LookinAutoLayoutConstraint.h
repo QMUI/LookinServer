@@ -25,9 +25,6 @@ typedef NS_ENUM(NSInteger, LookinConstraintItemType) {
 
 @interface LookinAutoLayoutConstraint : NSObject <NSSecureCoding>
 
-#if TARGET_OS_IPHONE
-+ (instancetype)instanceFromNSConstraint:(NSLayoutConstraint *)constraint isEffective:(BOOL)isEffective firstItemType:(LookinConstraintItemType)firstItemType secondItemType:(LookinConstraintItemType)secondItemType;
-#endif
 
 @property(nonatomic, assign) BOOL effective;
 @property(nonatomic, assign) BOOL active;

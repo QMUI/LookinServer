@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'AppKitDemo' do
+    pod 'LookinServer', :path=>'../../'
+end

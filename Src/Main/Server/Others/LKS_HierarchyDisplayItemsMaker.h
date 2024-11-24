@@ -25,7 +25,9 @@
 
 /// 把 layer 的 sublayers 转换为 displayItem 数组并返回
 + (NSArray<LookinDisplayItem *> *)subitemsOfLayer:(CALayer *)layer;
-
+#if TARGET_OS_OSX
++ (NSArray<LookinDisplayItem *> *)subitemsOfView:(NSView *)view;
+#endif
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

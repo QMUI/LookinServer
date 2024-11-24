@@ -21,7 +21,7 @@
 #if TARGET_OS_IPHONE
         CGRect rect = [self.frameInWindow CGRectValue];
         newInstance.frameInWindow = [NSValue valueWithCGRect:rect];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
         CGRect rect = [self.frameInWindow rectValue];
         newInstance.frameInWindow = [NSValue valueWithRect:rect];
 #endif

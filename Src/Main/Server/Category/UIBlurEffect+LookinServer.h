@@ -8,6 +8,10 @@
 //  https://lookin.work
 //
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE
+
 #import <UIKit/UIKit.h>
 
 @interface UIBlurEffect (LookinServer)
@@ -17,5 +21,7 @@
 @property(nonatomic, strong) NSNumber *lks_effectStyleNumber;
 
 @end
+
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

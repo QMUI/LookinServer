@@ -8,7 +8,13 @@
 //  https://lookin.work
 //
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_OSX
+#import <Appkit/Appkit.h>
+#endif
 
 extern NSString *const LKS_ConnectionDidEndNotificationName;
 

@@ -15,7 +15,9 @@
 @interface LKS_AttrGroupsMaker : NSObject
     
 + (NSArray<LookinAttributesGroup *> *)attrGroupsForLayer:(CALayer *)layer;
-
+#if TARGET_OS_OSX
++ (NSArray<LookinAttributesGroup *> *)attrGroupsForView:(NSView *)view;
+#endif
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

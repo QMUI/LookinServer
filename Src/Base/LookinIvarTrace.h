@@ -25,9 +25,7 @@ extern NSString *const LookinIvarTraceRelationValue_Self;
 
 #pragma mark - No Coding
 
-#if TARGET_OS_IPHONE
 @property(nonatomic, weak) id hostObject;
-#endif
 
 @end
 

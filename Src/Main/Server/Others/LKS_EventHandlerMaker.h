@@ -14,7 +14,7 @@
 
 @interface LKS_EventHandlerMaker : NSObject
 
-+ (NSArray<LookinEventHandler *> *)makeForView:(UIView *)view;
++ (NSArray<LookinEventHandler *> *)makeForView:(LookinView *)view;
 
 @end
 

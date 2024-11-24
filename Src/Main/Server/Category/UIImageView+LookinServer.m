@@ -12,7 +12,7 @@
 #import "UIImage+LookinServer.h"
 #import "NSObject+LookinServer.h"
 
-@implementation UIImageView (LookinServer)
+@implementation LookinImageView (LookinServer)
 
 - (NSString *)lks_imageSourceName {
     return self.image.lks_imageSourceName;

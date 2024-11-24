@@ -8,9 +8,9 @@
 //  https://lookin.work
 //
 
-#import <UIKit/UIKit.h>
+#import "LookinDefines.h"
 
-@interface UITextView (LookinServer)
+@interface LookinTextView (LookinServer)
 
 @property(nonatomic, assign) CGFloat lks_fontSize;
 

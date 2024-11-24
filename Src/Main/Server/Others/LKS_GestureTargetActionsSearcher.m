@@ -15,7 +15,7 @@
 
 @implementation LKS_GestureTargetActionsSearcher
 
-+ (NSArray<LookinTwoTuple *> *)getTargetActionsFromRecognizer:(UIGestureRecognizer *)recognizer {
++ (NSArray<LookinTwoTuple *> *)getTargetActionsFromRecognizer:(LookinGestureRecognizer *)recognizer {
     if (!recognizer) {
         return @[];
     }

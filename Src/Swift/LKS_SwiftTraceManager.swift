@@ -8,7 +8,19 @@
 //
 
 import Foundation
+#if canImport(AppKit) && !targetEnvironment(macCatalyst)
+import AppKit
+private typealias LookinView = NSView
+private typealias LookinViewController = NSViewController
+private typealias LookinGestureRecognizer = NSGestureRecognizer
+#endif
+
+#if canImport(UIKit)
 import UIKit
+private typealias LookinView = UIView
+private typealias LookinViewController = UIViewController
+private typealias LookinGestureRecognizer = UIGestureRecognizer
+#endif
 #if SPM_LOOKIN_SERVER_ENABLED
 import LookinServerBase
 #endif
@@ -25,7 +37,7 @@ public class LKS_SwiftTraceManager: NSObject {
                     let label: String? = child.label?.replacingOccurrences(of: "$__lazy_storage_$_", with: "")
                     let value = child.value
                     
-                    guard (value is UIView) || (value is CALayer) || (value is UIViewController) || (value is UIGestureRecognizer) else {
+                    guard (value is LookinView) || (value is CALayer) || (value is LookinViewController) || (value is LookinGestureRecognizer) else {
                         return
                     }
                     
@@ -42,11 +54,11 @@ public class LKS_SwiftTraceManager: NSObject {
                     
                     if (value === hostObject) {
                         ivarTrace.relation = LookinIvarTraceRelationValue_Self
-                    } else if let hostView = hostObject as? UIView {
+                    } else if let hostView = hostObject as? LookinView {
                         var ivarLayer: CALayer? = nil
                         if let layer = value as? CALayer {
                             ivarLayer = layer
-                        } else if let view = value as? UIView {
+                        } else if let view = value as? LookinView {
                             ivarLayer = view.layer
                         }
                         if let layer = ivarLayer, layer.superlayer === hostView.layer {

@@ -5,18 +5,24 @@
 //
 //  Created by likai.123 on 2023/11/4.
 //
-
+#import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
 
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+#endif
+#import "LookinDefines.h"
 typedef void(^LKS_StringSetter)(NSString *);
 typedef void(^LKS_NumberSetter)(NSNumber *);
 typedef void(^LKS_BoolSetter)(BOOL);
-typedef void(^LKS_ColorSetter)(UIColor *);
+typedef void(^LKS_ColorSetter)(LookinColor *);
 typedef void(^LKS_EnumSetter)(NSString *);
 typedef void(^LKS_RectSetter)(CGRect);
 typedef void(^LKS_SizeSetter)(CGSize);
 typedef void(^LKS_PointSetter)(CGPoint);
-typedef void(^LKS_InsetsSetter)(UIEdgeInsets);
+typedef void(^LKS_InsetsSetter)(LookinInsets);
 
 @interface LKS_CustomAttrSetterManager : NSObject
 

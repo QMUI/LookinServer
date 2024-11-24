@@ -8,11 +8,11 @@
 //  https://lookin.work
 //
 
-#import <UIKit/UIKit.h>
+#import "LookinDefines.h"
 
-@interface UIViewController (LookinServer)
+@interface LookinViewController (LookinServer)
 
-+ (UIViewController *)lks_visibleViewController;
++ (LookinViewController *)lks_visibleViewController;
 
 @end
 

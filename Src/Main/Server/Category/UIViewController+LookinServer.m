@@ -13,17 +13,26 @@
 #import <objc/runtime.h>
 #import "LKS_MultiplatformAdapter.h"
 
-@implementation UIViewController (LookinServer)
+@implementation LookinViewController (LookinServer)
 
-+ (nullable UIViewController *)lks_visibleViewController {
-    
-    UIViewController *rootViewController = [LKS_MultiplatformAdapter keyWindow].rootViewController;
-    UIViewController *visibleViewController = [rootViewController lks_visibleViewControllerIfExist];
++ (nullable LookinViewController *)lks_visibleViewController {
+#if TARGET_OS_IPHONE
+    LookinViewController *rootViewController = [LKS_MultiplatformAdapter keyWindow].rootViewController;
+    LookinViewController *visibleViewController = [rootViewController lks_visibleViewControllerIfExist];
     return visibleViewController;
+#endif
+    
+#if TARGET_OS_OSX
+    
+    LookinViewController *rootViewController = [LKS_MultiplatformAdapter keyWindow].contentViewController;
+    LookinViewController *visibleViewController = [rootViewController lks_visibleViewControllerIfExist];
+    return visibleViewController;
+#endif
 }
 
-- (UIViewController *)lks_visibleViewControllerIfExist {
+- (LookinViewController *)lks_visibleViewControllerIfExist {
     
+#if TARGET_OS_IPHONE
     if (self.presentedViewController) {
         return [self.presentedViewController lks_visibleViewControllerIfExist];
     }
@@ -41,6 +50,21 @@
     } else {
         return nil;
     }
+#endif
+    
+#if TARGET_OS_OSX
+    if (self.presentedViewControllers) {
+        for (NSViewController *presentedViewController in self.presentedViewControllers) {
+            return [presentedViewController lks_visibleViewControllerIfExist];
+        }
+    }
+    
+    if (self.isViewLoaded && !self.view.hidden && self.view.alphaValue > 0.01) {
+        return self;
+    } else {
+        return nil;
+    }
+#endif
 }
 
 @end

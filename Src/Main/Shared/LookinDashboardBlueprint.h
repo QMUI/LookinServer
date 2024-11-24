@@ -44,6 +44,8 @@
 /// 返回某个 LookinAttribute 代表的属性是哪一个类拥有的，比如 LookinAttrSec_UILabel_TextColor 是 UILabel 才有的
 + (NSString *)classNameWithAttrID:(LookinAttrIdentifier)attrID;
 
++ (BOOL)isWindowPropertyWithAttrID:(LookinAttrIdentifier)attrID;
+
 /// 一个 attr 要么属于 UIView 要么属于 CALayer，如果它属于 UIView 那么该方法返回 YES
 + (BOOL)isUIViewPropertyWithAttrID:(LookinAttrIdentifier)attrID;
 

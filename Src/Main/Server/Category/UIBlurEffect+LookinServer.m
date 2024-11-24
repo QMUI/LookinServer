@@ -12,6 +12,8 @@
 #import "NSObject+Lookin.h"
 #import <objc/runtime.h>
 
+#if TARGET_OS_IPHONE
+
 @implementation UIBlurEffect (LookinServer)
 
 #ifdef LOOKIN_SERVER_DISABLE_HOOK
@@ -53,5 +55,7 @@
 #endif /* LOOKIN_SERVER_DISABLE_HOOK */
 
 @end
+
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

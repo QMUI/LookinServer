@@ -10,7 +10,7 @@
 
 #import "UIColor+LookinServer.h"
 
-@implementation UIColor (LookinServer)
+@implementation LookinColor (LookinServer)
 
 - (NSArray<NSNumber *> *)lks_rgbaComponents {
     CGFloat r, g, b, a;
@@ -50,7 +50,7 @@
         NSAssert(NO, @"");
         return nil;
     }
-    UIColor *color = [UIColor colorWithRed:components[0].doubleValue green:components[1].doubleValue blue:components[2].doubleValue alpha:components[3].doubleValue];
+    LookinColor *color = [LookinColor colorWithRed:components[0].doubleValue green:components[1].doubleValue blue:components[2].doubleValue alpha:components[3].doubleValue];
     return color;
 }
 
@@ -111,10 +111,10 @@
     NSInteger alpha = a * 255;
     
     return [[NSString stringWithFormat:@"#%@%@%@%@",
-             [UIColor _alignColorHexStringLength:[UIColor _hexStringWithInteger:alpha]],
-             [UIColor _alignColorHexStringLength:[UIColor _hexStringWithInteger:red]],
-             [UIColor _alignColorHexStringLength:[UIColor _hexStringWithInteger:green]],
-             [UIColor _alignColorHexStringLength:[UIColor _hexStringWithInteger:blue]]] lowercaseString];
+             [LookinColor _alignColorHexStringLength:[LookinColor _hexStringWithInteger:alpha]],
+             [LookinColor _alignColorHexStringLength:[LookinColor _hexStringWithInteger:red]],
+             [LookinColor _alignColorHexStringLength:[LookinColor _hexStringWithInteger:green]],
+             [LookinColor _alignColorHexStringLength:[LookinColor _hexStringWithInteger:blue]]] lowercaseString];
 }
 
 // 对于色值只有单位数的，在前面补一个0，例如“F”会补齐为“0F”
@@ -168,14 +168,14 @@
     return letter;
 }
 
-+ (UIColor *)lks_colorWithCGColor:(CGColorRef)cgColor {
++ (LookinColor *)lks_colorWithCGColor:(CGColorRef)cgColor {
     if (!cgColor) {
         return nil;
     }
     if (CFGetTypeID(cgColor) != CGColorGetTypeID()) {
         return nil;
     }
-    return [UIColor colorWithCGColor:cgColor];
+    return [LookinColor colorWithCGColor:cgColor];
 }
 
 @end
