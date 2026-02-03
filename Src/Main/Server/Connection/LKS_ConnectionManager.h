@@ -20,9 +20,21 @@ extern NSString *const LKS_ConnectionDidEndNotificationName;
 
 @property(nonatomic, assign) BOOL applicationIsActive;
 
-- (void)respond:(LookinConnectionResponseAttachment *)data requestType:(uint32_t)requestType tag:(uint32_t)tag;
+#if LOOKIN_SERVER_WIRELESS
+- (void)startWirelessConnection;
 
-- (void)pushData:(NSObject *)data type:(uint32_t)type;
+- (void)endWirelessConnection;
+#endif
+
+- (BOOL)isConnected;
+
+#if LOOKIN_SERVER_WIRELESS
+- (BOOL)isWirelessConnnect;
+#endif
+
+- (void)respond:(LookinConnectionResponseAttachment *)data requestType:(uint32_t)requestType tag:(uint32_t)tag isWireless:(BOOL)isWireless;
+
+- (void)pushData:(NSObject *)data type:(uint32_t)type isWireless:(BOOL)isWireless;
 
 @end
 

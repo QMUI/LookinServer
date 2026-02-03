@@ -12,6 +12,8 @@
 
 @interface LKS_RequestHandler : NSObject
 
++ (instancetype)wireless;
+
 - (BOOL)canHandleRequestType:(uint32_t)requestType;
 
 - (void)handleRequestType:(uint32_t)requestType tag:(uint32_t)tag object:(id)object;

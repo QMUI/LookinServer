@@ -18,28 +18,28 @@ public class LKS_SwiftTraceManager: NSObject {
         var mirror: Mirror? = Mirror(reflecting: hostObject)
         var currClass: AnyClass? = type(of: hostObject)
         let initialInClass: AnyClass? = currClass
-        
+
         while let m = mirror, let unwrappedCurrClass = currClass {
             m.children.forEach { child in
                 if let child = child as? (label: String?, value: NSObject) {
                     let label: String? = child.label?.replacingOccurrences(of: "$__lazy_storage_$_", with: "")
                     let value = child.value
-                    
+
                     guard (value is UIView) || (value is CALayer) || (value is UIViewController) || (value is UIGestureRecognizer) else {
                         return
                     }
-                    
+
                     guard let label = label, label.count > 0 else {
                         return
                     }
-                    
+
                     let ivarTrace = LookinIvarTrace()
                     ivarTrace.hostObject = hostObject
-                    
+
                     ivarTrace.hostClassName = makeDisplayClassName(superClass: unwrappedCurrClass, childClass: initialInClass)
-                    
+
                     ivarTrace.ivarName = label
-                    
+
                     if (value === hostObject) {
                         ivarTrace.relation = LookinIvarTraceRelationValue_Self
                     } else if let hostView = hostObject as? UIView {
@@ -60,11 +60,11 @@ public class LKS_SwiftTraceManager: NSObject {
             currClass = unwrappedCurrClass.superclass()
         }
     }
-    
+
     // 比如 superClass 可能是 UIView，而 childClass 可能是 UIButton
     private static func makeDisplayClassName(superClass: AnyClass, childClass: AnyClass?) -> String {
         let superName = NSStringFromClass(superClass)
-        
+
         guard let childClass = childClass else {
             return superName
         }
@@ -81,7 +81,7 @@ public class LKS_SwiftTraceManager: NSObject {
         }
         return "\(childName) : \(superName)"
     }
-    
+
     private static func queryModuleName(classname: String) -> String? {
         let parts = classname.components(separatedBy: ".")
         if parts.count != 2 {
@@ -89,7 +89,7 @@ public class LKS_SwiftTraceManager: NSObject {
         }
         return parts[0]
     }
-    
+
     /// 不包含 module name
     private static func queryShortName(classname: String) -> String {
         let parts = classname.components(separatedBy: ".")

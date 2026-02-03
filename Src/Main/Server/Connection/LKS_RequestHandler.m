@@ -31,6 +31,8 @@
 
 @property(nonatomic, strong) NSMutableSet<LKS_HierarchyDetailsHandler *> *activeDetailHandlers;
 
+@property(nonatomic, assign) BOOL isWireless;
+
 @end
 
 @implementation LKS_RequestHandler {
@@ -60,6 +62,12 @@
     return self;
 }
 
++ (instancetype)wireless {
+    LKS_RequestHandler *handler = self.new;
+    handler.isWireless = YES;
+    return handler;
+}
+
 - (BOOL)canHandleRequestType:(uint32_t)requestType {
     if ([_validRequestTypes containsObject:@(requestType)]) {
         return YES;
@@ -74,7 +82,7 @@
         if (![LKS_ConnectionManager sharedInstance].applicationIsActive) {
             responseAttachment.appIsInBackground = YES;            
         }
-        [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag];
+        [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag isWireless:self.isWireless];
         
     } else if (requestType == LookinRequestTypeApp) {
         // 请求可用设备信息
@@ -90,7 +98,7 @@
         
         LookinConnectionResponseAttachment *responseAttachment = [LookinConnectionResponseAttachment new];
         responseAttachment.data = appInfo;
-        [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag];
+        [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag isWireless:self.isWireless];
         
     } else if (requestType == LookinRequestTypeHierarchy) {
         // 从 LookinClient 1.0.4 开始有这个参数，之前是 nil
@@ -105,7 +113,7 @@
         
         LookinConnectionResponseAttachment *responseAttachment = [LookinConnectionResponseAttachment new];
         responseAttachment.data = [LookinHierarchyInfo staticInfoWithLookinVersion:clientVersion];
-        [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag];
+        [[LKS_ConnectionManager sharedInstance] respond:responseAttachment requestType:requestType tag:tag isWireless:self.isWireless];
         
     } else if (requestType == LookinRequestTypeInbuiltAttrModification) {
         // 请求修改某个属性
@@ -116,7 +124,7 @@
             } else {
                 attachment.data = data;
             }
-            [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:requestType tag:tag];
+            [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:requestType tag:tag isWireless:self.isWireless];
         }];
         
     } else if (requestType == LookinRequestTypeCustomAttrModification) {
@@ -135,7 +143,7 @@
             attrAttachment.data = data;
             attrAttachment.dataTotalCount = dataTotalCount;
             attrAttachment.currentDataCount = 1;
-            [[LKS_ConnectionManager sharedInstance] respond:attrAttachment requestType:LookinRequestTypeAttrModificationPatch tag:tag];
+            [[LKS_ConnectionManager sharedInstance] respond:attrAttachment requestType:LookinRequestTypeAttrModificationPatch tag:tag isWireless:self.isWireless];
         }];
         
     } else if (requestType == LookinRequestTypeHierarchyDetails) {
@@ -153,7 +161,7 @@
             attachment.data = details;
             attachment.dataTotalCount = responsesDataTotalCount;
             attachment.currentDataCount = details.count;
-            [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:LookinRequestTypeHierarchyDetails tag:tag];
+            [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:LookinRequestTypeHierarchyDetails tag:tag isWireless:self.isWireless];
             
         } finishedBlock:^{
             [self.activeDetailHandlers removeObject:handler];
@@ -166,7 +174,7 @@
         
         LookinConnectionResponseAttachment *attach = [LookinConnectionResponseAttachment new];
         attach.data = lookinObj;
-        [[LKS_ConnectionManager sharedInstance] respond:attach requestType:requestType tag:tag];
+        [[LKS_ConnectionManager sharedInstance] respond:attach requestType:requestType tag:tag isWireless:self.isWireless];
         
     } else if (requestType == LookinRequestTypeAllAttrGroups) {
         unsigned long oid = ((NSNumber *)object).unsignedLongValue;
@@ -544,13 +552,13 @@
 - (void)_submitResponseWithError:(NSError *)error requestType:(uint32_t)requestType tag:(uint32_t)tag {
     LookinConnectionResponseAttachment *attachment = [LookinConnectionResponseAttachment new];
     attachment.error = error;
-    [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:requestType tag:tag];
+    [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:requestType tag:tag isWireless:self.isWireless];
 }
 
 - (void)_submitResponseWithData:(NSObject *)data requestType:(uint32_t)requestType tag:(uint32_t)tag {
     LookinConnectionResponseAttachment *attachment = [LookinConnectionResponseAttachment new];
     attachment.data = data;
-    [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:requestType tag:tag];
+    [[LKS_ConnectionManager sharedInstance] respond:attachment requestType:requestType tag:tag isWireless:self.isWireless];
 }
 
 @end
