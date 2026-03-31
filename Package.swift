@@ -32,6 +32,7 @@ let package = Package(
                 .headerSearchPath("Server/Category"),
                 .headerSearchPath("Server/Connection"),
                 .headerSearchPath("Server/Connection/RequestHandler"),
+                .headerSearchPath("Server/HTTP"),
                 .headerSearchPath("Server/Inspect"),
                 .headerSearchPath("Server/Others"),
                 .headerSearchPath("Server/Perspective"),

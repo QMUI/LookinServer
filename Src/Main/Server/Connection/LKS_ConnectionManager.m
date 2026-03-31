@@ -16,6 +16,7 @@
 #import "LookinServerDefines.h"
 #import "LKS_TraceManager.h"
 #import "LKS_MultiplatformAdapter.h"
+#import "LKS_HTTPHandler.h"
 
 NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNotificationName";
 
@@ -24,6 +25,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
 @property(nonatomic, weak) Lookin_PTChannel *peerChannel_;
 
 @property(nonatomic, strong) LKS_RequestHandler *requestHandler;
+@property(nonatomic, strong) LKS_HTTPHandler *httpHandler;
 
 @end
 
@@ -61,6 +63,10 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleGetLookinInfo:) name:@"GetLookinInfo" object:nil];
         
         self.requestHandler = [LKS_RequestHandler new];
+
+        // 启动 HTTP Server，供 lookin-mcp 直连（127.0.0.1:47190）
+        self.httpHandler = [LKS_HTTPHandler new];
+        [self.httpHandler startHTTPServer];
     }
     return self;
 }
